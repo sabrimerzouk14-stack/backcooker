@@ -3,535 +3,408 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BackCooker · Cuisiniers à domicile Marseille</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>BackCooker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,300;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-:root{
-  --bg:#F7F4EF;--white:#FFFFFF;--olive:#5C6B3A;--olive-l:#8A9E5A;
-  --salmon:#E8724A;--salmon-l:#F5A882;--beige:#EDE8DF;--beige-d:#D6CEBC;
-  --ink:#1E1C18;--ink-l:#6B6760;--sand:#C8B99A;--r:14px;--r-lg:20px;
+/* file written via python */
+:root {
+  --bg:#F9F6F1;--white:#FFFFFF;--ink:#18160F;--ink-2:#6B6455;--ink-3:#A89E8E;
+  --terra:#C5603A;--terra-l:#E8956D;--olive:#4A5E2F;--olive-l:#7A9448;
+  --beige:#EDE7DC;--beige-2:#DDD5C5;--gold:#B8943A;--r:16px;--r2:24px;
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;height:100dvh}
-
-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0;z-index:1001}
-.logo{font-family:'Fraunces',serif;font-size:22px;color:var(--ink);letter-spacing:-.5px;display:flex;align-items:center;gap:7px}
-.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--salmon)}
-.nav-city{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-l);font-weight:500;background:var(--beige);padding:5px 11px;border-radius:50px}
-.nav-r{display:flex;align-items:center;gap:10px}
-.btn-pro{background:var(--olive);color:#fff;padding:7px 14px;border-radius:50px;font-size:11px;font-weight:500;border:none;cursor:pointer}
-.nav-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--salmon),var(--olive-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
-
-.searchbar{padding:12px 16px;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0}
-.si{display:flex;align-items:center;gap:10px;background:var(--beige);border-radius:12px;padding:10px 14px;border:1.5px solid transparent;transition:.2s}
-.si:focus-within{border-color:var(--salmon-l);background:var(--white)}
-.si input{background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);width:100%}
-.si input::placeholder{color:var(--sand)}
-
-.tabs{display:flex;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0;padding:0 16px}
-.tab{padding:10px 14px;font-size:12px;font-weight:500;color:var(--ink-l);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
-.tab.on{color:var(--salmon);border-bottom-color:var(--salmon)}
-
-.main{flex:1;display:flex;overflow:hidden}
-
-.sidebar{width:390px;display:flex;flex-direction:column;border-right:1px solid var(--beige-d);flex-shrink:0;overflow:hidden;background:var(--bg)}
-
-.filters{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;background:var(--white);border-bottom:1px solid var(--beige-d)}
-.filters::-webkit-scrollbar{display:none}
-.ftag{padding:5px 12px;border-radius:50px;font-size:11px;font-weight:500;border:1.5px solid var(--beige-d);cursor:pointer;white-space:nowrap;background:var(--white);color:var(--ink-l);transition:.15s;flex-shrink:0}
-.ftag.on{background:var(--salmon);color:#fff;border-color:var(--salmon)}
-
-.clist{flex:1;overflow-y:auto;padding:10px 12px 20px;scrollbar-width:thin;scrollbar-color:var(--beige-d) transparent}
-.slbl{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sand);padding:6px 2px 10px}
-
-/* CARD */
-.card{background:var(--white);border-radius:var(--r-lg);margin-bottom:10px;cursor:pointer;border:1.5px solid var(--beige-d);transition:all .2s;overflow:hidden;animation:fu .3s ease both}
-@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card:hover{border-color:var(--salmon-l);box-shadow:0 4px 20px rgba(232,114,74,.1)}
-.card.sel{border-color:var(--salmon);box-shadow:0 4px 20px rgba(232,114,74,.15)}
-.card-header{padding:14px;display:flex;gap:12px;align-items:flex-start}
-.chef-photo{width:56px;height:56px;border-radius:14px;background:var(--beige);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;position:relative}
-.chef-badge{position:absolute;bottom:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--olive);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff}
-.card-info{flex:1;min-width:0}
-.card-name{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:2px}
-.card-spec{font-size:11px;color:var(--ink-l);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.rat{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:500}
-.star{color:#F0A500}
-.tag{font-size:9px;padding:2px 7px;border-radius:50px;background:var(--beige);color:var(--ink-l);font-weight:500}
-.tag-g{background:#EBF2E0;color:var(--olive)}
-.tag-s{background:#FDEEE8;color:var(--salmon)}
-.card-price{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--salmon);flex-shrink:0;text-align:right}
-.card-price small{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:400;color:var(--sand);display:block}
-
-.card-toggle{padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--beige);cursor:pointer;user-select:none}
-.card-toggle span{font-size:11px;color:var(--salmon);font-weight:500}
-.tarrow{width:18px;height:18px;border-radius:50%;background:var(--beige);display:flex;align-items:center;justify-content:center;transition:transform .2s}
-.tarrow.open{transform:rotate(180deg)}
-
-.card-exp{max-height:0;overflow:hidden;transition:max-height .35s ease}
-.card-exp.open{max-height:800px}
-.exp-inner{padding:12px 14px 14px}
-
-.chef-bio{font-size:11px;color:var(--ink-l);line-height:1.65;margin-bottom:12px;padding:10px 12px;background:var(--beige);border-radius:10px;font-style:italic}
-.chef-stats{display:flex;gap:7px;margin-bottom:12px}
-.cstat{flex:1;background:var(--beige);border-radius:10px;padding:8px;text-align:center}
-.cstat-v{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--salmon)}
-.cstat-l{font-size:9px;color:var(--sand);margin-top:1px}
-.menus-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
-.menu-item{background:var(--white);border:1.5px solid var(--beige-d);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:.15s}
-.menu-item:hover,.menu-item.on{border-color:var(--salmon);background:#FDEEE8}
-.mi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
-.mi-name{font-size:12px;font-weight:500}
-.mi-price{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--salmon)}
-.mi-desc{font-size:10px;color:var(--ink-l);line-height:1.5}
-.mi-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
-.mtag{font-size:9px;padding:2px 6px;border-radius:50px;background:var(--beige);color:var(--ink-l)}
-.btn-book{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px}
-
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink)}
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:opacity .5s ease,transform .5s ease}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateY(30px)}
+/* LANDING */
+#s-land{background:var(--ink);align-items:center;justify-content:center;overflow:hidden}
+.land-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(197,96,58,.18) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%,rgba(74,94,47,.15) 0%,transparent 60%)}
+.land-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:0 24px;width:100%;max-width:560px}
+.land-eyebrow{font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--terra-l);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.land-eyebrow::before,.land-eyebrow::after{content:'';width:30px;height:1px;background:var(--terra-l);opacity:.5}
+.land-logo{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,10vw,80px);font-weight:300;color:var(--white);letter-spacing:-.02em;line-height:1;margin-bottom:12px;text-align:center}
+.land-logo em{font-style:italic;color:var(--terra-l)}
+.land-sub{font-size:15px;font-weight:300;color:rgba(255,255,255,.45);text-align:center;margin-bottom:52px;line-height:1.6;max-width:340px}
+.city-wrap{width:100%;position:relative}
+.city-input-row{display:flex;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:100px;overflow:hidden;transition:.3s}
+.city-input-row:focus-within{border-color:rgba(197,96,58,.6);background:rgba(255,255,255,.09)}
+.city-icon{width:54px;display:flex;align-items:center;justify-content:center;color:var(--terra-l);flex-shrink:0;font-size:16px}
+.city-input{flex:1;background:none;border:none;outline:none;font-family:'Outfit',sans-serif;font-size:16px;font-weight:400;color:var(--white);padding:18px 0}
+.city-input::placeholder{color:rgba(255,255,255,.3)}
+.city-btn{background:var(--terra);color:#fff;border:none;padding:0 24px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;white-space:nowrap;border-radius:0 100px 100px 0}
+.city-btn:hover{background:#b55431}
+.city-suggestions{position:absolute;top:calc(100% + 8px);left:0;right:0;background:rgba(30,28,20,.95);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.1);border-radius:var(--r);overflow:hidden;z-index:100;display:none}
+.city-suggestions.show{display:block}
+.sug-item{display:flex;align-items:center;gap:12px;padding:13px 18px;cursor:pointer;transition:.15s;border-bottom:1px solid rgba(255,255,255,.05)}
+.sug-item:last-child{border-bottom:none}
+.sug-item:hover{background:rgba(197,96,58,.15)}
+.sug-name{font-size:14px;color:var(--white)}
+.sug-count{font-size:11px;color:rgba(255,255,255,.35);margin-left:auto}
+.land-cities{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px}
+.city-chip{padding:7px 16px;border-radius:50px;border:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;transition:.2s}
+.city-chip:hover{border-color:rgba(197,96,58,.5);color:var(--terra-l);background:rgba(197,96,58,.08)}
+/* APP */
+#s-app{background:var(--bg)}
+.app-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:60px;background:var(--white);border-bottom:1px solid var(--beige-2);flex-shrink:0;z-index:100}
+.app-logo{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--ink);letter-spacing:-.02em;display:flex;align-items:center;gap:6px;cursor:pointer}
+.app-logo span{color:var(--terra);font-style:italic}
+.app-logo-dot{width:7px;height:7px;border-radius:50%;background:var(--terra)}
+.nav-city-pill{display:flex;align-items:center;gap:6px;background:var(--beige);border-radius:50px;padding:6px 14px;font-size:13px;color:var(--ink-2);cursor:pointer;transition:.2s;border:1.5px solid transparent}
+.nav-city-pill:hover{border-color:var(--terra);color:var(--terra)}
+.nav-r{display:flex;gap:10px;align-items:center}
+.btn-pro{background:var(--olive);color:#fff;padding:8px 16px;border-radius:50px;font-size:12px;font-weight:500;border:none;cursor:pointer}
+.nav-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--terra),var(--gold));display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.hero-strip{background:var(--ink);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.hero-txt{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--white);letter-spacing:-.01em}
+.hero-txt em{font-style:italic;color:var(--terra-l)}
+.hero-count{background:rgba(197,96,58,.2);border:1px solid rgba(197,96,58,.3);border-radius:50px;padding:5px 13px;font-size:12px;font-weight:500;color:var(--terra-l)}
+.sf-bar{display:flex;gap:10px;align-items:center;padding:12px 16px;background:var(--white);border-bottom:1px solid var(--beige-2);flex-shrink:0}
+.search-wrap{flex:1;display:flex;align-items:center;gap:8px;background:var(--beige);border-radius:12px;padding:9px 14px;border:1.5px solid transparent;transition:.2s}
+.search-wrap:focus-within{border-color:var(--terra);background:var(--white)}
+.search-wrap input{background:none;border:none;outline:none;font-family:'Outfit',sans-serif;font-size:13px;color:var(--ink);width:100%}
+.search-wrap input::placeholder{color:var(--ink-3)}
+.filter-scroll{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--beige-2);scrollbar-width:none}
+.filter-scroll::-webkit-scrollbar{display:none}
+.ftag{padding:6px 14px;border-radius:50px;font-size:12px;font-weight:400;border:1.5px solid var(--beige-2);cursor:pointer;white-space:nowrap;background:var(--white);color:var(--ink-2);transition:.15s;flex-shrink:0}
+.ftag.on{background:var(--terra);color:#fff;border-color:var(--terra)}
+.app-main{flex:1;display:flex;overflow:hidden}
+.chef-list-panel{width:420px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--beige-2);overflow:hidden;background:var(--bg)}
+.list-header{padding:12px 16px 6px;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);flex-shrink:0}
+.chef-scroll{flex:1;overflow-y:auto;padding:4px 12px 20px;scrollbar-width:thin;scrollbar-color:var(--beige-2) transparent}
+/* CHEF CARD */
+.chef-card{background:var(--white);border-radius:var(--r2);margin-bottom:10px;border:1.5px solid var(--beige-2);overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:slideUp .35s ease both}
+@keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.chef-card:hover{border-color:rgba(197,96,58,.35);box-shadow:0 6px 24px rgba(197,96,58,.08)}
+.chef-card.active{border-color:var(--terra);box-shadow:0 6px 24px rgba(197,96,58,.12)}
+.cc-top{display:flex;gap:14px;align-items:flex-start;padding:16px 16px 12px;cursor:pointer}
+.cc-avatar{width:60px;height:60px;border-radius:16px;background:var(--beige);display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;position:relative}
+.cc-verified{position:absolute;bottom:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:var(--olive);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff}
+.cc-info{flex:1;min-width:0}
+.cc-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:500;margin-bottom:2px;letter-spacing:-.01em}
+.cc-spec{font-size:12px;color:var(--ink-2);margin-bottom:8px}
+.cc-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cc-rat{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:500}
+.cc-star{color:#D4940A}
+.cc-badge{font-size:10px;padding:3px 8px;border-radius:50px;background:var(--beige);color:var(--ink-2)}
+.cc-badge.green{background:#EAF0DE;color:var(--olive)}
+.cc-badge.terra{background:#FAE8DF;color:var(--terra)}
+.cc-price{text-align:right;flex-shrink:0}
+.cc-price-val{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--terra);line-height:1}
+.cc-price-lbl{font-size:10px;color:var(--ink-3);font-weight:300}
+.cc-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--beige);cursor:pointer;user-select:none;transition:.15s}
+.cc-toggle:hover{background:var(--beige)}
+.cc-toggle-lbl{font-size:12px;color:var(--terra);font-weight:500}
+.cc-arrow{width:20px;height:20px;border-radius:50%;background:var(--beige);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.cc-arrow.open{transform:rotate(180deg)}
+.cc-expand{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.cc-expand.open{max-height:1000px}
+.cc-exp-inner{padding:14px 16px 16px}
+.chef-bio-box{background:var(--beige);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.chef-bio-name{font-family:'Cormorant Garamond',serif;font-size:15px;font-style:italic;color:var(--terra);margin-bottom:6px}
+.chef-bio-txt{font-size:12px;color:var(--ink-2);line-height:1.7}
+.exp-stats{display:flex;gap:8px;margin-bottom:14px}
+.estat{flex:1;background:var(--beige);border-radius:12px;padding:10px;text-align:center}
+.estat-v{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--terra)}
+.estat-l{font-size:9px;color:var(--ink-3);margin-top:2px}
+.exp-sec-lbl{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.menu-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--white);border:1.5px solid var(--beige-2);border-radius:12px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.menu-row:hover{border-color:var(--terra);background:#FAF0EB}
+.menu-emoji{font-size:20px;flex-shrink:0}
+.menu-info{flex:1;min-width:0}
+.menu-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.menu-desc{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-tags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap}
+.menu-tag{font-size:9px;padding:2px 6px;border-radius:50px;background:var(--beige);color:var(--ink-2)}
+.menu-price{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;color:var(--terra);flex-shrink:0}
+.btn-reserve{width:100%;background:var(--terra);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;transition:.2s}
+.btn-reserve:hover{background:#b05030}
 /* MAP */
-.map-area{flex:1;position:relative;overflow:hidden}
+.map-panel{flex:1;position:relative;overflow:hidden}
 #map{width:100%;height:100%}
-.leaflet-control-zoom{border:none!important;border-radius:12px!important;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1)!important}
-.leaflet-control-zoom a{background:var(--white)!important;color:var(--ink)!important;font-size:15px!important;line-height:28px!important;width:28px!important;height:28px!important;border:none!important}
-.leaflet-popup-content-wrapper{padding:0!important;border-radius:16px!important;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)!important;border:none!important}
-.leaflet-popup-content{margin:0!important;width:220px!important}
+.leaflet-control-zoom{border:none!important;border-radius:14px!important;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.1)!important}
+.leaflet-control-zoom a{background:var(--white)!important;color:var(--ink)!important;font-size:16px!important;line-height:30px!important;width:30px!important;height:30px!important;border:none!important}
+.leaflet-popup-content-wrapper{padding:0!important;border-radius:18px!important;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.14)!important;border:none!important}
+.leaflet-popup-content{margin:0!important;width:230px!important}
 .leaflet-popup-tip-container{display:none!important}
-.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.7)!important;padding:2px 6px!important;border-radius:4px!important}
-
-.mpin{background:var(--ink);color:#fff;padding:5px 11px;border-radius:50px;font-size:10px;font-weight:500;white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.2);display:inline-flex;align-items:center;gap:4px;position:relative;cursor:pointer;transition:transform .15s}
-.mpin::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink);border-bottom:none}
-.mpin.on{background:var(--salmon)}.mpin.on::after{border-top-color:var(--salmon)}
-.mpin-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
-.map-badge{position:absolute;top:12px;left:12px;z-index:400;background:rgba(255,255,255,.95);border-radius:50px;padding:6px 14px;font-size:11px;font-weight:500;box-shadow:0 2px 10px rgba(0,0,0,.1);pointer-events:none;display:flex;align-items:center;gap:5px;color:var(--ink-l)}
-.map-badge b{color:var(--salmon)}
-.umark{width:14px;height:14px;border-radius:50%;background:#4A90D9;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(74,144,217,.5)}
-.pop{font-family:'DM Sans',sans-serif}
-.pop-h{background:var(--ink);padding:12px 14px;display:flex;gap:10px;align-items:center}
-.pop-av{font-size:22px;width:40px;height:40px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center}
-.pop-name{color:#fff;font-family:'Fraunces',serif;font-size:14px;font-weight:600}
-.pop-spec{color:rgba(255,255,255,.5);font-size:10px;margin-top:2px}
-.pop-b{padding:10px 12px}
-.pop-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.pop-rat{color:#F0A500;font-size:11px;font-weight:500}
-.pop-price{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--salmon)}
-.pop-price small{font-size:9px;font-weight:400;color:var(--sand)}
-.pop-btn{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
-
-/* BOOKING PANEL */
-.bpanel{position:absolute;top:12px;right:12px;bottom:12px;width:300px;background:var(--white);border-radius:var(--r-lg);box-shadow:0 8px 40px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden;transform:translateX(330px);transition:.35s cubic-bezier(.34,1.2,.64,1);z-index:300;border:1px solid var(--beige-d)}
-.bpanel.show{transform:translateX(0)}
-.bp-head{background:var(--ink);padding:16px;display:flex;gap:10px;align-items:center;position:relative;flex-shrink:0}
-.bp-av{font-size:26px;width:44px;height:44px;background:rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.bp-name{font-family:'Fraunces',serif;font-size:16px;color:#fff;font-weight:600}
-.bp-spec{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
-.bp-close{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
-.bp-body{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--beige-d) transparent}
-.bp-stats{display:flex;gap:6px;margin-bottom:14px}
-.bstat{flex:1;background:var(--beige);border-radius:10px;padding:8px;text-align:center}
-.bstat-v{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--salmon)}
-.bstat-l{font-size:9px;color:var(--sand);margin-top:1px}
-.sec-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);margin-bottom:7px}
-.pmenu{background:var(--beige);border:1.5px solid var(--beige-d);border-radius:10px;padding:9px 11px;margin-bottom:6px;cursor:pointer;transition:.15s}
-.pmenu:hover,.pmenu.on{border-color:var(--salmon);background:#FDEEE8}
-.pm-top{display:flex;justify-content:space-between;align-items:center}
-.pm-name{font-size:12px;font-weight:500}
-.pm-price{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--salmon)}
-.pm-desc{font-size:10px;color:var(--ink-l);margin-top:3px;line-height:1.4}
-.guests-row{display:flex;align-items:center;justify-content:space-between;background:var(--beige);border-radius:10px;padding:10px 14px;margin-bottom:14px}
-.guests-lbl{font-size:12px;font-weight:500}
-.guests-ctrl{display:flex;align-items:center;gap:10px}
-.g-btn{width:26px;height:26px;border-radius:50%;background:var(--white);border:1.5px solid var(--beige-d);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--ink);line-height:1}
-.g-btn:hover{border-color:var(--salmon);color:var(--salmon)}
-.g-count{font-family:'Fraunces',serif;font-size:16px;font-weight:600;min-width:20px;text-align:center}
-.date-row{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
-.date-row::-webkit-scrollbar{display:none}
-.dpill{padding:6px 10px;border-radius:8px;border:1.5px solid var(--beige-d);cursor:pointer;text-align:center;flex-shrink:0;transition:.15s;background:var(--white)}
-.dpill.on{border-color:var(--salmon);background:#FDEEE8}
-.dpill-d{font-size:11px;font-weight:500}
-.dpill-m{font-size:9px;color:var(--sand)}
-.slot-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
-.slot{padding:5px 10px;border-radius:7px;background:var(--beige);font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:.15s}
-.slot:hover,.slot.on{background:#FDEEE8;border-color:var(--salmon);color:var(--salmon)}
-.slot.busy{opacity:.35;cursor:not-allowed;text-decoration:line-through}
-.order-box{background:var(--beige);border-radius:12px;padding:12px;margin-bottom:14px}
-.ol{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--ink-l)}
-.ol.tot{font-size:13px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-d);padding-top:7px;margin-top:4px}
-.btn-pay{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
-
-/* MODAL */
-.ov{position:fixed;inset:0;background:rgba(30,28,24,.55);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
-.ov.show{opacity:1;pointer-events:all}
-.modal{background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92dvh;overflow-y:auto;transform:translateY(100%);transition:.35s cubic-bezier(.34,1.15,.64,1)}
-.ov.show .modal{transform:translateY(0)}
-.mh{background:var(--ink);padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
-.mt{font-family:'Fraunces',serif;color:#fff;font-size:20px;font-weight:600}
-.mc{color:rgba(255,255,255,.5);cursor:pointer;font-size:22px;line-height:1}
-.mb{padding:18px 20px 36px}
-.stripe-badge{display:flex;align-items:center;gap:6px;background:var(--beige);border-radius:8px;padding:7px 12px;margin-bottom:14px;font-size:11px;color:var(--ink-l)}
-.stripe-badge b{color:var(--olive)}
-.pay-osum{background:var(--beige);border-radius:12px;padding:13px;margin-bottom:16px}
-.pol{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--ink-l)}
-.pol.tot{font-size:14px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-d);padding-top:8px;margin-top:4px}
-.fl{font-size:11px;color:var(--ink-l);margin-bottom:4px;font-weight:500}
-.fi{background:var(--beige);border:1.5px solid var(--beige-d);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;margin-bottom:11px;color:var(--ink);transition:.15s}
-.fi:focus{border-color:var(--salmon);background:var(--white)}
-.crow{display:flex;gap:8px}.crow>div{flex:1}
-.pmethods{display:flex;gap:6px;margin-bottom:14px}
-.pmethod{flex:1;padding:9px;border-radius:9px;border:1.5px solid var(--beige-d);font-size:11px;font-weight:500;cursor:pointer;background:var(--white);text-align:center;transition:.15s}
-.pmethod.on{border-color:var(--salmon);background:#FDEEE8;color:var(--salmon)}
-.btn-confirm{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.success{text-align:center;padding:20px 10px}
-.s-icon{font-size:54px;margin-bottom:10px}
-.s-title{font-family:'Fraunces',serif;font-size:22px;margin-bottom:6px}
-.s-sub{font-size:12px;color:var(--ink-l);line-height:1.7}
-.s-ref{background:var(--beige);border-radius:12px;padding:12px;margin:14px 0;text-align:left}
-.s-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--ink-l)}
-
-.empty{text-align:center;padding:40px 16px;color:var(--ink-l)}
-.empty-icon{font-size:36px;margin-bottom:8px}
-
-@media(max-width:768px){
-  .sidebar{width:100%;border-right:none}
-  .map-area{display:none}
-  .bpanel{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:88dvh;border-radius:20px 20px 0 0;transform:translateY(100%)}
-  .bpanel.show{transform:translateY(0)}
-}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.8)!important;padding:2px 7px!important;border-radius:6px!important}
+.mpin{background:var(--ink);color:#fff;padding:6px 12px;border-radius:50px;font-size:11px;font-weight:500;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.22);display:inline-flex;align-items:center;gap:5px;position:relative;cursor:pointer;font-family:'Outfit',sans-serif;transition:transform .15s;border:1.5px solid rgba(255,255,255,.12)}
+.mpin::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink);border-bottom:none}
+.mpin.on{background:var(--terra);border-color:rgba(255,255,255,.2)}
+.mpin.on::after{border-top-color:var(--terra)}
+.mpin-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
+.map-badge{position:absolute;top:14px;left:14px;z-index:400;background:rgba(255,255,255,.96);border-radius:50px;padding:7px 16px;font-size:12px;color:var(--ink-2);box-shadow:0 2px 12px rgba(0,0,0,.1);pointer-events:none;display:flex;align-items:center;gap:6px;border:1px solid var(--beige-2)}
+.map-badge b{color:var(--terra);font-weight:600}
+.umark{width:16px;height:16px;border-radius:50%;background:#2E86C1;border:3px solid #fff;box-shadow:0 2px 8px rgba(46,134,193,.4)}
+.pop{font-family:'Outfit',sans-serif}
+.pop-h{background:var(--ink);padding:14px;display:flex;gap:10px;align-items:center}
+.pop-av{font-size:24px;width:44px;height:44px;background:rgba(255,255,255,.08);border-radius:12px;display:flex;align-items:center;justify-content:center}
+.pop-name{color:#fff;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:500}
+.pop-spec{color:rgba(255,255,255,.45);font-size:10px;margin-top:2px}
+.pop-b{padding:12px}
+.pop-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.pop-rat{color:#D4940A;font-size:12px;font-weight:500}
+.pop-price{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra)}
+.pop-price small{font-size:10px;font-weight:300;color:var(--ink-3)}
+.pop-btn{width:100%;background:var(--terra);color:#fff;border:none;border-radius:10px;padding:9px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif}
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;background:rgba(24,22,15,.45);backdrop-filter:blur(6px);z-index:500;opacity:0;pointer-events:none;transition:.3s}
+.drawer-overlay.show{opacity:1;pointer-events:all}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;background:var(--white);z-index:600;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1);box-shadow:-16px 0 60px rgba(0,0,0,.12)}
+.drawer.show{transform:translateX(0)}
+.drawer-head{background:var(--ink);padding:20px;display:flex;gap:12px;align-items:center;flex-shrink:0;position:relative}
+.dh-av{font-size:30px;width:54px;height:54px;background:rgba(255,255,255,.08);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dh-name{font-family:'Cormorant Garamond',serif;font-size:20px;color:#fff;font-weight:500}
+.dh-spec{font-size:11px;color:rgba(255,255,255,.4);margin-top:3px}
+.dh-close{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+.dh-close:hover{background:rgba(255,255,255,.2)}
+.drawer-body{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(--beige-2) transparent}
+.drawer-section{margin-bottom:20px}
+.drawer-sec-lbl{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.d-stats{display:flex;gap:8px}
+.dstat{flex:1;background:var(--beige);border-radius:12px;padding:10px;text-align:center}
+.dstat-v{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:var(--terra)}
+.dstat-l{font-size:9px;color:var(--ink-3);margin-top:2px}
+.d-menu{display:flex;align-items:center;gap:10px;background:var(--beige);border:1.5px solid transparent;border-radius:14px;padding:11px 13px;margin-bottom:7px;cursor:pointer;transition:.15s}
+.d-menu:hover,.d-menu.on{border-color:var(--terra);background:#FAF0EB}
+.d-menu-emoji{font-size:22px;flex-shrink:0}
+.d-menu-info{flex:1;min-width:0}
+.d-menu-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.d-menu-desc{font-size:11px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-menu-price{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--terra);flex-shrink:0}
+.d-guests{display:flex;align-items:center;justify-content:space-between;background:var(--beige);border-radius:14px;padding:12px 16px}
+.d-guests-lbl{font-size:13px;font-weight:500}
+.d-guests-ctrl{display:flex;align-items:center;gap:12px}
+.g-btn{width:28px;height:28px;border-radius:50%;background:var(--white);border:1.5px solid var(--beige-2);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--ink);line-height:1;transition:.15s}
+.g-btn:hover{border-color:var(--terra);color:var(--terra)}
+.g-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;min-width:24px;text-align:center}
+/* CALENDAR */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-month{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:500}
+.cal-nav{display:flex;gap:4px}
+.cal-nav-btn{width:28px;height:28px;border-radius:8px;background:var(--beige);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-2);transition:.15s}
+.cal-nav-btn:hover{background:var(--beige-2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-day-name{text-align:center;font-size:10px;font-weight:500;color:var(--ink-3);padding:4px 0;letter-spacing:.05em}
+.cal-day{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:.15s;position:relative;color:var(--ink)}
+.cal-day:hover:not(.empty):not(.past){background:var(--beige)}
+.cal-day.empty{cursor:default}
+.cal-day.past{color:var(--ink-3);cursor:not-allowed}
+.cal-day.available:not(.past){color:var(--olive);font-weight:500}
+.cal-day.available:not(.past)::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--olive-l)}
+.cal-day.selected{background:var(--terra)!important;color:#fff!important;font-weight:600}
+.cal-day.selected::after{display:none}
+.cal-day.today{font-weight:600}
+.cal-day.today:not(.selected)::before{content:'';position:absolute;top:3px;right:3px;width:4px;height:4px;border-radius:50%;background:var(--terra)}
+.slots-grid{display:flex;gap:6px;flex-wrap:wrap}
+.tslot{padding:7px 14px;border-radius:10px;background:var(--beige);font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+.tslot:hover{border-color:var(--terra)}
+.tslot.on{background:#FAF0EB;border-color:var(--terra);color:var(--terra);font-weight:600}
+.tslot.busy{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.slots-empty{font-size:12px;color:var(--ink-3);padding:8px 0}
+.d-summary{background:var(--beige);border-radius:16px;padding:14px}
+.d-sum-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:6px}
+.d-sum-row.tot{font-size:14px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-2);padding-top:9px;margin-top:4px}
+.btn-pay-now{width:100%;background:var(--terra);color:#fff;border:none;border-radius:14px;padding:15px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;transition:.2s}
+.btn-pay-now:hover{background:#b05030}
+/* PAYMENT */
+.pay-overlay{position:fixed;inset:0;background:rgba(24,22,15,.6);backdrop-filter:blur(8px);z-index:700;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.pay-overlay.show{opacity:1;pointer-events:all}
+.pay-modal{background:var(--white);border-radius:24px 24px 0 0;width:100%;max-width:520px;max-height:92dvh;overflow-y:auto;transform:translateY(100%);transition:.35s cubic-bezier(.4,0,.2,1)}
+.pay-overlay.show .pay-modal{transform:translateY(0)}
+.pm-head{background:var(--ink);padding:20px 22px;display:flex;justify-content:space-between;align-items:center}
+.pm-title{font-family:'Cormorant Garamond',serif;color:#fff;font-size:22px;font-weight:500}
+.pm-close{color:rgba(255,255,255,.4);cursor:pointer;font-size:22px;line-height:1}
+.pm-body{padding:20px 22px 36px}
+.stripe-info{display:flex;align-items:center;gap:8px;background:#EAF0DE;border-radius:10px;padding:9px 13px;font-size:12px;color:var(--olive);margin-bottom:16px;font-weight:500}
+.pay-recap{background:var(--beige);border-radius:14px;padding:14px;margin-bottom:18px}
+.pr-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:6px}
+.pr-row.tot{font-size:14px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-2);padding-top:9px;margin-top:4px}
+.pay-methods{display:flex;gap:7px;margin-bottom:16px}
+.pmethod{flex:1;padding:10px;border-radius:11px;border:1.5px solid var(--beige-2);font-size:12px;font-weight:500;cursor:pointer;background:var(--white);text-align:center;transition:.15s}
+.pmethod.on{border-color:var(--terra);background:#FAF0EB;color:var(--terra)}
+.pay-fl{font-size:11px;color:var(--ink-2);margin-bottom:5px;font-weight:500}
+.pay-fi{background:var(--beige);border:1.5px solid var(--beige-2);border-radius:11px;padding:12px 15px;font-family:'Outfit',sans-serif;font-size:14px;width:100%;outline:none;margin-bottom:12px;color:var(--ink);transition:.15s}
+.pay-fi:focus{border-color:var(--terra);background:var(--white)}
+.pay-row{display:flex;gap:10px}
+.pay-row>div{flex:1}
+.btn-confirm{width:100%;background:var(--terra);color:#fff;border:none;border-radius:14px;padding:16px;font-family:'Outfit',sans-serif;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.btn-confirm:hover{background:#b05030}
+.pay-success{text-align:center;padding:24px 10px}
+.ps-icon{font-size:58px;margin-bottom:12px}
+.ps-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;margin-bottom:8px}
+.ps-sub{font-size:13px;color:var(--ink-2);line-height:1.7}
+.ps-ref{background:var(--beige);border-radius:14px;padding:14px;margin:16px 0;text-align:left}
+.ps-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2);margin-bottom:5px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--ink-3)}
+.empty-state-icon{font-size:40px;margin-bottom:12px}
+@media(max-width:768px){.chef-list-panel{width:100%;border-right:none}.map-panel{display:none}.drawer{width:100%}}
 </style>
 </head>
 <body>
-
-<nav>
-  <div class="logo"><div class="logo-dot"></div>BackCooker</div>
-  <div class="nav-city">📍 Marseille</div>
-  <div class="nav-r">
-    <button class="btn-pro">Devenir BackCooker</button>
-    <div class="nav-av">S</div>
-  </div>
-</nav>
-
-<div class="searchbar">
-  <div class="si">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8B99A" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input id="searchInput" type="text" placeholder="Cuisine, plat, chef, quartier...">
-  </div>
-</div>
-
-<div class="tabs">
-  <div class="tab on">Explorer</div>
-  <div class="tab">Mes réservations</div>
-  <div class="tab">Favoris</div>
-</div>
-
-<div class="main">
-  <div class="sidebar">
-    <div class="filters">
-      <div class="ftag on" data-cat="tous">Tous</div>
-      <div class="ftag" data-cat="maghreb">🥘 Maghrébin</div>
-      <div class="ftag" data-cat="asiatique">🍜 Asiatique</div>
-      <div class="ftag" data-cat="africain">🫕 Africain</div>
-      <div class="ftag" data-cat="vege">🌿 Végétarien</div>
-      <div class="ftag" data-cat="grill">🔥 Grill</div>
-      <div class="ftag" data-cat="mer">🐟 Mer</div>
-    </div>
-    <div class="clist">
-      <div class="slbl" id="slbl">Cuisiniers disponibles à Marseille</div>
-      <div id="cardList"></div>
-    </div>
-  </div>
-
-  <div class="map-area">
-    <div id="map"></div>
-    <div class="map-badge">📍 <b id="mapcount">10</b> cuisiniers · Marseille</div>
-
-    <div class="bpanel" id="bpanel">
-      <div class="bp-head">
-        <div class="bp-av" id="bpav">👩🏻‍🍳</div>
-        <div><div class="bp-name" id="bpname">—</div><div class="bp-spec" id="bpspec">—</div></div>
-        <div class="bp-close" onclick="closePanel()">✕</div>
+<div class="screen" id="s-land">
+  <div class="land-bg"></div>
+  <div class="land-content">
+    <div class="land-eyebrow">Cuisiniers à domicile</div>
+    <div class="land-logo">Back<em>Cooker</em></div>
+    <div class="land-sub">Des cuisiniers passionnés préparent pour vous, chez vous. Entrez votre ville pour découvrir les talents autour de vous.</div>
+    <div class="city-wrap">
+      <div class="city-input-row">
+        <div class="city-icon">📍</div>
+        <input class="city-input" id="cityInput" type="text" placeholder="Entrez votre ville..." autocomplete="off" oninput="onCityInput(this.value)" onkeydown="onCityKey(event)">
+        <button class="city-btn" onclick="goToCity()">Trouver →</button>
       </div>
-      <div class="bp-body">
-        <div class="bp-stats" id="bpstats"></div>
-        <div class="sec-lbl">Choisir un menu</div>
-        <div id="bpmenus"></div>
-        <div class="sec-lbl" style="margin-top:12px">Convives</div>
-        <div class="guests-row">
-          <span class="guests-lbl">Nombre de personnes</span>
-          <div class="guests-ctrl">
-            <div class="g-btn" onclick="changeGuests(-1)">−</div>
-            <span class="g-count" id="gcount">2</span>
-            <div class="g-btn" onclick="changeGuests(1)">+</div>
-          </div>
-        </div>
-        <div class="sec-lbl">Date</div>
-        <div class="date-row" id="dateRow"></div>
-        <div class="sec-lbl" style="margin-top:8px">Créneau</div>
-        <div class="slot-row">
-          <div class="slot busy">12h00</div>
-          <div class="slot" onclick="pickSlot(this)">13h00</div>
-          <div class="slot on" onclick="pickSlot(this)">19h00</div>
-          <div class="slot" onclick="pickSlot(this)">19h30</div>
-          <div class="slot" onclick="pickSlot(this)">20h00</div>
-          <div class="slot" onclick="pickSlot(this)">20h30</div>
-          <div class="slot busy">21h30</div>
-        </div>
-        <div class="sec-lbl">Récapitulatif</div>
-        <div class="order-box">
-          <div class="ol"><span>Menu</span><span id="sumMenu">—</span></div>
-          <div class="ol"><span id="sumQty">2 pers.</span><span id="sumSub">—</span></div>
-          <div class="ol"><span>Frais de service</span><span>3€</span></div>
-          <div class="ol tot"><span>Total</span><span id="sumTot">—</span></div>
-        </div>
-        <button class="btn-pay" onclick="openPayment()">💳 Réserver & Payer</button>
-      </div>
+      <div class="city-suggestions" id="citySugg"></div>
+    </div>
+    <div class="land-cities">
+      <div class="city-chip" onclick="selectCity('Marseille')">Marseille</div>
+      <div class="city-chip" onclick="selectCity('Paris')">Paris</div>
+      <div class="city-chip" onclick="selectCity('Lyon')">Lyon</div>
+      <div class="city-chip" onclick="selectCity('Nice')">Nice</div>
+      <div class="city-chip" onclick="selectCity('Bordeaux')">Bordeaux</div>
+      <div class="city-chip" onclick="selectCity('Toulouse')">Toulouse</div>
     </div>
   </div>
 </div>
-
-<!-- PAYMENT -->
-<div class="ov" id="ov">
-  <div class="modal">
-    <div class="mh"><div class="mt">Paiement sécurisé</div><div class="mc" onclick="closePayment()">✕</div></div>
-    <div class="mb" id="payBody">
-      <div class="stripe-badge">🔒 Paiement sécurisé via <b>Stripe</b> — données chiffrées SSL</div>
-      <div class="pay-osum">
-        <div class="pol"><span>Chef</span><span id="pChef">—</span></div>
-        <div class="pol"><span>Menu</span><span id="pMenu">—</span></div>
-        <div class="pol"><span>Date & heure</span><span id="pDate">—</span></div>
-        <div class="pol"><span id="pQtyLine">—</span><span id="pSub">—</span></div>
-        <div class="pol"><span>Frais de service</span><span>3€</span></div>
-        <div class="pol tot"><span>Total à payer</span><span id="pTot">—</span></div>
+<div class="screen hidden" id="s-app">
+  <div class="app-nav">
+    <div class="app-logo" onclick="goBack()"><div class="app-logo-dot"></div>Back<span>Cooker</span></div>
+    <div class="nav-city-pill" onclick="goBack()" id="navCityPill">📍 Marseille</div>
+    <div class="nav-r"><button class="btn-pro">Devenir BackCooker</button><div class="nav-av">S</div></div>
+  </div>
+  <div class="hero-strip">
+    <div class="hero-txt">Cuisiniers autour de <em id="heroCity">Marseille</em></div>
+    <div class="hero-count" id="heroCount">10 chefs · ~20 km</div>
+  </div>
+  <div class="sf-bar">
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89E8E" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Chef, cuisine, plat..." oninput="renderCards()">
+    </div>
+  </div>
+  <div class="filter-scroll">
+    <div class="ftag on" data-cat="tous">Tous</div>
+    <div class="ftag" data-cat="maghreb">🥘 Maghrébin</div>
+    <div class="ftag" data-cat="asiatique">🍜 Asiatique</div>
+    <div class="ftag" data-cat="africain">🫕 Africain</div>
+    <div class="ftag" data-cat="vege">🌿 Végétarien</div>
+    <div class="ftag" data-cat="grill">🔥 Grill</div>
+    <div class="ftag" data-cat="mer">🐟 Mer</div>
+  </div>
+  <div class="app-main">
+    <div class="chef-list-panel">
+      <div class="list-header" id="listHeader">Cuisiniers disponibles</div>
+      <div class="chef-scroll" id="cardList"></div>
+    </div>
+    <div class="map-panel">
+      <div id="map"></div>
+      <div class="map-badge">📍 <b id="mapCount">10</b> chefs dans un rayon de 20 km</div>
+    </div>
+  </div>
+</div>
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="dh-av" id="dhAv">👩🏻‍🍳</div>
+    <div><div class="dh-name" id="dhName">—</div><div class="dh-spec" id="dhSpec">—</div></div>
+    <div class="dh-close" onclick="closeDrawer()">✕</div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section"><div class="drawer-sec-lbl">À propos</div><div class="d-stats" id="dStats"></div></div>
+    <div class="drawer-section"><div class="drawer-sec-lbl">Choisir un menu</div><div id="dMenus"></div></div>
+    <div class="drawer-section">
+      <div class="drawer-sec-lbl">Nombre de convives</div>
+      <div class="d-guests"><span class="d-guests-lbl">Personnes</span><div class="d-guests-ctrl"><div class="g-btn" onclick="changeGuests(-1)">−</div><span class="g-num" id="gNum">2</span><div class="g-btn" onclick="changeGuests(1)">+</div></div></div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-sec-lbl">Calendrier de disponibilités</div>
+      <div class="cal-header"><div class="cal-month" id="calMonth">—</div><div class="cal-nav"><button class="cal-nav-btn" onclick="prevMonth()">‹</button><button class="cal-nav-btn" onclick="nextMonth()">›</button></div></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="drawer-section"><div class="drawer-sec-lbl">Créneaux horaires</div><div id="slotsWrap"></div></div>
+    <div class="drawer-section">
+      <div class="drawer-sec-lbl">Récapitulatif</div>
+      <div class="d-summary">
+        <div class="d-sum-row"><span>Menu</span><span id="sumMenu">—</span></div>
+        <div class="d-sum-row"><span id="sumQty">2 pers.</span><span id="sumSub">—</span></div>
+        <div class="d-sum-row"><span>Frais de service</span><span>3 €</span></div>
+        <div class="d-sum-row tot"><span>Total</span><span id="sumTot">—</span></div>
       </div>
-      <div class="fl">Moyen de paiement</div>
-      <div class="pmethods">
-        <div class="pmethod on">💳 Carte</div>
-        <div class="pmethod">📱 Apple Pay</div>
-        <div class="pmethod">🅿️ PayPal</div>
+      <button class="btn-pay-now" onclick="openPayment()">💳 Réserver & Payer</button>
+    </div>
+  </div>
+</div>
+<div class="pay-overlay" id="payOverlay">
+  <div class="pay-modal">
+    <div class="pm-head"><div class="pm-title">Paiement sécurisé</div><div class="pm-close" onclick="closePayment()">✕</div></div>
+    <div class="pm-body" id="payBody">
+      <div class="stripe-info">🔒 Paiement sécurisé via Stripe — chiffrement SSL 256 bits</div>
+      <div class="pay-recap">
+        <div class="pr-row"><span>Chef</span><span id="pChef">—</span></div>
+        <div class="pr-row"><span>Menu</span><span id="pMenu">—</span></div>
+        <div class="pr-row"><span>Date & heure</span><span id="pDate">—</span></div>
+        <div class="pr-row"><span id="pQty">—</span><span id="pSub">—</span></div>
+        <div class="pr-row"><span>Frais de service</span><span>3 €</span></div>
+        <div class="pr-row tot"><span>Total à payer</span><span id="pTot">—</span></div>
       </div>
-      <div class="fl">Titulaire</div>
-      <input class="fi" type="text" placeholder="Prénom Nom">
-      <div class="fl">Numéro de carte</div>
-      <input class="fi" type="tel" inputmode="numeric" placeholder="1234 5678 9012 3456" oninput="fmtCard(this)">
-      <div class="crow">
-        <div><div class="fl">Expiration</div><input class="fi" placeholder="MM / AA" oninput="fmtExp(this)"></div>
-        <div><div class="fl">CVV</div><input class="fi" type="tel" placeholder="•••" maxlength="3"></div>
+      <div class="pay-methods"><div class="pmethod on">💳 Carte</div><div class="pmethod">📱 Apple Pay</div><div class="pmethod">🅿️ PayPal</div></div>
+      <div class="pay-fl">Titulaire</div><input class="pay-fi" type="text" placeholder="Prénom Nom">
+      <div class="pay-fl">Numéro de carte</div><input class="pay-fi" type="tel" inputmode="numeric" placeholder="1234 5678 9012 3456" oninput="fmtCard(this)">
+      <div class="pay-row">
+        <div><div class="pay-fl">Expiration</div><input class="pay-fi" placeholder="MM / AA" oninput="fmtExp(this)"></div>
+        <div><div class="pay-fl">CVV</div><input class="pay-fi" type="tel" placeholder="•••" maxlength="3"></div>
       </div>
       <button class="btn-confirm" onclick="confirmPayment()">🔒 Payer <span id="confirmAmt">—</span></button>
     </div>
   </div>
 </div>
-
 <script>
+const CITIES={Marseille:{lat:43.2965,lng:5.3698,chefs:[0,1,2,3,4,5,6,7,8,9]},Paris:{lat:48.8566,lng:2.3522,chefs:[0,2,3,5,7,8]},Lyon:{lat:45.764,lng:4.8357,chefs:[1,4,6,9]},Nice:{lat:43.7102,lng:7.262,chefs:[0,3,5,8,9]},Bordeaux:{lat:44.8378,lng:-.5792,chefs:[2,4,6,7]},Toulouse:{lat:43.6047,lng:1.4442,chefs:[1,3,5,6,8]}};
+const CITY_LIST=['Marseille','Paris','Lyon','Nice','Bordeaux','Toulouse','Montpellier','Nantes','Strasbourg','Rennes'];
 const chefs=[
-  {av:'👩🏻‍🍳',name:'Amina Benali',spec:'Cuisine marocaine · Tagines & Couscous',rat:4.9,meals:127,dist:'0.8km',price:28,lat:43.2965,lng:5.3698,cat:'maghreb',dispo:true,exp:'8 ans',
-   bio:'Née à Fès, Amina a grandi dans la cuisine de sa grand-mère. Installée à Marseille depuis 2015, elle apporte l\'authenticité des saveurs marocaines avec des produits du marché de Noailles.',
-   menus:[{label:'🥘 Tagine agneau',desc:'Agneau confit 4h, pruneaux, amandes, safran',prix:28,tags:['Sans gluten','Halal']},{label:'🫕 Couscous royal',desc:'Méchoui, merguez artisanales, 7 légumes',prix:32,tags:['Halal','Familial']},{label:'🥗 Salade marocaine',desc:'Tomate, concombre, poivrons, chermoula',prix:14,tags:['Végétarien']},{label:'🍮 Pastilla',desc:'Feuilles de brick, cannelle, pigeons confits',prix:18,tags:['Traditionnel']}]},
-  {av:'👨🏾‍🍳',name:'Kofi Asante',spec:'Cuisine africaine · Spécialités ivoiriennes',rat:4.8,meals:89,dist:'1.4km',price:24,lat:43.3010,lng:5.3620,cat:'africain',dispo:true,exp:'5 ans',
-   bio:'Kofi a quitté Abidjan pour Marseille en 2018 avec ses recettes familiales. Ancien cuisinier dans un restaurant étoilé, il revisite la cuisine ivoirienne avec une touche contemporaine.',
-   menus:[{label:'🍚 Riz gras',desc:'Riz parfumé, légumes sautés, épices maison',prix:22,tags:['Sans gluten']},{label:'🫕 Foutou banane',desc:'Banane pilée, sauce arachide, crevettes',prix:24,tags:['Traditionnel']},{label:'🥬 Sauce graine',desc:'Huile de palme, poisson fumé, légumes',prix:26,tags:['Halal']},{label:'🍖 Poulet braisé',desc:'Marinade citronnelle 24h, braise charbon',prix:28,tags:['Halal','Grillé']}]},
-  {av:'👩🏽‍🍳',name:'Linh Nguyen',spec:'Cuisine vietnamienne · Phở & Bánh mì',rat:4.7,meals:203,dist:'2.1km',price:22,lat:43.2890,lng:5.3780,cat:'asiatique',dispo:false,exp:'12 ans',
-   bio:'Linh est arrivée de Hanoï il y a 15 ans. Elle prépare son bouillon de phở pendant 12h la nuit. Ses bánh mì utilisent une baguette artisanale du boulanger du coin.',
-   menus:[{label:'🍜 Phở bœuf',desc:'Bouillon mijoté 12h, bœuf tranché, herbes',prix:22,tags:['Sans lactose']},{label:'🥪 Bánh mì',desc:'Baguette croustillante, pâté, pickles maison',prix:16,tags:['Léger']},{label:'🥗 Salade papaye',desc:'Papaye verte, crevettes, nuoc-mâm maison',prix:14,tags:['Sans gluten']},{label:'🍮 Chè coco',desc:'Lait de coco, haricots rouges, tapioca',prix:10,tags:['Végétarien']}]},
-  {av:'👩🏼‍🍳',name:'Yuki Tanaka',spec:'Cuisine japonaise · Ramen & Sushi',rat:4.9,meals:118,dist:'1.9km',price:30,lat:43.3050,lng:5.3750,cat:'asiatique',dispo:true,exp:'10 ans',
-   bio:'Ancienne cheffe à Tokyo, Yuki s\'est installée à Marseille pour sa lumière méditerranéenne. Elle marie la précision japonaise avec les produits de la mer marseillaise.',
-   menus:[{label:'🍜 Ramen tonkotsu',desc:'Bouillon porc 18h, chashu, œuf mollet mariné',prix:28,tags:['Signature']},{label:'🍱 Bento sushi',desc:'8 nigiri poissons locaux, miso, wakamé',prix:30,tags:['Frais']},{label:'🥟 Gyoza maison',desc:'Raviolis porc-ciboulette, sauce ponzu yuzu',prix:14,tags:['Artisanal']},{label:'🍡 Mochi glacé',desc:'Matcha, fraise ou yuzu, pâte de riz maison',prix:10,tags:['Végétarien']}]},
-  {av:'👨🏻‍🍳',name:'Marco Ferreira',spec:'Cuisine portugaise · Pasteis & Grillades',rat:4.6,meals:56,dist:'2.8km',price:32,lat:43.2850,lng:5.3650,cat:'grill',dispo:true,exp:'15 ans',
-   bio:'Marco, fils de pêcheur de Porto, achète ses poissons à 5h à la criée du Vieux-Port. Il cuisine les produits méditerranéens avec les techniques traditionnelles portugaises.',
-   menus:[{label:'🐟 Bacalhau',desc:'Morue effilochée, pommes paille, olives, œufs',prix:32,tags:['Traditionnel']},{label:'🥩 Côte de bœuf',desc:'Ibérique maturé 45j, chimichurri, braises',prix:38,tags:['Signature','Grillé']},{label:'🍮 Pastel de nata',desc:'Flan crémeux, pâte feuilletée maison, cannelle',prix:8,tags:['Artisanal']},{label:'🍲 Caldo verde',desc:'Soupe chou kale, chorizo fumé, huile olive',prix:14,tags:['Traditionnel']}]},
-  {av:'👩🏿‍🍳',name:'Fatou Diallo',spec:'Cuisine sénégalaise · Thiéboudiène',rat:5.0,meals:41,dist:'3.2km',price:26,lat:43.2920,lng:5.3820,cat:'africain',dispo:true,exp:'6 ans',
-   bio:'Fatou a appris à cuisiner avec sa mère à Dakar. Son thiéboudiène nécessite 3h de préparation avec des épices qu\'elle ramène personnellement du Sénégal.',
-   menus:[{label:'🐟 Thiéboudiène',desc:'Riz au poisson de la criée, légumes, tamarin',prix:26,tags:['Signature']},{label:'🍚 Mafé',desc:'Bœuf en sauce arachide fumée, légumes racines',prix:28,tags:['Halal','Familial']},{label:'🥜 Yassa poulet',desc:'Poulet mariné citron-oignon 24h, basmati',prix:24,tags:['Halal']},{label:'🍮 Thiakry',desc:'Semoule au lait caillé sucré, vanille bourbon',prix:10,tags:['Végétarien']}]},
-  {av:'👨🏽‍🍳',name:'Karim Mansouri',spec:'Cuisine algérienne · Chorba & Tajines',rat:4.7,meals:73,dist:'2.4km',price:22,lat:43.3080,lng:5.3550,cat:'maghreb',dispo:true,exp:'7 ans',
-   bio:'Né à Oran, Karim cuisine avec émotion depuis ses 16 ans. Sa chorba frik est réputée dans tout le 13e. Il partage la convivialité algérienne à chaque table.',
-   menus:[{label:'🍲 Chorba frik',desc:'Blé vert, agneau de lait, tomates, coriandre',prix:16,tags:['Halal','Traditionnel']},{label:'🫕 Couscous tfina',desc:'Pois chiches, légumes confits, smen affiné',prix:22,tags:['Halal','Familial']},{label:'🥙 Karantika',desc:'Tarte pois chiches, cumin, harissa douce',prix:12,tags:['Végétarien']},{label:'🍮 Zlabia',desc:'Beignets miel de jujubier, fleur d\'oranger',prix:8,tags:['Végétarien']}]},
-  {av:'👩🏻‍🍳',name:'Priya Sharma',spec:'Cuisine indienne · Curry & Tandoor',rat:4.8,meals:95,dist:'3.5km',price:25,lat:43.2800,lng:5.3720,cat:'asiatique',dispo:false,exp:'9 ans',
-   bio:'Priya vient de Mumbai et est tombée amoureuse de Marseille lors d\'un voyage. Elle torréfie et moud ses masalas quotidiennement pour une fraîcheur incomparable.',
-   menus:[{label:'🍛 Butter chicken',desc:'Poulet tandoor 24h, sauce tomate-crème épicée',prix:25,tags:['Signature','Sans gluten']},{label:'🫘 Dal makhani',desc:'Lentilles noires 8h, beurre clarifié, masala',prix:20,tags:['Végétarien']},{label:'🫓 Naan maison',desc:'Pain tandoor, beurre clarifié, ail, coriandre',prix:8,tags:['Artisanal']},{label:'🍮 Kheer',desc:'Riz au lait, cardamome, pistaches, eau de rose',prix:10,tags:['Végétarien']}]},
-  {av:'👩🏽‍🍳',name:'Leila Ouazzani',spec:'Cuisine végétarienne · Bio & Créatif',rat:4.9,meals:156,dist:'1.1km',price:20,lat:43.3020,lng:5.3680,cat:'vege',dispo:true,exp:'4 ans',
-   bio:'Ancienne nutritionniste, Leila s\'approvisionne exclusivement en bio au marché de la Plaine. Elle crée des plats végétariens qui surprennent même les plus carnivores.',
-   menus:[{label:'🥗 Bowl soleil',desc:'Quinoa, avocat, légumes rôtis zaatar, tahini',prix:20,tags:['Vegan','Bio','Sans gluten']},{label:'🫕 Curry potiron',desc:'Potiron bio, lait coco, gingembre, coriandre',prix:18,tags:['Vegan','Bio']},{label:'🥙 Wrap falafel',desc:'Falafel maison, houmous fumé, légumes croquants',prix:16,tags:['Vegan']},{label:'🍮 Cheesecake cru',desc:'Cajou-dattes, citron vert, fruits rouges locaux',prix:12,tags:['Vegan','Raw']}]},
-  {av:'👨🏻‍🍳',name:'Pierre Roux',spec:'Cuisine provençale · Bouillabaisse & Mer',rat:4.8,meals:88,dist:'0.5km',price:35,lat:43.2950,lng:5.3760,cat:'mer',dispo:true,exp:'20 ans',
-   bio:'Pierre est marseillais de naissance. Fils de pêcheur du Vieux-Port, il achète ses poissons à 5h à la criée. Sa bouillabaisse respecte la charte officielle des restaurateurs marseillais.',
-   menus:[{label:'🐟 Bouillabaisse',desc:'Poissons de roche, rouille maison, croutons aillés',prix:45,tags:['Signature','Local','AOC']},{label:'🦞 Homard grillé',desc:'Homard breton, beurre noisette, légumes du soleil',prix:55,tags:['Premium','Grillé']},{label:'🥗 Salade niçoise',desc:'Thon albacore, œuf mollet, anchois Méditerranée',prix:18,tags:['Local','Léger']},{label:'🍮 Tarte tropézienne',desc:'Brioche moelleuse, crème diplomate vanille',prix:12,tags:['Provençal']}]},
+{av:'👩🏻‍🍳',name:'Amina Benali',spec:'Cuisine marocaine · Tagines & Couscous',rat:4.9,meals:127,dist:'0.8km',price:28,latOff:[-.005,.004],cat:'maghreb',dispo:true,exp:'8 ans',bio:'Née à Fès, Amina a grandi dans la cuisine de sa grand-mère. Installée en France depuis 2015, elle apporte l\'authenticité des saveurs marocaines avec des produits de marché soigneusement sélectionnés.',weekdays:[1,3,5,6],slots:{default:['12h30','13h00','19h00','19h30','20h00'],busy:['12h30']},menus:[{e:'🥘',label:'Tagine agneau',desc:'Agneau confit 4h, pruneaux, amandes, safran du Maroc',prix:28,tags:['Sans gluten','Halal']},{e:'🫕',label:'Couscous royal',desc:'Méchoui, merguez artisanales, 7 légumes du jardin',prix:32,tags:['Halal','Familial']},{e:'🥗',label:'Salade marocaine',desc:'Tomate, concombre, poivrons grillés, chermoula fraîche',prix:14,tags:['Végétarien']},{e:'🍮',label:'Pastilla sucrée',desc:'Feuilles de brick feuilletées, cannelle, pigeons confits',prix:18,tags:['Traditionnel']}]},
+{av:'👨🏾‍🍳',name:'Kofi Asante',spec:'Cuisine africaine · Spécialités ivoiriennes',rat:4.8,meals:89,dist:'1.4km',price:24,latOff:[.008,-.003],cat:'africain',dispo:true,exp:'5 ans',bio:'Kofi a quitté Abidjan pour la France en 2018 avec ses recettes familiales. Ancien cuisinier dans un restaurant étoilé, il revisite la cuisine ivoirienne avec une touche contemporaine.',weekdays:[2,4,6,0],slots:{default:['12h00','13h00','19h30','20h00','20h30'],busy:['12h00']},menus:[{e:'🍚',label:'Riz gras',desc:'Riz parfumé à la tomate, légumes sautés, épices maison',prix:22,tags:['Sans gluten']},{e:'🫕',label:'Foutou banane',desc:'Banane plantain pilée, sauce arachide, crevettes fraîches',prix:24,tags:['Traditionnel']},{e:'🥬',label:'Sauce graine',desc:'Huile de palme, poisson fumé, légumes de saison',prix:26,tags:['Halal']},{e:'🍖',label:'Poulet braisé',desc:'Marinade citronnelle 24h, braise au charbon de bois',prix:28,tags:['Halal','Grillé']}]},
+{av:'👩🏽‍🍳',name:'Linh Nguyen',spec:'Cuisine vietnamienne · Phở & Bánh mì',rat:4.7,meals:203,dist:'2.1km',price:22,latOff:[-.008,.009],cat:'asiatique',dispo:false,exp:'12 ans',bio:'Linh est arrivée de Hanoï il y a 15 ans. Elle prépare son bouillon de phở pendant 12h la nuit pour une saveur incomparable.',weekdays:[1,2,5],slots:{default:['12h00','19h00','19h30'],busy:[]},menus:[{e:'🍜',label:'Phở bœuf',desc:'Bouillon mijoté 12h, bœuf wagyu tranché, herbes fraîches',prix:22,tags:['Sans lactose']},{e:'🥪',label:'Bánh mì',desc:'Baguette croustillante, pâté maison, pickles, coriandre',prix:16,tags:['Léger']},{e:'🥗',label:'Salade papaye',desc:'Papaye verte, crevettes tigrées, nuoc-mâm maison',prix:14,tags:['Sans gluten']},{e:'🍮',label:'Chè coco',desc:'Lait de coco, haricots rouges, perles tapioca',prix:10,tags:['Végétarien']}]},
+{av:'👩🏼‍🍳',name:'Yuki Tanaka',spec:'Cuisine japonaise · Ramen & Sushi',rat:4.9,meals:118,dist:'1.9km',price:30,latOff:[.012,.006],cat:'asiatique',dispo:true,exp:'10 ans',bio:'Ancienne cheffe dans un restaurant de Tokyo, Yuki marie la précision japonaise avec les produits de la mer locale dans des créations uniques.',weekdays:[3,4,5,6],slots:{default:['12h30','18h30','19h00','19h30','20h30'],busy:['12h30','18h30']},menus:[{e:'🍜',label:'Ramen tonkotsu',desc:'Bouillon porc & poulet 18h, chashu maison, œuf mollet mariné',prix:28,tags:['Signature']},{e:'🍱',label:'Bento sushi mer',desc:'8 nigiri poissons locaux, soupe miso, salade wakamé',prix:30,tags:['Frais']},{e:'🥟',label:'Gyoza maison',desc:'Raviolis porc-ciboulette, sauce ponzu yuzu',prix:14,tags:['Artisanal']},{e:'🍡',label:'Mochi glacé',desc:'Mochi matcha, fraise ou yuzu, pâte de riz maison',prix:10,tags:['Végétarien']}]},
+{av:'👨🏻‍🍳',name:'Marco Ferreira',spec:'Cuisine portugaise · Pasteis & Grillades',rat:4.6,meals:56,dist:'2.8km',price:32,latOff:[-.01,-.008],cat:'grill',dispo:true,exp:'15 ans',bio:'Fils de pêcheur de Porto, Marco achète ses poissons à l\'aube à la criée locale. Il cuisine les produits méditerranéens avec les techniques traditionnelles portugaises.',weekdays:[0,2,5,6],slots:{default:['12h00','13h00','20h00','20h30','21h00'],busy:['21h00']},menus:[{e:'🐟',label:'Bacalhau à brás',desc:'Morue effilochée, pommes paille, olives, œufs brouillés',prix:32,tags:['Traditionnel']},{e:'🥩',label:'Côte de bœuf',desc:'Ibérique maturé 45j, chimichurri, braises de cerisier',prix:38,tags:['Signature','Grillé']},{e:'🍮',label:'Pastel de nata',desc:'Flan crémeux, pâte feuilletée maison, cannelle de Porto',prix:8,tags:['Artisanal']},{e:'🍲',label:'Caldo verde',desc:'Chou kale, chorizo fumé, huile d\'olive extra vierge',prix:14,tags:['Traditionnel']}]},
+{av:'👩🏿‍🍳',name:'Fatou Diallo',spec:'Cuisine sénégalaise · Thiéboudiène',rat:5.0,meals:41,dist:'3.2km',price:26,latOff:[-.004,.012],cat:'africain',dispo:true,exp:'6 ans',bio:'Fatou prépare son thiéboudiène avec des épices qu\'elle rapporte personnellement de Dakar. 3h de préparation pour un voyage culinaire au Sénégal.',weekdays:[0,1,4,6],slots:{default:['13h00','19h00','19h30','20h00'],busy:[]},menus:[{e:'🐟',label:'Thiéboudiène',desc:'Riz au poisson de la criée, légumes confits, sauce tamarin',prix:26,tags:['Signature']},{e:'🍚',label:'Mafé',desc:'Bœuf en sauce arachide fumée, légumes racines',prix:28,tags:['Halal','Familial']},{e:'🥜',label:'Yassa poulet',desc:'Poulet mariné citron-oignon 24h, basmati parfumé',prix:24,tags:['Halal']},{e:'🍮',label:'Thiakry',desc:'Semoule au lait caillé sucré, vanille bourbon',prix:10,tags:['Végétarien']}]},
+{av:'👨🏽‍🍳',name:'Karim Mansouri',spec:'Cuisine algérienne · Chorba & Tajines',rat:4.7,meals:73,dist:'2.4km',price:22,latOff:[.009,-.011],cat:'maghreb',dispo:true,exp:'7 ans',bio:'Né à Oran, Karim cuisine avec émotion depuis ses 16 ans. Sa chorba frik est réputée partout où il passe. Il partage la convivialité algérienne à chaque table.',weekdays:[2,3,5,6,0],slots:{default:['12h00','12h30','19h00','19h30','20h00','20h30'],busy:['12h00']},menus:[{e:'🍲',label:'Chorba frik',desc:'Blé vert, agneau de lait, tomates fraîches, coriandre',prix:16,tags:['Halal','Traditionnel']},{e:'🫕',label:'Couscous tfina',desc:'Pois chiches, légumes confits, smen de brebis affiné',prix:22,tags:['Halal','Familial']},{e:'🥙',label:'Karantika',desc:'Tarte aux pois chiches, cumin, harissa douce artisanale',prix:12,tags:['Végétarien']},{e:'🍮',label:'Zlabia',desc:'Beignets dorés au miel de jujubier, fleur d\'oranger',prix:8,tags:['Végétarien']}]},
+{av:'👩🏻‍🍳',name:'Priya Sharma',spec:'Cuisine indienne · Curry & Tandoor',rat:4.8,meals:95,dist:'3.5km',price:25,latOff:[-.012,.003],cat:'asiatique',dispo:false,exp:'9 ans',bio:'Priya vient de Mumbai. Elle torréfie et moud ses masalas quotidiennement. Ses currys mijotent minimum 4h pour une profondeur de saveur incomparable.',weekdays:[1,4,5],slots:{default:['19h00','19h30','20h00'],busy:[]},menus:[{e:'🍛',label:'Butter chicken',desc:'Poulet mariné tandoor 24h, sauce tomate-crème épicée maison',prix:25,tags:['Signature']},{e:'🫘',label:'Dal makhani',desc:'Lentilles noires 8h, beurre clarifié, garam masala maison',prix:20,tags:['Végétarien']},{e:'🫓',label:'Naan maison',desc:'Pain au four tandoor, beurre clarifié, ail et coriandre',prix:8,tags:['Artisanal']},{e:'🍮',label:'Kheer',desc:'Riz au lait parfumé cardamome, pistaches, eau de rose',prix:10,tags:['Végétarien']}]},
+{av:'👩🏽‍🍳',name:'Leila Ouazzani',spec:'Cuisine végétarienne · Bio & Créatif',rat:4.9,meals:156,dist:'1.1km',price:20,latOff:[.005,.01],cat:'vege',dispo:true,exp:'4 ans',bio:'Ancienne nutritionniste, Leila s\'approvisionne exclusivement en bio au marché local. Elle crée des plats végétariens qui surprennent même les plus carnivores.',weekdays:[0,1,2,3,4,5,6],slots:{default:['12h00','12h30','13h00','19h00','19h30','20h00','20h30'],busy:['12h00']},menus:[{e:'🥗',label:'Bowl soleil',desc:'Quinoa, avocat, légumes rôtis zaatar, tahini citron',prix:20,tags:['Vegan','Bio','Sans gluten']},{e:'🫕',label:'Curry potiron',desc:'Potiron de saison, lait coco, gingembre frais, coriandre',prix:18,tags:['Vegan','Bio']},{e:'🥙',label:'Wrap falafel',desc:'Falafel maison, houmous fumé, légumes croquants',prix:16,tags:['Vegan','Artisanal']},{e:'🍮',label:'Cheesecake cru',desc:'Base cajou-dattes, citron vert, coulis fruits rouges',prix:12,tags:['Vegan','Raw']}]},
+{av:'👨🏻‍🍳',name:'Pierre Roux',spec:'Cuisine provençale · Bouillabaisse & Mer',rat:4.8,meals:88,dist:'0.5km',price:35,latOff:[-.002,-.006],cat:'mer',dispo:true,exp:'20 ans',bio:'Marseillais de naissance, fils de pêcheur, Pierre achète ses poissons à 5h à la criée. Sa bouillabaisse respecte la charte officielle des restaurateurs marseillais.',weekdays:[5,6,0],slots:{default:['12h30','13h00','20h00','20h30'],busy:[]},menus:[{e:'🐟',label:'Bouillabaisse',desc:'Poissons de roche de la criée, rouille maison, croutons aillés',prix:45,tags:['Signature','Local','AOC']},{e:'🦞',label:'Homard grillé',desc:'Homard breton, beurre noisette aux herbes, légumes du soleil',prix:55,tags:['Premium','Grillé']},{e:'🥗',label:'Salade niçoise',desc:'Thon albacore, œuf mollet, haricots verts, anchois',prix:18,tags:['Local','Léger']},{e:'🍮',label:'Tarte tropézienne',desc:'Brioche moelleuse, crème diplomate vanille Bourbon',prix:12,tags:['Provençal']}]},
 ];
-
-let cur=0,activeCat='tous',guests=2,selMenu=null,selSlot='19h00',selDate='';
+let currentCity='',activeCat='tous',curChef=0,guests=2,selMenu=null,selDay=null,selSlot=null,calYear,calMonth,map=null;
 const markers=[];
-
-// MAP
-const map=L.map('map',{zoomControl:true,scrollWheelZoom:true,tap:true}).setView([43.2965,5.3690],13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
-L.marker([43.2950,5.3720],{icon:L.divIcon({className:'',iconSize:[14,14],iconAnchor:[7,7],html:'<div class="umark"></div>'})}).addTo(map).bindTooltip('Vous',{permanent:true,direction:'top',offset:[0,-8]});
-
-function makeIcon(i,on){
-  const c=chefs[i];
-  return L.divIcon({className:'',html:`<div class="mpin${on?' on':''}"><div class="mpin-dot"></div>${c.name.split(' ')[0]} · ${c.price}€</div>`,iconSize:[130,30],iconAnchor:[65,30]});
-}
-
-chefs.forEach((c,i)=>{
-  const m=L.marker([c.lat,c.lng],{icon:makeIcon(i,i===0)}).addTo(map);
-  m.bindPopup(`<div class="pop"><div class="pop-h"><div class="pop-av">${c.av}</div><div><div class="pop-name">${c.name}</div><div class="pop-spec">${c.spec}</div></div></div><div class="pop-b"><div class="pop-row"><span class="pop-rat">★ ${c.rat} · ${c.meals} repas</span><span class="pop-price">${c.price}€<small>/pers.</small></span></div><button class="pop-btn" onclick="openChef(${i})">Voir & Réserver</button></div></div>`,{maxWidth:230,minWidth:220});
-  m.on('click',()=>{markers.forEach((mk,j)=>mk.setIcon(makeIcon(j,j===i)));cur=i;renderCards();});
-  markers.push(m);
-});
-setTimeout(()=>markers[0].openPopup(),600);
-
-// DATES
-function buildDates(){
-  const row=document.getElementById('dateRow');
-  const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
-  const months=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
-  for(let i=0;i<7;i++){
-    const d=new Date();d.setDate(d.getDate()+i);
-    const el=document.createElement('div');
-    el.className='dpill'+(i===0?' on':'');
-    const dayStr=`${days[d.getDay()]} ${d.getDate()}`;
-    el.innerHTML=`<div class="dpill-d">${dayStr}</div><div class="dpill-m">${months[d.getMonth()]}</div>`;
-    el.onclick=()=>{document.querySelectorAll('.dpill').forEach(x=>x.classList.remove('on'));el.classList.add('on');selDate=dayStr;updateSummary();};
-    row.appendChild(el);
-    if(i===0){selDate=dayStr;}
-  }
-}
-
-// RENDER CARDS
-function renderCards(){
-  const q=(document.getElementById('searchInput').value||'').toLowerCase();
-  const filtered=chefs.map((c,i)=>({...c,idx:i})).filter(c=>(activeCat==='tous'||c.cat===activeCat)&&(c.name.toLowerCase().includes(q)||c.spec.toLowerCase().includes(q)));
-  const list=document.getElementById('cardList');list.innerHTML='';
-  document.getElementById('slbl').textContent=filtered.length===chefs.length?`${filtered.length} cuisiniers disponibles à Marseille`:`${filtered.length} cuisinier${filtered.length>1?'s':''} trouvé${filtered.length>1?'s':''}`;
-  document.getElementById('mapcount').textContent=filtered.length;
-  chefs.forEach((c,i)=>{const vis=activeCat==='tous'||c.cat===activeCat;markers[i].setOpacity(vis?1:.18);markers[i].setIcon(makeIcon(i,i===cur&&vis));});
-  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">🍽️</div>Aucun cuisinier dans cette catégorie.</div>';return;}
-  filtered.forEach((c,fi)=>{
-    const el=document.createElement('div');
-    el.className=`card${c.idx===cur?' sel':''}`;
-    el.style.animationDelay=(fi*.04)+'s';
-    const dispTag=c.dispo?`<span class="tag tag-g">● Disponible</span>`:`<span class="tag tag-s">● Ce soir seulement</span>`;
-    el.innerHTML=`
-      <div class="card-header" onclick="openChef(${c.idx})">
-        <div class="chef-photo">${c.av}<div class="chef-badge">✓</div></div>
-        <div class="card-info">
-          <div class="card-name">${c.name}</div>
-          <div class="card-spec">${c.spec}</div>
-          <div class="card-meta"><div class="rat"><span class="star">★</span>${c.rat}</div><span class="tag">${c.meals} repas</span><span class="tag">${c.exp} d'exp.</span>${dispTag}</div>
-        </div>
-        <div class="card-price">${c.price}€<small>/pers.</small></div>
-      </div>
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <span>Voir le profil & les menus</span>
-        <div class="tarrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <div class="card-exp">
-        <div class="exp-inner">
-          <div class="chef-bio">"${c.bio}"</div>
-          <div class="chef-stats">
-            <div class="cstat"><div class="cstat-v">★ ${c.rat}</div><div class="cstat-l">Note</div></div>
-            <div class="cstat"><div class="cstat-v">${c.meals}</div><div class="cstat-l">Repas</div></div>
-            <div class="cstat"><div class="cstat-v">${c.exp}</div><div class="cstat-l">Exp.</div></div>
-            <div class="cstat"><div class="cstat-v">${c.dist}</div><div class="cstat-l">Distance</div></div>
-          </div>
-          <div class="menus-lbl">Ses menus</div>
-          ${c.menus.map((m,mi)=>`
-            <div class="menu-item${mi===0?' on':''}">
-              <div class="mi-top"><span class="mi-name">${m.label}</span><span class="mi-price">${m.prix}€</span></div>
-              <div class="mi-desc">${m.desc}</div>
-              <div class="mi-tags">${m.tags.map(t=>`<span class="mtag">${t}</span>`).join('')}</div>
-            </div>`).join('')}
-          <button class="btn-book" onclick="openChef(${c.idx})">📅 Réserver ce cuisinier</button>
-        </div>
-      </div>`;
-    list.appendChild(el);
-  });
-}
-
-function toggleCard(el){
-  el.querySelector('.tarrow').classList.toggle('open');
-  el.nextElementSibling.classList.toggle('open');
-}
-
-function openChef(i){
-  cur=i;const c=chefs[i];
-  renderCards();
-  markers.forEach((m,j)=>m.setIcon(makeIcon(j,j===i)));
-  map.flyTo([c.lat,c.lng],14,{duration:.7});
-  markers[i].openPopup();
-  document.getElementById('bpav').textContent=c.av;
-  document.getElementById('bpname').textContent=c.name;
-  document.getElementById('bpspec').textContent=c.spec;
-  document.getElementById('bpstats').innerHTML=`<div class="bstat"><div class="bstat-v">★ ${c.rat}</div><div class="bstat-l">Note</div></div><div class="bstat"><div class="bstat-v">${c.meals}</div><div class="bstat-l">Repas</div></div><div class="bstat"><div class="bstat-v">${c.exp}</div><div class="bstat-l">Exp.</div></div>`;
-  const me=document.getElementById('bpmenus');me.innerHTML='';
-  c.menus.forEach((m,mi)=>{
-    const d=document.createElement('div');d.className='pmenu'+(mi===0?' on':'');
-    d.innerHTML=`<div class="pm-top"><span class="pm-name">${m.label}</span><span class="pm-price">${m.prix}€/pers.</span></div><div class="pm-desc">${m.desc}</div>`;
-    d.onclick=()=>{me.querySelectorAll('.pmenu').forEach(x=>x.classList.remove('on'));d.classList.add('on');selMenu=m;updateSummary();};
-    me.appendChild(d);
-  });
-  selMenu=c.menus[0];guests=2;document.getElementById('gcount').textContent=2;
-  updateSummary();
-  document.getElementById('bpanel').classList.add('show');
-}
-
-function closePanel(){document.getElementById('bpanel').classList.remove('show');}
-
-function changeGuests(d){guests=Math.max(1,Math.min(12,guests+d));document.getElementById('gcount').textContent=guests;updateSummary();}
-
-function pickSlot(el){document.querySelectorAll('.slot:not(.busy)').forEach(s=>s.classList.remove('on'));el.classList.add('on');selSlot=el.textContent;updateSummary();}
-
-function updateSummary(){
-  if(!selMenu)return;
-  const sub=selMenu.prix*guests,tot=sub+3;
-  document.getElementById('sumMenu').textContent=selMenu.label.replace(/^\S+\s/,'');
-  document.getElementById('sumQty').textContent=`${guests} pers. × ${selMenu.prix}€`;
-  document.getElementById('sumSub').textContent=sub+'€';
-  document.getElementById('sumTot').textContent=tot+'€';
-}
-
-function openPayment(){
-  if(!selMenu){alert('Veuillez choisir un menu.');return;}
-  const c=chefs[cur],sub=selMenu.prix*guests,tot=sub+3;
-  document.getElementById('pChef').textContent=c.name;
-  document.getElementById('pMenu').textContent=selMenu.label.replace(/^\S+\s/,'');
-  document.getElementById('pDate').textContent=(selDate||'Aujourd\'hui')+' · '+selSlot;
-  document.getElementById('pQtyLine').textContent=`${guests} pers. × ${selMenu.prix}€`;
-  document.getElementById('pSub').textContent=sub+'€';
-  document.getElementById('pTot').textContent=tot+'€';
-  document.getElementById('confirmAmt').textContent=tot+'€';
-  document.getElementById('ov').classList.add('show');
-}
-
-function closePayment(){document.getElementById('ov').classList.remove('show');}
-
-function confirmPayment(){
-  const c=chefs[cur],tot=(selMenu.prix*guests)+3;
-  document.getElementById('payBody').innerHTML=`
-    <div class="success">
-      <div class="s-icon">🎉</div>
-      <div class="s-title">Réservation confirmée !</div>
-      <div class="s-sub">Repas avec <b>${c.name}</b> confirmé.<br>${selDate||'Aujourd\'hui'} à ${selSlot} · ${guests} personne${guests>1?'s':''}</div>
-      <div class="s-ref">
-        <div class="s-row"><span>Référence</span><b>#BC-${Math.floor(10000+Math.random()*90000)}</b></div>
-        <div class="s-row"><span>Chef</span><b>${c.name}</b></div>
-        <div class="s-row"><span>Menu</span><b>${selMenu.label.replace(/^\S+\s/,'')}</b></div>
-        <div class="s-row"><span>Total débité</span><b style="color:var(--salmon)">${tot}€</b></div>
-      </div>
-      <p style="font-size:11px;color:var(--sand);margin-bottom:16px">Email de confirmation envoyé. Le BackCooker vous contacte sous 30 min.</p>
-      <button class="btn-confirm" onclick="closePayment()" style="background:var(--olive)">✓ Parfait, merci !</button>
-    </div>`;
-}
-
+const MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const DAYS_LBL=['Lu','Ma','Me','Je','Ve','Sa','Di'];
+function onCityInput(val){const sugg=document.getElementById('citySugg');if(!val.trim()){sugg.classList.remove('show');return;}const m=CITY_LIST.filter(c=>c.toLowerCase().startsWith(val.toLowerCase())).slice(0,5);if(!m.length){sugg.classList.remove('show');return;}sugg.innerHTML=m.map(c=>`<div class="sug-item" onclick="selectCity('${c}')"><span>📍</span><span class="sug-name">${c}</span><span class="sug-count">${CITIES[c]?CITIES[c].chefs.length+' chefs':'bientôt'}</span></div>`).join('');sugg.classList.add('show');}
+function onCityKey(e){if(e.key==='Enter')goToCity();}
+function selectCity(city){document.getElementById('cityInput').value=city;document.getElementById('citySugg').classList.remove('show');goToCity(city);}
+function goToCity(city){const val=city||document.getElementById('cityInput').value.trim();if(!val)return;currentCity=val;launchApp();}
+function launchApp(){const cd=CITIES[currentCity]||CITIES['Marseille'];document.getElementById('heroCity').textContent=currentCity;document.getElementById('navCityPill').textContent='📍 '+currentCity;const cnt=cd.chefs.length;document.getElementById('heroCount').textContent=cnt+' chef'+(cnt>1?'s':'')+' · ~20 km';document.getElementById('s-land').classList.add('hidden');document.getElementById('s-app').classList.remove('hidden');setTimeout(()=>{initMap(cd);renderCards();},100);}
+function goBack(){document.getElementById('s-app').classList.add('hidden');document.getElementById('s-land').classList.remove('hidden');closeDrawer();}
+function initMap(cd){if(map){map.remove();map=null;markers.length=0;}map=L.map('map',{zoomControl:true,scrollWheelZoom:true,tap:true}).setView([cd.lat,cd.lng],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);L.marker([cd.lat+.002,cd.lng-.002],{icon:L.divIcon({className:'',iconSize:[16,16],iconAnchor:[8,8],html:'<div class="umark"></div>'})}).addTo(map).bindTooltip('Vous',{permanent:true,direction:'top',offset:[0,-10]});chefs.forEach((c,i)=>{const lat=cd.lat+c.latOff[0],lng=cd.lng+c.latOff[1];const m=L.marker([lat,lng],{icon:makeIcon(i,i===0)}).addTo(map);m.bindPopup(`<div class="pop"><div class="pop-h"><div class="pop-av">${c.av}</div><div><div class="pop-name">${c.name}</div><div class="pop-spec">${c.spec}</div></div></div><div class="pop-b"><div class="pop-row"><span class="pop-rat">★ ${c.rat} · ${c.meals} repas</span><span class="pop-price">${c.price}€<small>/pers.</small></span></div><button class="pop-btn" onclick="openDrawer(${i})">Voir & Réserver</button></div></div>`,{maxWidth:240,minWidth:230});m.on('click',()=>{markers.forEach((mk,j)=>mk.setIcon(makeIcon(j,j===i)));curChef=i;renderCards();});markers.push(m);});setTimeout(()=>markers[0].openPopup(),600);}
+function makeIcon(i,on){const c=chefs[i];return L.divIcon({className:'',html:`<div class="mpin${on?' on':''}"><div class="mpin-dot"></div>${c.name.split(' ')[0]} · ${c.price}€</div>`,iconSize:[136,32],iconAnchor:[68,32]});}
+function renderCards(){const q=(document.getElementById('searchInput')?.value||'').toLowerCase();const cd=CITIES[currentCity]||CITIES['Marseille'];const allowed=new Set(cd.chefs);const filtered=chefs.map((c,i)=>({...c,idx:i})).filter(c=>allowed.has(c.idx)).filter(c=>activeCat==='tous'||c.cat===activeCat).filter(c=>!q||c.name.toLowerCase().includes(q)||c.spec.toLowerCase().includes(q));document.getElementById('listHeader').textContent=`${filtered.length} cuisinier${filtered.length>1?'s':''} dans votre secteur`;document.getElementById('mapCount').textContent=filtered.length;if(markers.length){chefs.forEach((c,i)=>{const vis=allowed.has(i)&&(activeCat==='tous'||c.cat===activeCat);markers[i].setOpacity(vis?1:.15);markers[i].setIcon(makeIcon(i,i===curChef&&vis));});}const list=document.getElementById('cardList');list.innerHTML='';if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="empty-state-icon">🍽️</div>Aucun cuisinier dans cette catégorie.</div>';return;}filtered.forEach((c,fi)=>{const el=document.createElement('div');el.className=`chef-card${c.idx===curChef?' active':''}`;el.style.animationDelay=(fi*.05)+'s';const db=c.dispo?`<span class="cc-badge green">● Disponible</span>`:`<span class="cc-badge terra">● Ce soir</span>`;el.innerHTML=`<div class="cc-top" onclick="openDrawer(${c.idx})"><div class="cc-avatar">${c.av}<div class="cc-verified">✓</div></div><div class="cc-info"><div class="cc-name">${c.name}</div><div class="cc-spec">${c.spec}</div><div class="cc-meta"><div class="cc-rat"><span class="cc-star">★</span>${c.rat}</div><span class="cc-badge">${c.meals} repas</span><span class="cc-badge">${c.exp}</span>${db}</div></div><div class="cc-price"><div class="cc-price-val">${c.price}€</div><div class="cc-price-lbl">/pers.</div></div></div><div class="cc-toggle" onclick="toggleCard(this)"><span class="cc-toggle-lbl">Voir le profil & les menus</span><div class="cc-arrow"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div></div><div class="cc-expand"><div class="cc-exp-inner"><div class="chef-bio-box"><div class="chef-bio-name">${c.name}</div><div class="chef-bio-txt">${c.bio}</div></div><div class="exp-stats"><div class="estat"><div class="estat-v">★${c.rat}</div><div class="estat-l">Note</div></div><div class="estat"><div class="estat-v">${c.meals}</div><div class="estat-l">Repas</div></div><div class="estat"><div class="estat-v">${c.exp}</div><div class="estat-l">Exp.</div></div><div class="estat"><div class="estat-v">${c.dist}</div><div class="estat-l">Distance</div></div></div><div class="exp-sec-lbl">Ses menus</div>${c.menus.map(m=>`<div class="menu-row"><div class="menu-emoji">${m.e}</div><div class="menu-info"><div class="menu-name">${m.label}</div><div class="menu-desc">${m.desc}</div><div class="menu-tags">${m.tags.map(t=>`<span class="menu-tag">${t}</span>`).join('')}</div></div><div class="menu-price">${m.prix}€</div></div>`).join('')}<button class="btn-reserve" onclick="openDrawer(${c.idx})">📅 Réserver ce cuisinier</button></div></div>`;list.appendChild(el);});}
+function toggleCard(el){el.querySelector('.cc-arrow').classList.toggle('open');el.nextElementSibling.classList.toggle('open');}
+function openDrawer(i){curChef=i;const c=chefs[i];renderCards();if(map){markers.forEach((m,j)=>m.setIcon(makeIcon(j,j===i)));const cd=CITIES[currentCity]||CITIES['Marseille'];map.flyTo([cd.lat+c.latOff[0],cd.lng+c.latOff[1]],14,{duration:.6});markers[i].openPopup();}document.getElementById('dhAv').textContent=c.av;document.getElementById('dhName').textContent=c.name;document.getElementById('dhSpec').textContent=c.spec;document.getElementById('dStats').innerHTML=`<div class="dstat"><div class="dstat-v">★${c.rat}</div><div class="dstat-l">Note</div></div><div class="dstat"><div class="dstat-v">${c.meals}</div><div class="dstat-l">Repas</div></div><div class="dstat"><div class="dstat-v">${c.exp}</div><div class="dstat-l">Expérience</div></div>`;const me=document.getElementById('dMenus');me.innerHTML='';c.menus.forEach((m,mi)=>{const d=document.createElement('div');d.className='d-menu'+(mi===0?' on':'');d.innerHTML=`<div class="d-menu-emoji">${m.e}</div><div class="d-menu-info"><div class="d-menu-name">${m.label}</div><div class="d-menu-desc">${m.desc}</div></div><div class="d-menu-price">${m.prix}€</div>`;d.onclick=()=>{me.querySelectorAll('.d-menu').forEach(x=>x.classList.remove('on'));d.classList.add('on');selMenu=m;updateSummary();};me.appendChild(d);});selMenu=c.menus[0];guests=2;document.getElementById('gNum').textContent=2;const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();selDay=null;selSlot=null;buildCal();updateSummary();document.getElementById('drawerOverlay').classList.add('show');document.getElementById('drawer').classList.add('show');}
+function closeDrawer(){document.getElementById('drawerOverlay').classList.remove('show');document.getElementById('drawer').classList.remove('show');}
+function changeGuests(d){guests=Math.max(1,Math.min(12,guests+d));document.getElementById('gNum').textContent=guests;updateSummary();}
+function buildCal(){const c=chefs[curChef];document.getElementById('calMonth').textContent=MONTHS[calMonth]+' '+calYear;const grid=document.getElementById('calGrid');grid.innerHTML='';DAYS_LBL.forEach(d=>{const h=document.createElement('div');h.className='cal-day-name';h.textContent=d;grid.appendChild(h);});const first=new Date(calYear,calMonth,1);let startDow=first.getDay();startDow=startDow===0?6:startDow-1;const dim=new Date(calYear,calMonth+1,0).getDate();const today=new Date();today.setHours(0,0,0,0);for(let i=0;i<startDow;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e);}for(let day=1;day<=dim;day++){const date=new Date(calYear,calMonth,day);const dow=date.getDay();const isPast=date<today;const isToday=date.getTime()===today.getTime();const isAvail=c.weekdays.includes(dow);const isSel=selDay&&selDay.getTime()===date.getTime();const el=document.createElement('div');let cls='cal-day';if(isPast)cls+=' past';else if(isSel)cls+=' selected';else if(isAvail)cls+=' available';if(isToday)cls+=' today';el.className=cls;el.textContent=day;if(!isPast&&isAvail){el.onclick=()=>{selDay=date;selSlot=null;buildCal();buildSlots();updateSummary();};}grid.appendChild(el);}buildSlots();}
+function prevMonth(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}buildCal();}
+function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}buildCal();}
+function buildSlots(){const c=chefs[curChef];const wrap=document.getElementById('slotsWrap');if(!selDay){wrap.innerHTML='<div class="slots-empty">Sélectionnez une date pour voir les créneaux.</div>';return;}const grid=document.createElement('div');grid.className='slots-grid';c.slots.default.forEach(s=>{const busy=c.slots.busy.includes(s);const el=document.createElement('div');el.className='tslot'+(busy?' busy':'')+(selSlot===s?' on':'');el.textContent=s;if(!busy)el.onclick=()=>{wrap.querySelectorAll('.tslot').forEach(x=>x.classList.remove('on'));el.classList.add('on');selSlot=s;updateSummary();};grid.appendChild(el);});wrap.innerHTML='';wrap.appendChild(grid);}
+function updateSummary(){if(!selMenu)return;const sub=selMenu.prix*guests;const tot=sub+3;document.getElementById('sumMenu').textContent=selMenu.label;document.getElementById('sumQty').textContent=`${guests} pers. × ${selMenu.prix}€`;document.getElementById('sumSub').textContent=sub+'€';document.getElementById('sumTot').textContent=tot+'€';}
+function openPayment(){if(!selMenu){alert('Veuillez choisir un menu.');return;}if(!selDay){alert('Veuillez choisir une date dans le calendrier.');return;}if(!selSlot){alert('Veuillez choisir un créneau horaire.');return;}const c=chefs[curChef];const sub=selMenu.prix*guests;const tot=sub+3;const ds=selDay.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});document.getElementById('pChef').textContent=c.name;document.getElementById('pMenu').textContent=selMenu.label;document.getElementById('pDate').textContent=ds+' · '+selSlot;document.getElementById('pQty').textContent=`${guests} pers. × ${selMenu.prix}€`;document.getElementById('pSub').textContent=sub+'€';document.getElementById('pTot').textContent=tot+'€';document.getElementById('confirmAmt').textContent=tot+'€';document.getElementById('payOverlay').classList.add('show');}
+function closePayment(){document.getElementById('payOverlay').classList.remove('show');}
+function confirmPayment(){const c=chefs[curChef];const tot=(selMenu.prix*guests)+3;const ds=selDay.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});document.getElementById('payBody').innerHTML=`<div class="pay-success"><div class="ps-icon">🎉</div><div class="ps-title">Réservation confirmée !</div><div class="ps-sub">Repas avec <b>${c.name}</b> confirmé.<br>${ds} à ${selSlot} · ${guests} personne${guests>1?'s':''}</div><div class="ps-ref"><div class="ps-row"><span>Référence</span><b>#BC-${Math.floor(10000+Math.random()*90000)}</b></div><div class="ps-row"><span>Chef</span><b>${c.name}</b></div><div class="ps-row"><span>Menu</span><b>${selMenu.label}</b></div><div class="ps-row"><span>Date</span><b>${ds} · ${selSlot}</b></div><div class="ps-row"><span>Total débité</span><b style="color:var(--terra)">${tot}€</b></div></div><p style="font-size:11px;color:var(--ink-3);margin-bottom:18px">Email de confirmation envoyé. Votre BackCooker vous contacte dans les 30 minutes.</p><button class="btn-confirm" onclick="closePayment();closeDrawer();" style="background:var(--olive)">✓ Parfait, merci !</button></div>`;}
 function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
 function fmtExp(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+' / '+v.substring(2);el.value=v;}
-
-document.querySelectorAll('.ftag').forEach(el=>{el.onclick=function(){document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));this.classList.add('on');activeCat=this.dataset.cat;renderCards();const vis=chefs.filter(c=>activeCat==='tous'||c.cat===activeCat);if(vis.length)map.flyToBounds(L.latLngBounds(vis.map(c=>[c.lat,c.lng])).pad(.3),{duration:.7});};});
-document.getElementById('searchInput').oninput=()=>renderCards();
-document.querySelectorAll('.tab').forEach(el=>{el.onclick=function(){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));this.classList.add('on');};});
-document.querySelectorAll('.pmethods .pmethod').forEach(el=>{el.onclick=function(){document.querySelectorAll('.pmethods .pmethod').forEach(b=>b.classList.remove('on'));this.classList.add('on');};});
-
-buildDates();renderCards();
-setTimeout(()=>map.invalidateSize(),300);
+document.querySelectorAll('.ftag').forEach(el=>{el.onclick=function(){document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));this.classList.add('on');activeCat=this.dataset.cat;renderCards();if(map){const cd=CITIES[currentCity]||CITIES['Marseille'];const allowed=new Set(cd.chefs);const vis=chefs.filter((c,i)=>allowed.has(i)&&(activeCat==='tous'||c.cat===activeCat));if(vis.length)map.flyToBounds(L.latLngBounds(vis.map(c=>[cd.lat+c.latOff[0],cd.lng+c.latOff[1]])).pad(.3),{duration:.7});}};});
+document.querySelectorAll('.pay-methods .pmethod').forEach(el=>{el.onclick=function(){document.querySelectorAll('.pay-methods .pmethod').forEach(b=>b.classList.remove('on'));this.classList.add('on');};});
+document.addEventListener('click',e=>{if(!e.target.closest('.city-wrap'))document.getElementById('citySugg')?.classList.remove('show');});
 </script>
 </body>
 </html>
