@@ -3,544 +3,535 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>BackCooker</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<title>BackCooker · Cuisiniers à domicile Marseille</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-:root {
-  --cream: #FAF6EF;
-  --dark: #1A1612;
-  --terra: #C4622D;
-  --terra-l: #E8856A;
-  --gold: #D4A847;
-  --sage: #7A9E7E;
-  --gray: #8C8480;
+:root{
+  --bg:#F7F4EF;--white:#FFFFFF;--olive:#5C6B3A;--olive-l:#8A9E5A;
+  --salmon:#E8724A;--salmon-l:#F5A882;--beige:#EDE8DF;--beige-d:#D6CEBC;
+  --ink:#1E1C18;--ink-l:#6B6760;--sand:#C8B99A;--r:14px;--r-lg:20px;
 }
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html, body { height:100%; overflow:hidden; }
-body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--dark); display:flex; flex-direction:column; height:100dvh; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;height:100dvh}
 
-/* NAV */
-nav { display:flex; align-items:center; justify-content:space-between; padding:0 16px; height:54px; background:var(--dark); flex-shrink:0; z-index:1001; }
-.logo { font-family:'Playfair Display',serif; font-size:21px; color:#FAF6EF; letter-spacing:-.3px; }
-.logo span { color:var(--terra); }
-.nav-r { display:flex; gap:10px; align-items:center; }
-.btn-join { background:var(--gold); color:var(--dark); padding:6px 13px; border-radius:50px; font-size:11px; font-weight:600; border:none; cursor:pointer; white-space:nowrap; }
-.av { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,var(--terra),var(--gold)); display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; }
+nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0;z-index:1001}
+.logo{font-family:'Fraunces',serif;font-size:22px;color:var(--ink);letter-spacing:-.5px;display:flex;align-items:center;gap:7px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--salmon)}
+.nav-city{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--ink-l);font-weight:500;background:var(--beige);padding:5px 11px;border-radius:50px}
+.nav-r{display:flex;align-items:center;gap:10px}
+.btn-pro{background:var(--olive);color:#fff;padding:7px 14px;border-radius:50px;font-size:11px;font-weight:500;border:none;cursor:pointer}
+.nav-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--salmon),var(--olive-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
 
-/* TABS */
-.tabs { display:flex; background:var(--dark); padding:0 14px 10px; gap:5px; flex-shrink:0; }
-.tab { padding:5px 13px; border-radius:50px; font-size:11px; font-weight:500; color:rgba(255,255,255,0.4); cursor:pointer; transition:.2s; }
-.tab.on { background:var(--terra); color:#fff; }
+.searchbar{padding:12px 16px;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0}
+.si{display:flex;align-items:center;gap:10px;background:var(--beige);border-radius:12px;padding:10px 14px;border:1.5px solid transparent;transition:.2s}
+.si:focus-within{border-color:var(--salmon-l);background:var(--white)}
+.si input{background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);width:100%}
+.si input::placeholder{color:var(--sand)}
 
-/* MAIN */
-.main { flex:1; display:flex; flex-direction:column; overflow:hidden; position:relative; }
+.tabs{display:flex;background:var(--white);border-bottom:1px solid var(--beige-d);flex-shrink:0;padding:0 16px}
+.tab{padding:10px 14px;font-size:12px;font-weight:500;color:var(--ink-l);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;white-space:nowrap}
+.tab.on{color:var(--salmon);border-bottom-color:var(--salmon)}
+
+.main{flex:1;display:flex;overflow:hidden}
+
+.sidebar{width:390px;display:flex;flex-direction:column;border-right:1px solid var(--beige-d);flex-shrink:0;overflow:hidden;background:var(--bg)}
+
+.filters{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;background:var(--white);border-bottom:1px solid var(--beige-d)}
+.filters::-webkit-scrollbar{display:none}
+.ftag{padding:5px 12px;border-radius:50px;font-size:11px;font-weight:500;border:1.5px solid var(--beige-d);cursor:pointer;white-space:nowrap;background:var(--white);color:var(--ink-l);transition:.15s;flex-shrink:0}
+.ftag.on{background:var(--salmon);color:#fff;border-color:var(--salmon)}
+
+.clist{flex:1;overflow-y:auto;padding:10px 12px 20px;scrollbar-width:thin;scrollbar-color:var(--beige-d) transparent}
+.slbl{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sand);padding:6px 2px 10px}
+
+/* CARD */
+.card{background:var(--white);border-radius:var(--r-lg);margin-bottom:10px;cursor:pointer;border:1.5px solid var(--beige-d);transition:all .2s;overflow:hidden;animation:fu .3s ease both}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--salmon-l);box-shadow:0 4px 20px rgba(232,114,74,.1)}
+.card.sel{border-color:var(--salmon);box-shadow:0 4px 20px rgba(232,114,74,.15)}
+.card-header{padding:14px;display:flex;gap:12px;align-items:flex-start}
+.chef-photo{width:56px;height:56px;border-radius:14px;background:var(--beige);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;position:relative}
+.chef-badge{position:absolute;bottom:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--olive);border:2px solid var(--white);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff}
+.card-info{flex:1;min-width:0}
+.card-name{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:2px}
+.card-spec{font-size:11px;color:var(--ink-l);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.rat{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:500}
+.star{color:#F0A500}
+.tag{font-size:9px;padding:2px 7px;border-radius:50px;background:var(--beige);color:var(--ink-l);font-weight:500}
+.tag-g{background:#EBF2E0;color:var(--olive)}
+.tag-s{background:#FDEEE8;color:var(--salmon)}
+.card-price{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--salmon);flex-shrink:0;text-align:right}
+.card-price small{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:400;color:var(--sand);display:block}
+
+.card-toggle{padding:8px 14px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--beige);cursor:pointer;user-select:none}
+.card-toggle span{font-size:11px;color:var(--salmon);font-weight:500}
+.tarrow{width:18px;height:18px;border-radius:50%;background:var(--beige);display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.tarrow.open{transform:rotate(180deg)}
+
+.card-exp{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.card-exp.open{max-height:800px}
+.exp-inner{padding:12px 14px 14px}
+
+.chef-bio{font-size:11px;color:var(--ink-l);line-height:1.65;margin-bottom:12px;padding:10px 12px;background:var(--beige);border-radius:10px;font-style:italic}
+.chef-stats{display:flex;gap:7px;margin-bottom:12px}
+.cstat{flex:1;background:var(--beige);border-radius:10px;padding:8px;text-align:center}
+.cstat-v{font-family:'Fraunces',serif;font-size:15px;font-weight:600;color:var(--salmon)}
+.cstat-l{font-size:9px;color:var(--sand);margin-top:1px}
+.menus-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);margin-bottom:6px}
+.menu-item{background:var(--white);border:1.5px solid var(--beige-d);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.menu-item:hover,.menu-item.on{border-color:var(--salmon);background:#FDEEE8}
+.mi-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.mi-name{font-size:12px;font-weight:500}
+.mi-price{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--salmon)}
+.mi-desc{font-size:10px;color:var(--ink-l);line-height:1.5}
+.mi-tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.mtag{font-size:9px;padding:2px 6px;border-radius:50px;background:var(--beige);color:var(--ink-l)}
+.btn-book{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px}
 
 /* MAP */
-#map { width:100%; height:42%; flex-shrink:0; z-index:1; }
+.map-area{flex:1;position:relative;overflow:hidden}
+#map{width:100%;height:100%}
+.leaflet-control-zoom{border:none!important;border-radius:12px!important;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.1)!important}
+.leaflet-control-zoom a{background:var(--white)!important;color:var(--ink)!important;font-size:15px!important;line-height:28px!important;width:28px!important;height:28px!important;border:none!important}
+.leaflet-popup-content-wrapper{padding:0!important;border-radius:16px!important;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.12)!important;border:none!important}
+.leaflet-popup-content{margin:0!important;width:220px!important}
+.leaflet-popup-tip-container{display:none!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(255,255,255,.7)!important;padding:2px 6px!important;border-radius:4px!important}
 
-/* Leaflet overrides */
-.leaflet-control-zoom { border:none!important; border-radius:10px!important; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.15)!important; }
-.leaflet-control-zoom a { background:#fff!important; color:var(--dark)!important; font-size:16px!important; line-height:28px!important; width:28px!important; height:28px!important; border:none!important; }
-.leaflet-control-zoom a:hover { background:var(--cream)!important; }
-.leaflet-popup-content-wrapper { padding:0!important; border-radius:14px!important; overflow:hidden; box-shadow:0 8px 30px rgba(0,0,0,0.18)!important; border:none!important; }
-.leaflet-popup-content { margin:0!important; width:210px!important; }
-.leaflet-popup-tip-container { display:none!important; }
-.leaflet-attribution-flag { display:none!important; }
-.leaflet-control-attribution { font-size:9px!important; background:rgba(255,255,255,0.7)!important; padding:2px 5px!important; border-radius:4px!important; }
+.mpin{background:var(--ink);color:#fff;padding:5px 11px;border-radius:50px;font-size:10px;font-weight:500;white-space:nowrap;box-shadow:0 3px 12px rgba(0,0,0,.2);display:inline-flex;align-items:center;gap:4px;position:relative;cursor:pointer;transition:transform .15s}
+.mpin::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink);border-bottom:none}
+.mpin.on{background:var(--salmon)}.mpin.on::after{border-top-color:var(--salmon)}
+.mpin-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);flex-shrink:0}
+.map-badge{position:absolute;top:12px;left:12px;z-index:400;background:rgba(255,255,255,.95);border-radius:50px;padding:6px 14px;font-size:11px;font-weight:500;box-shadow:0 2px 10px rgba(0,0,0,.1);pointer-events:none;display:flex;align-items:center;gap:5px;color:var(--ink-l)}
+.map-badge b{color:var(--salmon)}
+.umark{width:14px;height:14px;border-radius:50%;background:#4A90D9;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(74,144,217,.5)}
+.pop{font-family:'DM Sans',sans-serif}
+.pop-h{background:var(--ink);padding:12px 14px;display:flex;gap:10px;align-items:center}
+.pop-av{font-size:22px;width:40px;height:40px;background:rgba(255,255,255,.1);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.pop-name{color:#fff;font-family:'Fraunces',serif;font-size:14px;font-weight:600}
+.pop-spec{color:rgba(255,255,255,.5);font-size:10px;margin-top:2px}
+.pop-b{padding:10px 12px}
+.pop-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pop-rat{color:#F0A500;font-size:11px;font-weight:500}
+.pop-price{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--salmon)}
+.pop-price small{font-size:9px;font-weight:400;color:var(--sand)}
+.pop-btn{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:8px;padding:8px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
 
-/* Chef pins */
-.cpin { background:var(--dark); color:#fff; padding:5px 10px; border-radius:20px; font-size:10px; font-weight:600; white-space:nowrap; box-shadow:0 3px 10px rgba(0,0,0,0.25); display:inline-flex; align-items:center; gap:4px; position:relative; cursor:pointer; transition:transform .15s; }
-.cpin::after { content:''; position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--dark); border-bottom:none; }
-.cpin.on { background:var(--terra); }
-.cpin.on::after { border-top-color:var(--terra); }
-.cpin:hover { transform:scale(1.06); }
-.pdot { width:5px; height:5px; border-radius:50%; background:var(--gold); flex-shrink:0; }
+/* BOOKING PANEL */
+.bpanel{position:absolute;top:12px;right:12px;bottom:12px;width:300px;background:var(--white);border-radius:var(--r-lg);box-shadow:0 8px 40px rgba(0,0,0,.12);display:flex;flex-direction:column;overflow:hidden;transform:translateX(330px);transition:.35s cubic-bezier(.34,1.2,.64,1);z-index:300;border:1px solid var(--beige-d)}
+.bpanel.show{transform:translateX(0)}
+.bp-head{background:var(--ink);padding:16px;display:flex;gap:10px;align-items:center;position:relative;flex-shrink:0}
+.bp-av{font-size:26px;width:44px;height:44px;background:rgba(255,255,255,.1);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bp-name{font-family:'Fraunces',serif;font-size:16px;color:#fff;font-weight:600}
+.bp-spec{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
+.bp-close{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+.bp-body{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--beige-d) transparent}
+.bp-stats{display:flex;gap:6px;margin-bottom:14px}
+.bstat{flex:1;background:var(--beige);border-radius:10px;padding:8px;text-align:center}
+.bstat-v{font-family:'Fraunces',serif;font-size:14px;font-weight:600;color:var(--salmon)}
+.bstat-l{font-size:9px;color:var(--sand);margin-top:1px}
+.sec-lbl{font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--sand);margin-bottom:7px}
+.pmenu{background:var(--beige);border:1.5px solid var(--beige-d);border-radius:10px;padding:9px 11px;margin-bottom:6px;cursor:pointer;transition:.15s}
+.pmenu:hover,.pmenu.on{border-color:var(--salmon);background:#FDEEE8}
+.pm-top{display:flex;justify-content:space-between;align-items:center}
+.pm-name{font-size:12px;font-weight:500}
+.pm-price{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--salmon)}
+.pm-desc{font-size:10px;color:var(--ink-l);margin-top:3px;line-height:1.4}
+.guests-row{display:flex;align-items:center;justify-content:space-between;background:var(--beige);border-radius:10px;padding:10px 14px;margin-bottom:14px}
+.guests-lbl{font-size:12px;font-weight:500}
+.guests-ctrl{display:flex;align-items:center;gap:10px}
+.g-btn{width:26px;height:26px;border-radius:50%;background:var(--white);border:1.5px solid var(--beige-d);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--ink);line-height:1}
+.g-btn:hover{border-color:var(--salmon);color:var(--salmon)}
+.g-count{font-family:'Fraunces',serif;font-size:16px;font-weight:600;min-width:20px;text-align:center}
+.date-row{display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.date-row::-webkit-scrollbar{display:none}
+.dpill{padding:6px 10px;border-radius:8px;border:1.5px solid var(--beige-d);cursor:pointer;text-align:center;flex-shrink:0;transition:.15s;background:var(--white)}
+.dpill.on{border-color:var(--salmon);background:#FDEEE8}
+.dpill-d{font-size:11px;font-weight:500}
+.dpill-m{font-size:9px;color:var(--sand)}
+.slot-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px}
+.slot{padding:5px 10px;border-radius:7px;background:var(--beige);font-size:11px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:.15s}
+.slot:hover,.slot.on{background:#FDEEE8;border-color:var(--salmon);color:var(--salmon)}
+.slot.busy{opacity:.35;cursor:not-allowed;text-decoration:line-through}
+.order-box{background:var(--beige);border-radius:12px;padding:12px;margin-bottom:14px}
+.ol{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--ink-l)}
+.ol.tot{font-size:13px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-d);padding-top:7px;margin-top:4px}
+.btn-pay{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:12px;padding:13px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px}
 
-/* User marker */
-.umark { width:14px; height:14px; border-radius:50%; background:#4A90D9; border:2.5px solid #fff; box-shadow:0 2px 6px rgba(74,144,217,0.5); }
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(30,28,24,.55);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+.ov.show{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:92dvh;overflow-y:auto;transform:translateY(100%);transition:.35s cubic-bezier(.34,1.15,.64,1)}
+.ov.show .modal{transform:translateY(0)}
+.mh{background:var(--ink);padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+.mt{font-family:'Fraunces',serif;color:#fff;font-size:20px;font-weight:600}
+.mc{color:rgba(255,255,255,.5);cursor:pointer;font-size:22px;line-height:1}
+.mb{padding:18px 20px 36px}
+.stripe-badge{display:flex;align-items:center;gap:6px;background:var(--beige);border-radius:8px;padding:7px 12px;margin-bottom:14px;font-size:11px;color:var(--ink-l)}
+.stripe-badge b{color:var(--olive)}
+.pay-osum{background:var(--beige);border-radius:12px;padding:13px;margin-bottom:16px}
+.pol{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;color:var(--ink-l)}
+.pol.tot{font-size:14px;font-weight:600;color:var(--ink);border-top:1px solid var(--beige-d);padding-top:8px;margin-top:4px}
+.fl{font-size:11px;color:var(--ink-l);margin-bottom:4px;font-weight:500}
+.fi{background:var(--beige);border:1.5px solid var(--beige-d);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;margin-bottom:11px;color:var(--ink);transition:.15s}
+.fi:focus{border-color:var(--salmon);background:var(--white)}
+.crow{display:flex;gap:8px}.crow>div{flex:1}
+.pmethods{display:flex;gap:6px;margin-bottom:14px}
+.pmethod{flex:1;padding:9px;border-radius:9px;border:1.5px solid var(--beige-d);font-size:11px;font-weight:500;cursor:pointer;background:var(--white);text-align:center;transition:.15s}
+.pmethod.on{border-color:var(--salmon);background:#FDEEE8;color:var(--salmon)}
+.btn-confirm{width:100%;background:var(--salmon);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.success{text-align:center;padding:20px 10px}
+.s-icon{font-size:54px;margin-bottom:10px}
+.s-title{font-family:'Fraunces',serif;font-size:22px;margin-bottom:6px}
+.s-sub{font-size:12px;color:var(--ink-l);line-height:1.7}
+.s-ref{background:var(--beige);border-radius:12px;padding:12px;margin:14px 0;text-align:left}
+.s-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--ink-l)}
 
-/* Popup */
-.pop { font-family:'DM Sans',sans-serif; }
-.pop-h { background:var(--dark); padding:12px 14px; display:flex; gap:10px; align-items:center; }
-.pop-av { font-size:22px; }
-.pop-name { color:#fff; font-weight:600; font-size:13px; line-height:1.2; }
-.pop-spec { color:rgba(255,255,255,0.5); font-size:10px; margin-top:2px; }
-.pop-b { padding:10px 12px; }
-.pop-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.pop-rat { color:var(--gold); font-size:11px; font-weight:600; }
-.pop-price { font-size:15px; font-weight:700; color:var(--terra); }
-.pop-price small { font-size:9px; font-weight:400; color:var(--gray); }
-.pop-btn { width:100%; background:var(--terra); color:#fff; border:none; border-radius:8px; padding:8px; font-size:12px; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
-.pop-btn:active { background:#a3521f; }
+.empty{text-align:center;padding:40px 16px;color:var(--ink-l)}
+.empty-icon{font-size:36px;margin-bottom:8px}
 
-/* Map badge */
-.map-badge { position:absolute; top:10px; left:10px; z-index:500; background:rgba(255,255,255,0.95); border-radius:10px; padding:5px 11px; font-size:11px; font-weight:500; box-shadow:0 2px 8px rgba(0,0,0,0.12); pointer-events:none; }
-.map-badge span { color:var(--terra); font-weight:700; }
-
-/* BOTTOM SECTION */
-.bottom { flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--cream); }
-
-/* Filters */
-.filters { display:flex; gap:6px; padding:10px 14px; overflow-x:auto; flex-shrink:0; background:#fff; border-bottom:1px solid rgba(0,0,0,0.07); scrollbar-width:none; }
-.filters::-webkit-scrollbar { display:none; }
-.ftag { padding:5px 12px; border-radius:50px; font-size:11px; font-weight:500; border:1.5px solid rgba(0,0,0,0.1); cursor:pointer; white-space:nowrap; background:#fff; flex-shrink:0; transition:.15s; }
-.ftag.on { background:var(--terra); color:#fff; border-color:var(--terra); }
-
-/* Cards */
-.clist { flex:1; overflow-y:auto; padding:8px 12px 90px; scrollbar-width:none; }
-.clist::-webkit-scrollbar { display:none; }
-.slbl { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--gray); padding:4px 2px 8px; }
-
-.card { background:#fff; border-radius:14px; padding:12px; margin-bottom:8px; cursor:pointer; border:2px solid transparent; box-shadow:0 2px 8px rgba(0,0,0,0.05); transition:border-color .2s, transform .15s; display:flex; align-items:center; gap:12px; animation:fu .3s ease both; }
-.card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}.card:nth-child(6){animation-delay:.25s}
-@keyframes fu { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-.card.sel { border-color:var(--terra); box-shadow:0 4px 16px rgba(196,98,45,0.12); }
-.card:active { transform:scale(0.99); }
-.cav { font-size:26px; width:46px; height:46px; border-radius:12px; background:var(--cream); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.cinfo { flex:1; min-width:0; }
-.cname { font-family:'Playfair Display',serif; font-size:14px; margin-bottom:2px; }
-.cspec { font-size:10px; color:var(--gray); margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.cmeta { display:flex; gap:6px; align-items:center; }
-.stars { color:var(--gold); font-size:10px; }
-.mbadge { font-size:9px; padding:2px 6px; border-radius:50px; background:var(--cream); }
-.dispo { color:var(--sage); }
-.cprice { font-size:16px; font-weight:700; color:var(--terra); flex-shrink:0; }
-.cprice small { font-size:9px; font-weight:400; color:var(--gray); display:block; text-align:right; }
-
-/* BOTTOM SHEET */
-.sheet { position:fixed; bottom:0; left:0; right:0; background:#fff; border-radius:20px 20px 0 0; box-shadow:0 -6px 30px rgba(0,0,0,0.14); transform:translateY(100%); transition:.32s cubic-bezier(.34,1.15,.64,1); z-index:600; max-height:88dvh; overflow-y:auto; }
-.sheet.show { transform:translateY(0); }
-.sheet-handle { width:36px; height:4px; background:#E0DDD8; border-radius:2px; margin:10px auto 0; }
-
-.sh { background:var(--dark); padding:14px 16px; display:flex; gap:12px; align-items:center; position:relative; margin-top:6px; }
-.shav { font-size:26px; width:46px; height:46px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.shname { font-family:'Playfair Display',serif; font-size:17px; color:#fff; }
-.shspec { font-size:10px; color:rgba(255,255,255,0.5); margin-top:2px; }
-.shclose { position:absolute; top:10px; right:12px; width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.12); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; }
-
-.sb { padding:14px; }
-.drow { display:flex; gap:7px; margin-bottom:12px; }
-.dstat { flex:1; background:var(--cream); border-radius:11px; padding:9px; text-align:center; }
-.dsv { font-size:15px; font-weight:700; color:var(--terra); }
-.dsl { font-size:9px; color:var(--gray); margin-top:1px; }
-.mlbl { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--gray); margin-bottom:6px; }
-.mchips { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
-.menu-card { background:var(--cream); border:1.5px solid rgba(0,0,0,0.07); border-radius:11px; padding:9px 11px; cursor:pointer; transition:.15s; }
-.menu-card.on { background:#FFF5F0; border-color:var(--terra); }
-.mc-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:2px; }
-.mc-label { font-size:12px; font-weight:600; color:var(--dark); }
-.mc-price { font-size:13px; font-weight:700; color:var(--terra); }
-.mc-desc { font-size:10px; color:var(--gray); line-height:1.4; }
-.rdv { background:var(--cream); border-radius:12px; padding:11px; margin-bottom:12px; }
-.rdvl { font-size:10px; color:var(--gray); margin-bottom:6px; font-weight:500; }
-.slots { display:flex; gap:5px; flex-wrap:wrap; }
-.slot { padding:5px 10px; border-radius:7px; background:#fff; font-size:10px; font-weight:500; cursor:pointer; border:1.5px solid rgba(0,0,0,0.08); transition:.15s; }
-.slot.on { background:var(--dark); color:#fff; border-color:var(--dark); }
-.slot.busy { opacity:.35; cursor:not-allowed; text-decoration:line-through; }
-.bbtn { width:100%; background:var(--terra); color:#fff; border:none; border-radius:12px; padding:13px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; }
-.bbtn:active { background:#a3521f; }
-
-/* PAYMENT MODAL */
-.ov { position:fixed; inset:0; background:rgba(26,22,18,0.55); backdrop-filter:blur(4px); z-index:700; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:.25s; }
-.ov.show { opacity:1; pointer-events:all; }
-.modal { background:#fff; border-radius:20px 20px 0 0; width:100%; max-height:92dvh; overflow-y:auto; transform:translateY(100%); transition:.32s cubic-bezier(.34,1.15,.64,1); }
-.ov.show .modal { transform:translateY(0); }
-.mh { background:var(--dark); padding:16px 18px; display:flex; justify-content:space-between; align-items:center; }
-.mt { font-family:'Playfair Display',serif; color:#fff; font-size:18px; }
-.mc { color:rgba(255,255,255,0.5); cursor:pointer; font-size:20px; line-height:1; }
-.mb { padding:16px 18px 32px; }
-.osum { background:var(--cream); border-radius:12px; padding:12px; margin-bottom:14px; }
-.ol { display:flex; justify-content:space-between; font-size:12px; margin-bottom:5px; color:var(--gray); }
-.ol.tot { font-size:14px; font-weight:700; color:var(--dark); border-top:1px solid rgba(0,0,0,0.08); padding-top:7px; margin-top:3px; }
-.fl { font-size:11px; color:var(--gray); margin-bottom:4px; font-weight:500; }
-.fi { background:var(--cream); border:1.5px solid rgba(0,0,0,0.1); border-radius:9px; padding:10px 13px; font-family:'DM Sans',sans-serif; font-size:13px; width:100%; outline:none; margin-bottom:10px; color:var(--dark); }
-.fi:focus { border-color:var(--terra); }
-.crow { display:flex; gap:8px; }
-.crow>div { flex:1; }
-.brands { display:flex; gap:6px; margin-bottom:12px; }
-.brand { padding:5px 12px; border-radius:7px; border:1.5px solid rgba(0,0,0,0.1); font-size:11px; font-weight:600; cursor:pointer; background:#fff; }
-.brand.on { border-color:var(--terra); background:#FFF5F0; color:var(--terra); }
-.paybtn { width:100%; background:var(--terra); color:#fff; border:none; border-radius:12px; padding:14px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; }
-.paybtn:active { background:#a3521f; }
-.success { text-align:center; padding:20px 8px; }
-.sicon { font-size:52px; margin-bottom:8px; }
-.stitle { font-family:'Playfair Display',serif; font-size:20px; margin-bottom:6px; }
-.ssub { font-size:12px; color:var(--gray); line-height:1.6; }
+@media(max-width:768px){
+  .sidebar{width:100%;border-right:none}
+  .map-area{display:none}
+  .bpanel{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:88dvh;border-radius:20px 20px 0 0;transform:translateY(100%)}
+  .bpanel.show{transform:translateY(0)}
+}
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="logo">🍳 Back<span>Cooker</span></div>
+  <div class="logo"><div class="logo-dot"></div>BackCooker</div>
+  <div class="nav-city">📍 Marseille</div>
   <div class="nav-r">
-    <button class="btn-join">+ Cuisinier</button>
-    <div class="av">S</div>
+    <button class="btn-pro">Devenir BackCooker</button>
+    <div class="nav-av">S</div>
   </div>
 </nav>
 
+<div class="searchbar">
+  <div class="si">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#C8B99A" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="searchInput" type="text" placeholder="Cuisine, plat, chef, quartier...">
+  </div>
+</div>
+
 <div class="tabs">
-  <div class="tab on">🗺️ Explorer</div>
-  <div class="tab">📅 Réservations</div>
-  <div class="tab">❤️ Favoris</div>
+  <div class="tab on">Explorer</div>
+  <div class="tab">Mes réservations</div>
+  <div class="tab">Favoris</div>
 </div>
 
 <div class="main">
-  <!-- REAL MAP -->
-  <div style="position:relative; flex-shrink:0; height:42%;">
-    <div id="map" style="width:100%;height:100%;"></div>
-    <div class="map-badge">📍 <span id="mapcount">9</span> cuisiniers · <span>5 km</span></div>
-  </div>
-
-  <!-- BOTTOM SECTION -->
-  <div class="bottom">
+  <div class="sidebar">
     <div class="filters">
-      <div class="ftag on"  data-cat="tous">🍽️ Tous</div>
-      <div class="ftag"     data-cat="maghreb">🥘 Maghrébin</div>
-      <div class="ftag"     data-cat="asiatique">🍜 Asiatique</div>
-      <div class="ftag"     data-cat="africain">🫕 Africain</div>
-      <div class="ftag"     data-cat="vege">🥗 Végétarien</div>
-      <div class="ftag"     data-cat="grill">🥩 Grill</div>
+      <div class="ftag on" data-cat="tous">Tous</div>
+      <div class="ftag" data-cat="maghreb">🥘 Maghrébin</div>
+      <div class="ftag" data-cat="asiatique">🍜 Asiatique</div>
+      <div class="ftag" data-cat="africain">🫕 Africain</div>
+      <div class="ftag" data-cat="vege">🌿 Végétarien</div>
+      <div class="ftag" data-cat="grill">🔥 Grill</div>
+      <div class="ftag" data-cat="mer">🐟 Mer</div>
     </div>
-    <div class="clist" id="clist">
-      <div class="slbl" id="slbl">Cuisiniers proches de vous</div>
+    <div class="clist">
+      <div class="slbl" id="slbl">Cuisiniers disponibles à Marseille</div>
+      <div id="cardList"></div>
     </div>
   </div>
-</div>
 
-<!-- BOTTOM SHEET -->
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"></div>
-  <div class="sh">
-    <div class="shav" id="shav">👩🏻‍🍳</div>
-    <div>
-      <div class="shname" id="shname">Amina Benali</div>
-      <div class="shspec" id="shspec">Cuisine marocaine · Tagines & Couscous</div>
-    </div>
-    <div class="shclose" onclick="closeSheet()">✕</div>
-  </div>
-  <div class="sb">
-    <div class="drow">
-      <div class="dstat"><div class="dsv" id="drat">4.9</div><div class="dsl">Note ★</div></div>
-      <div class="dstat"><div class="dsv" id="dmeals">127</div><div class="dsl">Repas</div></div>
-      <div class="dstat"><div class="dsv" id="ddist">0.8km</div><div class="dsl">Distance</div></div>
-    </div>
-    <div class="mlbl">Ses menus</div>
-    <div class="mchips" id="dmenus"></div>
-    <div class="rdv">
-      <div class="rdvl">📅 Créneaux disponibles · Aujourd'hui</div>
-      <div class="slots">
-        <div class="slot busy">12h00</div>
-        <div class="slot" onclick="pickSlot(this)">13h00</div>
-        <div class="slot on" onclick="pickSlot(this)">19h00</div>
-        <div class="slot" onclick="pickSlot(this)">19h30</div>
-        <div class="slot" onclick="pickSlot(this)">20h00</div>
-        <div class="slot busy">21h00</div>
+  <div class="map-area">
+    <div id="map"></div>
+    <div class="map-badge">📍 <b id="mapcount">10</b> cuisiniers · Marseille</div>
+
+    <div class="bpanel" id="bpanel">
+      <div class="bp-head">
+        <div class="bp-av" id="bpav">👩🏻‍🍳</div>
+        <div><div class="bp-name" id="bpname">—</div><div class="bp-spec" id="bpspec">—</div></div>
+        <div class="bp-close" onclick="closePanel()">✕</div>
+      </div>
+      <div class="bp-body">
+        <div class="bp-stats" id="bpstats"></div>
+        <div class="sec-lbl">Choisir un menu</div>
+        <div id="bpmenus"></div>
+        <div class="sec-lbl" style="margin-top:12px">Convives</div>
+        <div class="guests-row">
+          <span class="guests-lbl">Nombre de personnes</span>
+          <div class="guests-ctrl">
+            <div class="g-btn" onclick="changeGuests(-1)">−</div>
+            <span class="g-count" id="gcount">2</span>
+            <div class="g-btn" onclick="changeGuests(1)">+</div>
+          </div>
+        </div>
+        <div class="sec-lbl">Date</div>
+        <div class="date-row" id="dateRow"></div>
+        <div class="sec-lbl" style="margin-top:8px">Créneau</div>
+        <div class="slot-row">
+          <div class="slot busy">12h00</div>
+          <div class="slot" onclick="pickSlot(this)">13h00</div>
+          <div class="slot on" onclick="pickSlot(this)">19h00</div>
+          <div class="slot" onclick="pickSlot(this)">19h30</div>
+          <div class="slot" onclick="pickSlot(this)">20h00</div>
+          <div class="slot" onclick="pickSlot(this)">20h30</div>
+          <div class="slot busy">21h30</div>
+        </div>
+        <div class="sec-lbl">Récapitulatif</div>
+        <div class="order-box">
+          <div class="ol"><span>Menu</span><span id="sumMenu">—</span></div>
+          <div class="ol"><span id="sumQty">2 pers.</span><span id="sumSub">—</span></div>
+          <div class="ol"><span>Frais de service</span><span>3€</span></div>
+          <div class="ol tot"><span>Total</span><span id="sumTot">—</span></div>
+        </div>
+        <button class="btn-pay" onclick="openPayment()">💳 Réserver & Payer</button>
       </div>
     </div>
-    <button class="bbtn" onclick="openPay()">🍽️ Réserver · <span id="dprice">28€/pers.</span></button>
   </div>
 </div>
 
 <!-- PAYMENT -->
 <div class="ov" id="ov">
   <div class="modal">
-    <div class="mh">
-      <div class="mt" id="mtitle">Réservation · Amina</div>
-      <div class="mc" onclick="closePay()">✕</div>
-    </div>
-    <div class="mb" id="mbody">
-      <div class="osum">
-        <div class="ol"><span>Menu</span><span id="omenu">Tagine agneau</span></div>
-        <div class="ol"><span>Créneau</span><span>Aujourd'hui 19h00</span></div>
-        <div class="ol"><span>2 pers. × <span id="oprice">28</span>€</span><span id="otot1">56€</span></div>
-        <div class="ol"><span>Frais de service</span><span>3€</span></div>
-        <div class="ol tot"><span>Total</span><span id="otot">59€</span></div>
+    <div class="mh"><div class="mt">Paiement sécurisé</div><div class="mc" onclick="closePayment()">✕</div></div>
+    <div class="mb" id="payBody">
+      <div class="stripe-badge">🔒 Paiement sécurisé via <b>Stripe</b> — données chiffrées SSL</div>
+      <div class="pay-osum">
+        <div class="pol"><span>Chef</span><span id="pChef">—</span></div>
+        <div class="pol"><span>Menu</span><span id="pMenu">—</span></div>
+        <div class="pol"><span>Date & heure</span><span id="pDate">—</span></div>
+        <div class="pol"><span id="pQtyLine">—</span><span id="pSub">—</span></div>
+        <div class="pol"><span>Frais de service</span><span>3€</span></div>
+        <div class="pol tot"><span>Total à payer</span><span id="pTot">—</span></div>
       </div>
       <div class="fl">Moyen de paiement</div>
-      <div class="brands">
-        <div class="brand on">💳 Carte</div>
-        <div class="brand">📱 Apple Pay</div>
-        <div class="brand">🅿️ PayPal</div>
+      <div class="pmethods">
+        <div class="pmethod on">💳 Carte</div>
+        <div class="pmethod">📱 Apple Pay</div>
+        <div class="pmethod">🅿️ PayPal</div>
       </div>
+      <div class="fl">Titulaire</div>
+      <input class="fi" type="text" placeholder="Prénom Nom">
       <div class="fl">Numéro de carte</div>
-      <input class="fi" type="tel" inputmode="numeric" placeholder="1234 5678 9012 3456">
+      <input class="fi" type="tel" inputmode="numeric" placeholder="1234 5678 9012 3456" oninput="fmtCard(this)">
       <div class="crow">
-        <div><div class="fl">Expiration</div><input class="fi" placeholder="MM/AA"></div>
-        <div><div class="fl">CVV</div><input class="fi" type="tel" placeholder="123"></div>
+        <div><div class="fl">Expiration</div><input class="fi" placeholder="MM / AA" oninput="fmtExp(this)"></div>
+        <div><div class="fl">CVV</div><input class="fi" type="tel" placeholder="•••" maxlength="3"></div>
       </div>
-      <button class="paybtn" onclick="confirmPay()">🔒 Payer <span id="paybtnamt">59€</span></button>
+      <button class="btn-confirm" onclick="confirmPayment()">🔒 Payer <span id="confirmAmt">—</span></button>
     </div>
   </div>
 </div>
 
 <script>
-const chefs = [
-  { av:'👩🏻‍🍳', name:'Amina Benali',     spec:'Cuisine marocaine · Tagines & Couscous',       rat:'4.9', meals:'127', dist:'0.8km',  price:28, lat:48.8570, lng:2.3480, cat:'maghreb',  dispo:true,
-    menus:[{label:'🥘 Tagine agneau',desc:'Agneau confit, pruneaux, amandes grillées',prix:28},{label:'🫕 Couscous royal',desc:'Méchoui, merguez, légumes du jardin',prix:32},{label:'🥗 Salade marocaine',desc:'Tomate, concombre, chermoula fraîche',prix:14},{label:'🍮 Pastilla sucrée',desc:'Feuilles de brick, cannelle, pigeons',prix:18}]},
-  { av:'👨🏾‍🍳', name:'Kofi Asante',      spec:'Cuisine africaine · Spécialités ivoiriennes',  rat:'4.8', meals:'89',  dist:'1.4km',  price:24, lat:48.8650, lng:2.3330, cat:'africain', dispo:true,
-    menus:[{label:'🍚 Riz gras',desc:'Riz parfumé, légumes sautés, épices maison',prix:22},{label:'🫕 Foutou banane',desc:'Banane pilée, sauce arachide onctueuse',prix:24},{label:'🥬 Sauce graine',desc:'Huile de palme, poisson fumé, légumes',prix:26},{label:'🍖 Poulet braisé',desc:'Marinade citronnelle, braise au charbon',prix:28}]},
-  { av:'👩🏽‍🍳', name:'Linh Nguyen',      spec:'Cuisine vietnamienne · Phở et Bánh mì',        rat:'4.7', meals:'203', dist:'2.1km',  price:22, lat:48.8710, lng:2.3620, cat:'asiatique',dispo:false,
-    menus:[{label:'🍜 Phở bœuf',desc:'Bouillon 12h, bœuf tranché, herbes fraîches',prix:22},{label:'🥪 Bánh mì',desc:'Baguette croustillante, pâté, pickles maison',prix:16},{label:'🥗 Salade papaye',desc:'Papaye verte, crevettes, sauce nuoc-mâm',prix:14},{label:'🍮 Chè',desc:'Dessert lait de coco, haricots, gelée',prix:10}]},
-  { av:'👨🏻‍🍳', name:'Marco Ferreira',   spec:'Cuisine portugaise · Pasteis et Grillades',    rat:'4.6', meals:'56',  dist:'2.8km',  price:32, lat:48.8490, lng:2.3280, cat:'grill',    dispo:true,
-    menus:[{label:'🐟 Bacalhau',desc:'Morue grillée, pommes de terre, olives',prix:32},{label:'🥩 Côte de bœuf',desc:'Bœuf ibérique, chimichurri, braises',prix:38},{label:'🍮 Pastel de nata',desc:'Flan crémeux, cannelle, pâte feuilletée',prix:8},{label:'🍲 Caldo verde',desc:'Soupe chou kale, chorizo, huile olive',prix:14}]},
-  { av:'👩🏿‍🍳', name:'Fatou Diallo',     spec:'Cuisine sénégalaise · Thiéboudiène',            rat:'5.0', meals:'41',  dist:'3.2km',  price:26, lat:48.8530, lng:2.3750, cat:'africain', dispo:true,
-    menus:[{label:'🐟 Thiéboudiène',desc:'Riz au poisson, légumes, sauce tamarin',prix:26},{label:'🍚 Mafé',desc:'Bœuf en sauce arachide, légumes racines',prix:28},{label:'🥜 Yassa poulet',desc:'Poulet mariné citron-oignon, riz blanc',prix:24},{label:'🍮 Thiakry',desc:'Semoule au lait caillé sucré, vanille',prix:10}]},
-  { av:'👩🏼‍🍳', name:'Yuki Tanaka',      spec:'Cuisine japonaise · Ramen et Sushi',            rat:'4.9', meals:'118', dist:'1.9km',  price:30, lat:48.8620, lng:2.3550, cat:'asiatique',dispo:true,
-    menus:[{label:'🍜 Ramen tonkotsu',desc:'Bouillon porc 18h, chashu, oeuf mollet',prix:28},{label:'🍱 Bento sushi',desc:'8 pièces nigiri, miso, salade wakamé',prix:30},{label:'🥟 Gyoza maison',desc:'Raviolis porc-chou, sauce ponzu',prix:14},{label:'🍡 Mochi glacé',desc:'Mochi matcha, fraise ou yuzu',prix:10}]},
-  { av:'👨🏽‍🍳', name:'Karim Mansouri',   spec:'Cuisine algérienne · Chorba et Couscous',       rat:'4.7', meals:'73',  dist:'2.4km',  price:22, lat:48.8500, lng:2.3420, cat:'maghreb',  dispo:true,
-    menus:[{label:'🍲 Chorba frik',desc:'Soupe blé vert, agneau, coriandre',prix:16},{label:'🫕 Couscous tfina',desc:'Pois chiches, légumes confits, smen',prix:22},{label:'🥙 Karantika',desc:'Tarte pois chiches, cumin, harissa',prix:12},{label:'🍮 Zlabia',desc:'Beignets miel, fleur oranger, croustillants',prix:8}]},
-  { av:'👩🏻‍🍳', name:'Priya Sharma',     spec:'Cuisine indienne · Curry et Tandoor',           rat:'4.8', meals:'95',  dist:'3.5km',  price:25, lat:48.8680, lng:2.3700, cat:'asiatique',dispo:false,
-    menus:[{label:'🍛 Butter chicken',desc:'Poulet tandoor, sauce tomate-crème épicée',prix:25},{label:'🫘 Dal makhani',desc:'Lentilles noires, beurre clarifié, épices',prix:20},{label:'🫓 Naan maison',desc:'Pain tandoor, beurre, ail et coriandre',prix:8},{label:'🍮 Kheer',desc:'Riz au lait rose, cardamome, pistaches',prix:10}]},
-  { av:'👩🏽‍🍳', name:'Leila Ouazzani',   spec:'Cuisine végétarienne · Bio et Créatif',         rat:'4.9', meals:'156', dist:'1.1km',  price:20, lat:48.8600, lng:2.3400, cat:'vege',     dispo:true,
-    menus:[{label:'🥗 Bowl quinoa',desc:'Quinoa, avocat, légumes rôtis, tahini',prix:20},{label:'🫕 Curry potiron',desc:'Potiron, lait coco, gingembre, coriandre',prix:18},{label:'🥙 Wrap falafel',desc:'Falafel maison, houmous, légumes croquants',prix:16},{label:'🍮 Cheesecake cru',desc:'Cajou, citron, fruits rouges, sans cuisson',prix:12}]},
+const chefs=[
+  {av:'👩🏻‍🍳',name:'Amina Benali',spec:'Cuisine marocaine · Tagines & Couscous',rat:4.9,meals:127,dist:'0.8km',price:28,lat:43.2965,lng:5.3698,cat:'maghreb',dispo:true,exp:'8 ans',
+   bio:'Née à Fès, Amina a grandi dans la cuisine de sa grand-mère. Installée à Marseille depuis 2015, elle apporte l\'authenticité des saveurs marocaines avec des produits du marché de Noailles.',
+   menus:[{label:'🥘 Tagine agneau',desc:'Agneau confit 4h, pruneaux, amandes, safran',prix:28,tags:['Sans gluten','Halal']},{label:'🫕 Couscous royal',desc:'Méchoui, merguez artisanales, 7 légumes',prix:32,tags:['Halal','Familial']},{label:'🥗 Salade marocaine',desc:'Tomate, concombre, poivrons, chermoula',prix:14,tags:['Végétarien']},{label:'🍮 Pastilla',desc:'Feuilles de brick, cannelle, pigeons confits',prix:18,tags:['Traditionnel']}]},
+  {av:'👨🏾‍🍳',name:'Kofi Asante',spec:'Cuisine africaine · Spécialités ivoiriennes',rat:4.8,meals:89,dist:'1.4km',price:24,lat:43.3010,lng:5.3620,cat:'africain',dispo:true,exp:'5 ans',
+   bio:'Kofi a quitté Abidjan pour Marseille en 2018 avec ses recettes familiales. Ancien cuisinier dans un restaurant étoilé, il revisite la cuisine ivoirienne avec une touche contemporaine.',
+   menus:[{label:'🍚 Riz gras',desc:'Riz parfumé, légumes sautés, épices maison',prix:22,tags:['Sans gluten']},{label:'🫕 Foutou banane',desc:'Banane pilée, sauce arachide, crevettes',prix:24,tags:['Traditionnel']},{label:'🥬 Sauce graine',desc:'Huile de palme, poisson fumé, légumes',prix:26,tags:['Halal']},{label:'🍖 Poulet braisé',desc:'Marinade citronnelle 24h, braise charbon',prix:28,tags:['Halal','Grillé']}]},
+  {av:'👩🏽‍🍳',name:'Linh Nguyen',spec:'Cuisine vietnamienne · Phở & Bánh mì',rat:4.7,meals:203,dist:'2.1km',price:22,lat:43.2890,lng:5.3780,cat:'asiatique',dispo:false,exp:'12 ans',
+   bio:'Linh est arrivée de Hanoï il y a 15 ans. Elle prépare son bouillon de phở pendant 12h la nuit. Ses bánh mì utilisent une baguette artisanale du boulanger du coin.',
+   menus:[{label:'🍜 Phở bœuf',desc:'Bouillon mijoté 12h, bœuf tranché, herbes',prix:22,tags:['Sans lactose']},{label:'🥪 Bánh mì',desc:'Baguette croustillante, pâté, pickles maison',prix:16,tags:['Léger']},{label:'🥗 Salade papaye',desc:'Papaye verte, crevettes, nuoc-mâm maison',prix:14,tags:['Sans gluten']},{label:'🍮 Chè coco',desc:'Lait de coco, haricots rouges, tapioca',prix:10,tags:['Végétarien']}]},
+  {av:'👩🏼‍🍳',name:'Yuki Tanaka',spec:'Cuisine japonaise · Ramen & Sushi',rat:4.9,meals:118,dist:'1.9km',price:30,lat:43.3050,lng:5.3750,cat:'asiatique',dispo:true,exp:'10 ans',
+   bio:'Ancienne cheffe à Tokyo, Yuki s\'est installée à Marseille pour sa lumière méditerranéenne. Elle marie la précision japonaise avec les produits de la mer marseillaise.',
+   menus:[{label:'🍜 Ramen tonkotsu',desc:'Bouillon porc 18h, chashu, œuf mollet mariné',prix:28,tags:['Signature']},{label:'🍱 Bento sushi',desc:'8 nigiri poissons locaux, miso, wakamé',prix:30,tags:['Frais']},{label:'🥟 Gyoza maison',desc:'Raviolis porc-ciboulette, sauce ponzu yuzu',prix:14,tags:['Artisanal']},{label:'🍡 Mochi glacé',desc:'Matcha, fraise ou yuzu, pâte de riz maison',prix:10,tags:['Végétarien']}]},
+  {av:'👨🏻‍🍳',name:'Marco Ferreira',spec:'Cuisine portugaise · Pasteis & Grillades',rat:4.6,meals:56,dist:'2.8km',price:32,lat:43.2850,lng:5.3650,cat:'grill',dispo:true,exp:'15 ans',
+   bio:'Marco, fils de pêcheur de Porto, achète ses poissons à 5h à la criée du Vieux-Port. Il cuisine les produits méditerranéens avec les techniques traditionnelles portugaises.',
+   menus:[{label:'🐟 Bacalhau',desc:'Morue effilochée, pommes paille, olives, œufs',prix:32,tags:['Traditionnel']},{label:'🥩 Côte de bœuf',desc:'Ibérique maturé 45j, chimichurri, braises',prix:38,tags:['Signature','Grillé']},{label:'🍮 Pastel de nata',desc:'Flan crémeux, pâte feuilletée maison, cannelle',prix:8,tags:['Artisanal']},{label:'🍲 Caldo verde',desc:'Soupe chou kale, chorizo fumé, huile olive',prix:14,tags:['Traditionnel']}]},
+  {av:'👩🏿‍🍳',name:'Fatou Diallo',spec:'Cuisine sénégalaise · Thiéboudiène',rat:5.0,meals:41,dist:'3.2km',price:26,lat:43.2920,lng:5.3820,cat:'africain',dispo:true,exp:'6 ans',
+   bio:'Fatou a appris à cuisiner avec sa mère à Dakar. Son thiéboudiène nécessite 3h de préparation avec des épices qu\'elle ramène personnellement du Sénégal.',
+   menus:[{label:'🐟 Thiéboudiène',desc:'Riz au poisson de la criée, légumes, tamarin',prix:26,tags:['Signature']},{label:'🍚 Mafé',desc:'Bœuf en sauce arachide fumée, légumes racines',prix:28,tags:['Halal','Familial']},{label:'🥜 Yassa poulet',desc:'Poulet mariné citron-oignon 24h, basmati',prix:24,tags:['Halal']},{label:'🍮 Thiakry',desc:'Semoule au lait caillé sucré, vanille bourbon',prix:10,tags:['Végétarien']}]},
+  {av:'👨🏽‍🍳',name:'Karim Mansouri',spec:'Cuisine algérienne · Chorba & Tajines',rat:4.7,meals:73,dist:'2.4km',price:22,lat:43.3080,lng:5.3550,cat:'maghreb',dispo:true,exp:'7 ans',
+   bio:'Né à Oran, Karim cuisine avec émotion depuis ses 16 ans. Sa chorba frik est réputée dans tout le 13e. Il partage la convivialité algérienne à chaque table.',
+   menus:[{label:'🍲 Chorba frik',desc:'Blé vert, agneau de lait, tomates, coriandre',prix:16,tags:['Halal','Traditionnel']},{label:'🫕 Couscous tfina',desc:'Pois chiches, légumes confits, smen affiné',prix:22,tags:['Halal','Familial']},{label:'🥙 Karantika',desc:'Tarte pois chiches, cumin, harissa douce',prix:12,tags:['Végétarien']},{label:'🍮 Zlabia',desc:'Beignets miel de jujubier, fleur d\'oranger',prix:8,tags:['Végétarien']}]},
+  {av:'👩🏻‍🍳',name:'Priya Sharma',spec:'Cuisine indienne · Curry & Tandoor',rat:4.8,meals:95,dist:'3.5km',price:25,lat:43.2800,lng:5.3720,cat:'asiatique',dispo:false,exp:'9 ans',
+   bio:'Priya vient de Mumbai et est tombée amoureuse de Marseille lors d\'un voyage. Elle torréfie et moud ses masalas quotidiennement pour une fraîcheur incomparable.',
+   menus:[{label:'🍛 Butter chicken',desc:'Poulet tandoor 24h, sauce tomate-crème épicée',prix:25,tags:['Signature','Sans gluten']},{label:'🫘 Dal makhani',desc:'Lentilles noires 8h, beurre clarifié, masala',prix:20,tags:['Végétarien']},{label:'🫓 Naan maison',desc:'Pain tandoor, beurre clarifié, ail, coriandre',prix:8,tags:['Artisanal']},{label:'🍮 Kheer',desc:'Riz au lait, cardamome, pistaches, eau de rose',prix:10,tags:['Végétarien']}]},
+  {av:'👩🏽‍🍳',name:'Leila Ouazzani',spec:'Cuisine végétarienne · Bio & Créatif',rat:4.9,meals:156,dist:'1.1km',price:20,lat:43.3020,lng:5.3680,cat:'vege',dispo:true,exp:'4 ans',
+   bio:'Ancienne nutritionniste, Leila s\'approvisionne exclusivement en bio au marché de la Plaine. Elle crée des plats végétariens qui surprennent même les plus carnivores.',
+   menus:[{label:'🥗 Bowl soleil',desc:'Quinoa, avocat, légumes rôtis zaatar, tahini',prix:20,tags:['Vegan','Bio','Sans gluten']},{label:'🫕 Curry potiron',desc:'Potiron bio, lait coco, gingembre, coriandre',prix:18,tags:['Vegan','Bio']},{label:'🥙 Wrap falafel',desc:'Falafel maison, houmous fumé, légumes croquants',prix:16,tags:['Vegan']},{label:'🍮 Cheesecake cru',desc:'Cajou-dattes, citron vert, fruits rouges locaux',prix:12,tags:['Vegan','Raw']}]},
+  {av:'👨🏻‍🍳',name:'Pierre Roux',spec:'Cuisine provençale · Bouillabaisse & Mer',rat:4.8,meals:88,dist:'0.5km',price:35,lat:43.2950,lng:5.3760,cat:'mer',dispo:true,exp:'20 ans',
+   bio:'Pierre est marseillais de naissance. Fils de pêcheur du Vieux-Port, il achète ses poissons à 5h à la criée. Sa bouillabaisse respecte la charte officielle des restaurateurs marseillais.',
+   menus:[{label:'🐟 Bouillabaisse',desc:'Poissons de roche, rouille maison, croutons aillés',prix:45,tags:['Signature','Local','AOC']},{label:'🦞 Homard grillé',desc:'Homard breton, beurre noisette, légumes du soleil',prix:55,tags:['Premium','Grillé']},{label:'🥗 Salade niçoise',desc:'Thon albacore, œuf mollet, anchois Méditerranée',prix:18,tags:['Local','Léger']},{label:'🍮 Tarte tropézienne',desc:'Brioche moelleuse, crème diplomate vanille',prix:12,tags:['Provençal']}]},
 ];
 
-let cur = 0;
-let activeCat = 'tous';
-const markers = [];
+let cur=0,activeCat='tous',guests=2,selMenu=null,selSlot='19h00',selDate='';
+const markers=[];
 
-// ─── MAP INIT ───────────────────────────────────────────
-const map = L.map('map', { zoomControl:true, scrollWheelZoom:true, tap:true })
-  .setView([48.858, 2.348], 13);
+// MAP
+const map=L.map('map',{zoomControl:true,scrollWheelZoom:true,tap:true}).setView([43.2965,5.3690],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(map);
+L.marker([43.2950,5.3720],{icon:L.divIcon({className:'',iconSize:[14,14],iconAnchor:[7,7],html:'<div class="umark"></div>'})}).addTo(map).bindTooltip('Vous',{permanent:true,direction:'top',offset:[0,-8]});
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution:'© <a href="https://openstreetmap.org">OSM</a>',
-  maxZoom:19
-}).addTo(map);
-
-// User position
-const userIcon = L.divIcon({
-  className:'', iconSize:[14,14], iconAnchor:[7,7],
-  html:'<div class="umark"></div>'
-});
-L.marker([48.858, 2.352], { icon:userIcon }).addTo(map)
-  .bindTooltip('Vous', { permanent:true, direction:'top', offset:[0,-8] });
-
-// Chef markers
-function makeIcon(i, active) {
-  const c = chefs[i];
-  return L.divIcon({
-    className:'',
-    html:`<div class="cpin${active?' on':''}"><div class="pdot"></div>${c.name.split(' ')[0]} · ${c.price}€</div>`,
-    iconSize:[120,30], iconAnchor:[60,30]
-  });
+function makeIcon(i,on){
+  const c=chefs[i];
+  return L.divIcon({className:'',html:`<div class="mpin${on?' on':''}"><div class="mpin-dot"></div>${c.name.split(' ')[0]} · ${c.price}€</div>`,iconSize:[130,30],iconAnchor:[65,30]});
 }
 
-chefs.forEach((c, i) => {
-  const marker = L.marker([c.lat, c.lng], { icon:makeIcon(i, i===0) }).addTo(map);
-  marker.bindPopup(`
-    <div class="pop">
-      <div class="pop-h">
-        <div class="pop-av">${c.av}</div>
-        <div>
-          <div class="pop-name">${c.name}</div>
-          <div class="pop-spec">${c.spec}</div>
-        </div>
-      </div>
-      <div class="pop-b">
-        <div class="pop-row">
-          <span class="pop-rat">★ ${c.rat} · ${c.meals} repas</span>
-          <span class="pop-price">${c.price}€<small>/pers.</small></span>
-        </div>
-        <button class="pop-btn" onclick="sel(${i})">Voir & Réserver</button>
-      </div>
-    </div>
-  `, { maxWidth:220, minWidth:210 });
-  marker.on('click', () => {
-    markers.forEach((m,j) => m.setIcon(makeIcon(j, j===i)));
-    cur = i;
-    renderCards();
-  });
-  markers.push(marker);
+chefs.forEach((c,i)=>{
+  const m=L.marker([c.lat,c.lng],{icon:makeIcon(i,i===0)}).addTo(map);
+  m.bindPopup(`<div class="pop"><div class="pop-h"><div class="pop-av">${c.av}</div><div><div class="pop-name">${c.name}</div><div class="pop-spec">${c.spec}</div></div></div><div class="pop-b"><div class="pop-row"><span class="pop-rat">★ ${c.rat} · ${c.meals} repas</span><span class="pop-price">${c.price}€<small>/pers.</small></span></div><button class="pop-btn" onclick="openChef(${i})">Voir & Réserver</button></div></div>`,{maxWidth:230,minWidth:220});
+  m.on('click',()=>{markers.forEach((mk,j)=>mk.setIcon(makeIcon(j,j===i)));cur=i;renderCards();});
+  markers.push(m);
 });
-setTimeout(() => markers[0].openPopup(), 500);
+setTimeout(()=>markers[0].openPopup(),600);
 
-// ─── RENDER CARDS ───────────────────────────────────────
-function renderCards() {
-  const filtered = chefs
-    .map((c,i) => ({...c, idx:i}))
-    .filter(c => activeCat === 'tous' || c.cat === activeCat);
-
-  const list = document.getElementById('clist');
-  const count = filtered.length;
-  document.getElementById('slbl').textContent =
-    count === chefs.length
-      ? `${count} cuisiniers proches de vous`
-      : `${count} cuisinier${count>1?'s':''} · ${document.querySelector('.ftag.on').textContent.trim()}`;
-
-  // Remove old cards
-  list.querySelectorAll('.card').forEach(el => el.remove());
-
-  if (count === 0) {
-    const empty = document.createElement('div');
-    empty.style.cssText = 'text-align:center;padding:30px 10px;color:var(--gray);font-size:13px;';
-    empty.innerHTML = '<div style="font-size:32px;margin-bottom:8px">🍽️</div>Aucun cuisinier dans cette catégorie pour l\'instant.';
-    list.appendChild(empty);
-    // Hide all markers
-    markers.forEach(m => map.removeLayer(m));
-    chefs.forEach((_,i) => {
-      if (!map.hasLayer(markers[i])) markers[i].addTo(map);
-      markers[i].setOpacity(0.2);
-    });
-    return;
+// DATES
+function buildDates(){
+  const row=document.getElementById('dateRow');
+  const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const months=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  for(let i=0;i<7;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const el=document.createElement('div');
+    el.className='dpill'+(i===0?' on':'');
+    const dayStr=`${days[d.getDay()]} ${d.getDate()}`;
+    el.innerHTML=`<div class="dpill-d">${dayStr}</div><div class="dpill-m">${months[d.getMonth()]}</div>`;
+    el.onclick=()=>{document.querySelectorAll('.dpill').forEach(x=>x.classList.remove('on'));el.classList.add('on');selDate=dayStr;updateSummary();};
+    row.appendChild(el);
+    if(i===0){selDate=dayStr;}
   }
+}
 
-  // Show/hide markers
-  chefs.forEach((c,i) => {
-    if (!map.hasLayer(markers[i])) markers[i].addTo(map);
-    const visible = activeCat === 'tous' || c.cat === activeCat;
-    markers[i].setOpacity(visible ? 1 : 0.2);
-    markers[i].setIcon(makeIcon(i, i === cur && visible));
-  });
-
-  filtered.forEach((c, fi) => {
-    const isSel = c.idx === cur;
-    const dispoBadge = c.dispo
-      ? `<span class="mbadge dispo">● Dispo</span>`
-      : `<span class="mbadge" style="color:#C4622D">● Ce soir</span>`;
-    const el = document.createElement('div');
-    el.className = `card${isSel ? ' sel' : ''}`;
-    el.style.animationDelay = (fi * 0.05) + 's';
-    el.innerHTML = `
-      <div class="cav">${c.av}</div>
-      <div class="cinfo">
-        <div class="cname">${c.name}</div>
-        <div class="cspec">${c.spec}</div>
-        <div class="cmeta">
-          <span class="stars">★★★★★</span>
-          <span style="font-size:10px;color:#7A9E7E;margin-left:2px">${c.rat}</span>
-          <span class="mbadge">${c.meals} repas</span>
-          ${dispoBadge}
+// RENDER CARDS
+function renderCards(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const filtered=chefs.map((c,i)=>({...c,idx:i})).filter(c=>(activeCat==='tous'||c.cat===activeCat)&&(c.name.toLowerCase().includes(q)||c.spec.toLowerCase().includes(q)));
+  const list=document.getElementById('cardList');list.innerHTML='';
+  document.getElementById('slbl').textContent=filtered.length===chefs.length?`${filtered.length} cuisiniers disponibles à Marseille`:`${filtered.length} cuisinier${filtered.length>1?'s':''} trouvé${filtered.length>1?'s':''}`;
+  document.getElementById('mapcount').textContent=filtered.length;
+  chefs.forEach((c,i)=>{const vis=activeCat==='tous'||c.cat===activeCat;markers[i].setOpacity(vis?1:.18);markers[i].setIcon(makeIcon(i,i===cur&&vis));});
+  if(!filtered.length){list.innerHTML='<div class="empty"><div class="empty-icon">🍽️</div>Aucun cuisinier dans cette catégorie.</div>';return;}
+  filtered.forEach((c,fi)=>{
+    const el=document.createElement('div');
+    el.className=`card${c.idx===cur?' sel':''}`;
+    el.style.animationDelay=(fi*.04)+'s';
+    const dispTag=c.dispo?`<span class="tag tag-g">● Disponible</span>`:`<span class="tag tag-s">● Ce soir seulement</span>`;
+    el.innerHTML=`
+      <div class="card-header" onclick="openChef(${c.idx})">
+        <div class="chef-photo">${c.av}<div class="chef-badge">✓</div></div>
+        <div class="card-info">
+          <div class="card-name">${c.name}</div>
+          <div class="card-spec">${c.spec}</div>
+          <div class="card-meta"><div class="rat"><span class="star">★</span>${c.rat}</div><span class="tag">${c.meals} repas</span><span class="tag">${c.exp} d'exp.</span>${dispTag}</div>
         </div>
+        <div class="card-price">${c.price}€<small>/pers.</small></div>
       </div>
-      <div class="cprice">${c.price}€<small>/pers.</small></div>`;
-    el.onclick = () => sel(c.idx);
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <span>Voir le profil & les menus</span>
+        <div class="tarrow"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="card-exp">
+        <div class="exp-inner">
+          <div class="chef-bio">"${c.bio}"</div>
+          <div class="chef-stats">
+            <div class="cstat"><div class="cstat-v">★ ${c.rat}</div><div class="cstat-l">Note</div></div>
+            <div class="cstat"><div class="cstat-v">${c.meals}</div><div class="cstat-l">Repas</div></div>
+            <div class="cstat"><div class="cstat-v">${c.exp}</div><div class="cstat-l">Exp.</div></div>
+            <div class="cstat"><div class="cstat-v">${c.dist}</div><div class="cstat-l">Distance</div></div>
+          </div>
+          <div class="menus-lbl">Ses menus</div>
+          ${c.menus.map((m,mi)=>`
+            <div class="menu-item${mi===0?' on':''}">
+              <div class="mi-top"><span class="mi-name">${m.label}</span><span class="mi-price">${m.prix}€</span></div>
+              <div class="mi-desc">${m.desc}</div>
+              <div class="mi-tags">${m.tags.map(t=>`<span class="mtag">${t}</span>`).join('')}</div>
+            </div>`).join('')}
+          <button class="btn-book" onclick="openChef(${c.idx})">📅 Réserver ce cuisinier</button>
+        </div>
+      </div>`;
     list.appendChild(el);
   });
 }
 
-// ─── SELECT CHEF ────────────────────────────────────────
-function sel(i) {
-  cur = i;
-  const c = chefs[i];
+function toggleCard(el){
+  el.querySelector('.tarrow').classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
 
+function openChef(i){
+  cur=i;const c=chefs[i];
   renderCards();
-
-  markers.forEach((m,j) => m.setIcon(makeIcon(j, j===i)));
-  map.flyTo([c.lat, c.lng], 14, { duration:0.8 });
+  markers.forEach((m,j)=>m.setIcon(makeIcon(j,j===i)));
+  map.flyTo([c.lat,c.lng],14,{duration:.7});
   markers[i].openPopup();
-
-  // Sheet header
-  document.getElementById('shav').textContent   = c.av;
-  document.getElementById('shname').textContent = c.name;
-  document.getElementById('shspec').textContent = c.spec;
-  document.getElementById('drat').textContent   = c.rat;
-  document.getElementById('dmeals').textContent = c.meals;
-  document.getElementById('ddist').textContent  = c.dist;
-
-  // Menus — rich cards
-  const menusEl = document.getElementById('dmenus');
-  menusEl.innerHTML = '';
-  c.menus.forEach((m, j) => {
-    const chip = document.createElement('div');
-    chip.className = 'menu-card' + (j===0 ? ' on' : '');
-    chip.innerHTML = `
-      <div class="mc-top">
-        <span class="mc-label">${m.label}</span>
-        <span class="mc-price">${m.prix}€</span>
-      </div>
-      <div class="mc-desc">${m.desc}</div>`;
-    chip.onclick = () => {
-      menusEl.querySelectorAll('.menu-card').forEach(el => el.classList.remove('on'));
-      chip.classList.add('on');
-      selMenu = m;
-      document.getElementById('dprice').textContent = m.prix + '€/pers.';
-      document.getElementById('omenu').textContent  = m.label.replace(/^\S+\s/,'');
-      document.getElementById('oprice').textContent = m.prix;
-      document.getElementById('otot1').textContent  = (m.prix*2) + '€';
-      document.getElementById('otot').textContent   = (m.prix*2+3) + '€';
-      document.getElementById('paybtnamt').textContent = (m.prix*2+3) + '€';
-    };
-    menusEl.appendChild(chip);
+  document.getElementById('bpav').textContent=c.av;
+  document.getElementById('bpname').textContent=c.name;
+  document.getElementById('bpspec').textContent=c.spec;
+  document.getElementById('bpstats').innerHTML=`<div class="bstat"><div class="bstat-v">★ ${c.rat}</div><div class="bstat-l">Note</div></div><div class="bstat"><div class="bstat-v">${c.meals}</div><div class="bstat-l">Repas</div></div><div class="bstat"><div class="bstat-v">${c.exp}</div><div class="bstat-l">Exp.</div></div>`;
+  const me=document.getElementById('bpmenus');me.innerHTML='';
+  c.menus.forEach((m,mi)=>{
+    const d=document.createElement('div');d.className='pmenu'+(mi===0?' on':'');
+    d.innerHTML=`<div class="pm-top"><span class="pm-name">${m.label}</span><span class="pm-price">${m.prix}€/pers.</span></div><div class="pm-desc">${m.desc}</div>`;
+    d.onclick=()=>{me.querySelectorAll('.pmenu').forEach(x=>x.classList.remove('on'));d.classList.add('on');selMenu=m;updateSummary();};
+    me.appendChild(d);
   });
-
-  // Init payment with first menu
-  selMenu = c.menus[0];
-  document.getElementById('dprice').textContent    = selMenu.prix + '€/pers.';
-  document.getElementById('mtitle').textContent    = 'Réservation · ' + c.name.split(' ')[0];
-  document.getElementById('omenu').textContent     = selMenu.label.replace(/^\S+\s/,'');
-  document.getElementById('oprice').textContent    = selMenu.prix;
-  document.getElementById('otot1').textContent     = (selMenu.prix*2) + '€';
-  document.getElementById('otot').textContent      = (selMenu.prix*2+3) + '€';
-  document.getElementById('paybtnamt').textContent = (selMenu.prix*2+3) + '€';
-
-  document.getElementById('sheet').classList.add('show');
+  selMenu=c.menus[0];guests=2;document.getElementById('gcount').textContent=2;
+  updateSummary();
+  document.getElementById('bpanel').classList.add('show');
 }
 
-let selMenu = chefs[0].menus[0];
+function closePanel(){document.getElementById('bpanel').classList.remove('show');}
 
-function pickSlot(el) {
-  el.closest('.slots').querySelectorAll('.slot:not(.busy)').forEach(s => s.classList.remove('on'));
-  el.classList.add('on');
+function changeGuests(d){guests=Math.max(1,Math.min(12,guests+d));document.getElementById('gcount').textContent=guests;updateSummary();}
+
+function pickSlot(el){document.querySelectorAll('.slot:not(.busy)').forEach(s=>s.classList.remove('on'));el.classList.add('on');selSlot=el.textContent;updateSummary();}
+
+function updateSummary(){
+  if(!selMenu)return;
+  const sub=selMenu.prix*guests,tot=sub+3;
+  document.getElementById('sumMenu').textContent=selMenu.label.replace(/^\S+\s/,'');
+  document.getElementById('sumQty').textContent=`${guests} pers. × ${selMenu.prix}€`;
+  document.getElementById('sumSub').textContent=sub+'€';
+  document.getElementById('sumTot').textContent=tot+'€';
 }
 
-function closeSheet() { document.getElementById('sheet').classList.remove('show'); }
-function openPay()    { document.getElementById('ov').classList.add('show'); }
-function closePay()   { document.getElementById('ov').classList.remove('show'); }
+function openPayment(){
+  if(!selMenu){alert('Veuillez choisir un menu.');return;}
+  const c=chefs[cur],sub=selMenu.prix*guests,tot=sub+3;
+  document.getElementById('pChef').textContent=c.name;
+  document.getElementById('pMenu').textContent=selMenu.label.replace(/^\S+\s/,'');
+  document.getElementById('pDate').textContent=(selDate||'Aujourd\'hui')+' · '+selSlot;
+  document.getElementById('pQtyLine').textContent=`${guests} pers. × ${selMenu.prix}€`;
+  document.getElementById('pSub').textContent=sub+'€';
+  document.getElementById('pTot').textContent=tot+'€';
+  document.getElementById('confirmAmt').textContent=tot+'€';
+  document.getElementById('ov').classList.add('show');
+}
 
-function confirmPay() {
-  const c = chefs[cur];
-  document.getElementById('mbody').innerHTML = `
+function closePayment(){document.getElementById('ov').classList.remove('show');}
+
+function confirmPayment(){
+  const c=chefs[cur],tot=(selMenu.prix*guests)+3;
+  document.getElementById('payBody').innerHTML=`
     <div class="success">
-      <div class="sicon">🎉</div>
-      <div class="stitle">Réservation confirmée !</div>
-      <div class="ssub" style="margin-bottom:14px">
-        Repas chez <strong>${c.name}</strong><br>ce soir à 19h00 · ${selMenu.prix*2+3}€ débités
+      <div class="s-icon">🎉</div>
+      <div class="s-title">Réservation confirmée !</div>
+      <div class="s-sub">Repas avec <b>${c.name}</b> confirmé.<br>${selDate||'Aujourd\'hui'} à ${selSlot} · ${guests} personne${guests>1?'s':''}</div>
+      <div class="s-ref">
+        <div class="s-row"><span>Référence</span><b>#BC-${Math.floor(10000+Math.random()*90000)}</b></div>
+        <div class="s-row"><span>Chef</span><b>${c.name}</b></div>
+        <div class="s-row"><span>Menu</span><b>${selMenu.label.replace(/^\S+\s/,'')}</b></div>
+        <div class="s-row"><span>Total débité</span><b style="color:var(--salmon)">${tot}€</b></div>
       </div>
-      <div style="background:var(--cream);border-radius:12px;padding:12px;margin:12px 0;text-align:left">
-        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
-          <span style="color:var(--gray)">N° confirmation</span>
-          <span style="font-weight:600">#BC-${Math.floor(10000+Math.random()*90000)}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:12px">
-          <span style="color:var(--gray)">Montant débité</span>
-          <span style="font-weight:700;color:var(--terra)">${selMenu.prix*2+3}€</span>
-        </div>
-      </div>
-      <button class="paybtn" onclick="closePay()" style="margin-top:8px">✓ Super, merci !</button>
+      <p style="font-size:11px;color:var(--sand);margin-bottom:16px">Email de confirmation envoyé. Le BackCooker vous contacte sous 30 min.</p>
+      <button class="btn-confirm" onclick="closePayment()" style="background:var(--olive)">✓ Parfait, merci !</button>
     </div>`;
 }
 
-// ─── FILTERS ────────────────────────────────────────────
-document.querySelectorAll('.ftag').forEach(el => {
-  el.onclick = function() {
-    document.querySelectorAll('.ftag').forEach(t => t.classList.remove('on'));
-    this.classList.add('on');
-    activeCat = this.dataset.cat;
-    renderCards();
-    // Fit map to visible chefs
-    const visible = chefs.filter(c => activeCat==='tous' || c.cat===activeCat);
-    document.getElementById('mapcount').textContent = visible.length;
-    if (visible.length > 0) {
-      const bounds = L.latLngBounds(visible.map(c => [c.lat, c.lng]));
-      map.flyToBounds(bounds.pad(0.3), { duration:0.8 });
-    }
-  };
-});
+function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function fmtExp(el){let v=el.value.replace(/\D/g,'').substring(0,4);if(v.length>=2)v=v.substring(0,2)+' / '+v.substring(2);el.value=v;}
 
-document.querySelectorAll('.brands .brand').forEach(el => {
-  el.onclick = function() { document.querySelectorAll('.brands .brand').forEach(b=>b.classList.remove('on')); this.classList.add('on'); };
-});
-document.querySelectorAll('.tab').forEach(el => {
-  el.onclick = function() { document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on')); this.classList.add('on'); };
-});
+document.querySelectorAll('.ftag').forEach(el=>{el.onclick=function(){document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));this.classList.add('on');activeCat=this.dataset.cat;renderCards();const vis=chefs.filter(c=>activeCat==='tous'||c.cat===activeCat);if(vis.length)map.flyToBounds(L.latLngBounds(vis.map(c=>[c.lat,c.lng])).pad(.3),{duration:.7});};});
+document.getElementById('searchInput').oninput=()=>renderCards();
+document.querySelectorAll('.tab').forEach(el=>{el.onclick=function(){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));this.classList.add('on');};});
+document.querySelectorAll('.pmethods .pmethod').forEach(el=>{el.onclick=function(){document.querySelectorAll('.pmethods .pmethod').forEach(b=>b.classList.remove('on'));this.classList.add('on');};});
 
-// ─── INIT ────────────────────────────────────────────────
-setTimeout(() => map.invalidateSize(), 300);
-renderCards();
-
+buildDates();renderCards();
+setTimeout(()=>map.invalidateSize(),300);
 </script>
 </body>
 </html>
