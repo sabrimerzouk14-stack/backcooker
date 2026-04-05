@@ -4,476 +4,449 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>BackCooker</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 :root{
-  --bg:#F0EFEA;
-  --bg2:#E8E6E0;
-  --card:#FAFAF8;
-  --card2:#F0EFEA;
-  --border:#D8D5CE;
-  --border2:#E4E1DA;
-  --ink:#1C1917;
-  --ink2:#57534E;
-  --ink3:#A8A29E;
-  --ora:#C05A28;
-  --ora-l:#E07848;
-  --ora-d:#9A4818;
-  --ora-pale:#FBF0E8;
-  --ora-pale2:#F5E0CE;
-  --grn:#3D6B2A;
-  --grn-l:#5A9A40;
+  --bg:#F7F3EC; --card:#FFFFFF; --card2:#F0EBE0;
+  --border:#E0D8C8; --ink:#1A1510; --ink2:#6B5F4A; --ink3:#A89070;
+  --gold:#B8862A; --gold-l:#D4A040; --gold-d:#8A6010;
+  --gold-pale:#FBF5E6; --gold-pale2:#F5EAD0;
+  --grn:#3A6020; --grn-l:#5A9A40;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 
-.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:opacity .45s,transform .45s}
-.screen.off{opacity:0;pointer-events:none;transform:translateY(18px)}
+/* SCREENS */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;transition:opacity .4s,transform .4s}
+.screen.off{opacity:0;pointer-events:none;transform:translateY(16px)}
 
-/* ══════════ LANDING ══════════ */
-#land{background:#1C1410;align-items:center;justify-content:center;overflow:hidden}
-.land-glow{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(192,90,40,.16) 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-55%);pointer-events:none}
-
-/* Food SVG decoration */
-.land-deco{position:absolute;inset:0;pointer-events:none}
-
-.land-c{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:0 28px;width:100%;max-width:540px}
-.land-pill{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ora-l);background:rgba(192,90,40,.15);border:1px solid rgba(192,90,40,.3);padding:6px 16px;border-radius:50px;margin-bottom:24px}
-.land-logo{font-family:'Cormorant Garamond',serif;font-size:clamp(56px,12vw,90px);font-weight:400;color:#F5F0E8;line-height:1;margin-bottom:10px;text-align:center;letter-spacing:-.02em}
-.land-logo em{font-style:italic;color:var(--ora-l)}
-.land-sub{font-size:14px;font-weight:300;color:rgba(245,240,232,.4);text-align:center;margin-bottom:44px;line-height:1.7;max-width:360px}
-
-.chef-strip{display:flex;align-items:center;margin-bottom:36px}
-.cs-av{width:42px;height:42px;border-radius:50%;border:3px solid #1C1410;margin-left:-10px;font-size:20px;background:#2A2018;display:flex;align-items:center;justify-content:center}
-.cs-av:first-child{margin-left:0}
-.cs-lbl{font-size:12px;color:rgba(245,240,232,.45);margin-left:14px}
-.cs-lbl b{color:var(--ora-l)}
-
-.city-box{width:100%;position:relative}
-.city-row{display:flex;background:rgba(245,240,232,.06);border:1.5px solid rgba(245,240,232,.1);border-radius:14px;overflow:hidden;transition:.25s}
-.city-row:focus-within{border-color:rgba(192,90,40,.55)}
-.city-ico{width:50px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.city-inp{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:16px;color:#F5F0E8;padding:17px 0}
-.city-inp::placeholder{color:rgba(245,240,232,.22)}
-.city-go{background:var(--ora);color:#fff;border:none;padding:0 24px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
-.city-go:hover{background:var(--ora-d)}
-.sugg{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#2A2018;border:1px solid #3A3020;border-radius:12px;overflow:hidden;z-index:200;display:none}
+/* ═══ LANDING ═══ */
+#land{background:#1C1208;align-items:center;justify-content:center;overflow:hidden}
+.lg{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(184,134,42,.15) 0%,transparent 68%);top:50%;left:50%;transform:translate(-50%,-58%);pointer-events:none}
+.lc{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;padding:0 28px;width:100%;max-width:520px}
+.lpill{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-l);background:rgba(184,134,42,.14);border:1px solid rgba(184,134,42,.28);padding:6px 16px;border-radius:50px;margin-bottom:22px}
+.llogo{font-family:'Tenor Sans',sans-serif;font-size:clamp(54px,12vw,88px);color:#F5F0E5;line-height:1;margin-bottom:9px;text-align:center}
+.llogo em{font-style:italic;color:var(--gold-l)}
+.lsub{font-size:14px;font-weight:300;color:rgba(245,240,229,.38);text-align:center;margin-bottom:44px;line-height:1.7;max-width:340px}
+.favs{display:flex;align-items:center;margin-bottom:32px}
+.fav{width:40px;height:40px;border-radius:50%;border:3px solid #1C1208;margin-left:-10px;font-size:18px;background:#2A2010;display:flex;align-items:center;justify-content:center}
+.fav:first-child{margin-left:0}
+.fav-lbl{font-size:12px;color:rgba(245,240,229,.38);margin-left:12px}
+.fav-lbl b{color:var(--gold-l)}
+.cbox{width:100%;position:relative}
+.crow{display:flex;background:rgba(245,240,229,.05);border:1.5px solid rgba(245,240,229,.09);border-radius:14px;overflow:hidden;transition:.25s}
+.crow:focus-within{border-color:rgba(184,134,42,.5)}
+.cico{width:48px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.cinp{flex:1;background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:16px;color:#F5F0E5;padding:17px 0}
+.cinp::placeholder{color:rgba(245,240,229,.2)}
+.cgo{background:var(--gold);color:#fff;border:none;padding:0 24px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}
+.cgo:hover{background:var(--gold-d)}
+.sugg{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#282010;border:1px solid #3A3018;border-radius:12px;overflow:hidden;z-index:200;display:none}
 .sugg.show{display:block}
-.sugg-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:.15s;border-bottom:1px solid rgba(255,255,255,.04)}
-.sugg-item:last-child{border-bottom:none}
-.sugg-item:hover{background:rgba(192,90,40,.15)}
-.sugg-name{font-size:13px;color:#F5F0E8}
-.sugg-n{font-size:11px;color:rgba(245,240,232,.3);margin-left:auto}
-.qcities{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:20px}
-.qc{padding:6px 14px;border-radius:50px;border:1px solid rgba(245,240,232,.1);font-size:12px;color:rgba(245,240,232,.38);cursor:pointer;transition:.2s}
-.qc:hover{border-color:rgba(192,90,40,.45);color:var(--ora-l);background:rgba(192,90,40,.08)}
+.si{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;transition:.15s;border-bottom:1px solid rgba(255,255,255,.04)}
+.si:last-child{border-bottom:none}
+.si:hover{background:rgba(184,134,42,.14)}
+.sn{font-size:13px;color:#F5F0E5}
+.sc{font-size:11px;color:rgba(245,240,229,.28);margin-left:auto}
+.qc{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.qci{padding:6px 14px;border-radius:50px;border:1px solid rgba(245,240,229,.09);font-size:12px;color:rgba(245,240,229,.35);cursor:pointer;transition:.2s}
+.qci:hover{border-color:rgba(184,134,42,.44);color:var(--gold-l)}
 
-/* ══════════ APP ══════════ */
+/* ═══ APP ═══ */
 #app{background:var(--bg)}
-.top-nav{height:54px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:200}
-.tn-logo{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:600}
-.tn-logo em{font-style:italic;color:var(--ora)}
-.tn-dot{width:6px;height:6px;border-radius:50%;background:var(--ora);margin-bottom:1px;flex-shrink:0}
-.tn-city-pill{flex:1;display:flex;justify-content:center}
-.tn-cp{display:inline-flex;align-items:center;gap:5px;background:var(--ora-pale);border:1px solid var(--border2);border-radius:50px;padding:5px 12px;font-size:12px;color:var(--ora);cursor:pointer;font-weight:500}
-.tn-r{display:flex;gap:8px;align-items:center}
-.tn-btn{background:var(--ora);color:#fff;padding:6px 13px;border-radius:7px;font-size:11px;font-weight:600;border:none;cursor:pointer;white-space:nowrap}
-.tn-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--ora-d),var(--ora));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
-.hero{background:var(--ink);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.hero-l{font-family:'Cormorant Garamond',serif;font-size:17px;color:#F5F0E8}
-.hero-l em{font-style:italic;color:var(--ora-l)}
-.hero-r{background:rgba(192,90,40,.2);border:1px solid rgba(192,90,40,.3);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:500;color:var(--ora-l)}
-.toolbar{background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0}
-.tb-search{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border2)}
-.tb-si{flex:1;display:flex;align-items:center;gap:8px;background:var(--card2);border:1.5px solid var(--border2);border-radius:9px;padding:8px 12px;transition:.2s}
-.tb-si:focus-within{border-color:var(--ora)}
-.tb-si input{background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);width:100%}
-.tb-si input::placeholder{color:var(--ink3)}
-.tb-filters{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;scrollbar-width:none}
-.tb-filters::-webkit-scrollbar{display:none}
-.ftag{padding:5px 11px;border-radius:7px;font-size:12px;font-weight:500;border:1.5px solid var(--border2);cursor:pointer;white-space:nowrap;background:var(--card);color:var(--ink2);transition:.15s;flex-shrink:0}
-.ftag.on{background:var(--ora-pale2);color:var(--ora);border-color:rgba(192,90,40,.4)}
-.app-main{flex:1;display:flex;overflow:hidden}
-.list-panel{width:400px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--border);overflow:hidden}
-.list-hdr{padding:10px 14px 4px;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);flex-shrink:0}
-.list-scroll{flex:1;overflow-y:auto;padding:4px 10px 20px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
 
-/* CHEF CARD */
-.ccard{background:var(--card);border-radius:12px;margin-bottom:8px;border:1.5px solid var(--border2);overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:sup .3s ease both}
-@keyframes sup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.ccard:hover{border-color:rgba(192,90,40,.4)}
-.ccard.hi{border-color:var(--ora);box-shadow:0 4px 14px rgba(192,90,40,.1)}
-.cc-main{display:flex;cursor:pointer;align-items:stretch}
-.cc-photo{width:78px;height:78px;flex-shrink:0;overflow:hidden}
-.cc-photo img{width:100%;height:100%;object-fit:cover;display:block}
-.cc-photo-fb{width:78px;height:78px;background:var(--ora-pale);display:flex;align-items:center;justify-content:center;font-size:34px;flex-shrink:0}
-.cc-inf{flex:1;padding:11px 12px 9px}
-.cc-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;margin-bottom:1px;color:var(--ink)}
-.cc-spec{font-size:10px;color:var(--ink2);margin-bottom:5px}
-.cc-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.cc-rat{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:600}
-.cc-star{color:#C8820A}
-.cc-tag{font-size:9px;padding:2px 6px;border-radius:4px;background:var(--bg2);color:var(--ink2)}
-.cc-tag.gr{background:#E0EED8;color:var(--grn)}
-.cc-tag.or{background:var(--ora-pale);color:var(--ora)}
-.cc-price-col{padding:11px 11px 0 0;text-align:right;flex-shrink:0}
-.cc-pv{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ora);line-height:1}
-.cc-pl{font-size:9px;color:var(--ink3)}
-.cc-acc{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--border2);cursor:pointer;transition:.15s}
-.cc-acc:hover{background:var(--card2)}
-.cc-acc-lbl{font-size:11px;color:var(--ora);font-weight:500}
-.cc-arr{width:17px;height:17px;border-radius:4px;background:var(--card2);display:flex;align-items:center;justify-content:center;transition:transform .25s}
-.cc-arr.open{transform:rotate(180deg)}
-.cc-drop{max-height:0;overflow:hidden;transition:max-height .4s ease}
-.cc-drop.open{max-height:900px}
-.cc-drop-in{padding:12px}
-.bio-box{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:10px 12px;margin-bottom:10px}
-.bio-nm{font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:var(--ora);margin-bottom:4px}
-.bio-txt{font-size:11px;color:var(--ink2);line-height:1.7;font-weight:300}
+/* TOP NAV */
+.nav{height:54px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:100}
+.nav-logo{font-family:'Tenor Sans',sans-serif;font-size:19px;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:5px}
+.nav-logo em{font-style:italic;color:var(--gold);margin-left:1px}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-bottom:1px;flex-shrink:0}
+.nav-loc{flex:1;display:flex;justify-content:center}
+.nav-city{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--gold-d);background:var(--gold-pale);border:1px solid var(--border);border-radius:50px;padding:5px 12px;cursor:pointer}
+.nav-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+
+/* SCROLLABLE BODY */
+.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+
+/* SEARCH */
+.searchbar{padding:12px 14px 6px}
+.si2{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.si2:focus-within{border-color:var(--gold)}
+.si2 input{background:none;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);width:100%}
+.si2 input::placeholder{color:var(--ink3)}
+
+/* ── GRANDES CATÉGORIES STYLE UBER ── */
+.cats-block{padding:14px 14px 6px}
+.cats-title{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.cats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.05);position:relative;overflow:hidden}
+.cat-card.on{border-color:var(--gold);background:var(--gold-pale)}
+.cat-card:active{transform:scale(.96)}
+.cat-card-img{font-size:30px;line-height:1}
+.cat-card-lbl{font-size:11px;font-weight:600;color:var(--ink2);text-align:center;line-height:1.2}
+.cat-card.on .cat-card-lbl{color:var(--gold-d)}
+.cat-card-glow{position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,134,42,.08),transparent);opacity:0;transition:.2s}
+.cat-card.on .cat-card-glow{opacity:1}
+
+/* ── SECTIONS TEMPORELLES ── */
+.sec{padding:16px 14px 0}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-title{font-family:'Tenor Sans',sans-serif;font-size:18px;color:var(--ink)}
+.sec-subtitle{font-size:12px;color:var(--ink3);margin-top:1px}
+.sec-see{font-size:12px;font-weight:600;color:var(--gold-d);cursor:pointer;white-space:nowrap}
+
+/* Horizontal scroll cards */
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:0 14px 16px;scrollbar-width:none;margin:0 -14px}
+.hscroll::-webkit-scrollbar{display:none}
+
+/* Chef card horizontal */
+.chef-h{width:155px;flex-shrink:0;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .15s}
+.chef-h:active{transform:scale(.97)}
+.chef-h-img{width:155px;height:105px;object-fit:cover;display:block;background:var(--gold-pale)}
+.chef-h-img-fb{width:155px;height:105px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:44px}
+.chef-h-body{padding:9px 10px 10px}
+.chef-h-name{font-family:'Tenor Sans',sans-serif;font-size:14px;color:var(--ink);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chef-h-spec{font-size:10px;color:var(--ink3);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chef-h-foot{display:flex;align-items:center;justify-content:space-between}
+.chef-h-rat{font-size:11px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:2px}
+.chef-h-star{color:#C8820A}
+.chef-h-price{font-family:'Tenor Sans',sans-serif;font-size:14px;color:var(--gold-d)}
+.chef-h-meta{display:flex;align-items:center;gap:5px;margin-top:4px}
+.chef-h-dist{font-size:10px;color:var(--ink3)}
+.dispo-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dispo-dot.ok{background:var(--grn-l)}
+.dispo-dot.soon{background:var(--gold-l)}
+
+/* Divider */
+.divider{height:8px;background:var(--card2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0 0}
+
+/* Chef card vertical (list style) */
+.chef-v{display:flex;background:var(--card);border-radius:14px;margin:0 14px 10px;border:1px solid var(--border);overflow:hidden;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:box-shadow .2s}
+.chef-v:active{box-shadow:0 3px 14px rgba(184,134,42,.15)}
+.chef-v.hi{border-color:var(--gold)}
+.chef-v-img{width:88px;height:88px;object-fit:cover;flex-shrink:0}
+.chef-v-img-fb{width:88px;height:88px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.chef-v-body{flex:1;padding:10px 12px;min-width:0}
+.chef-v-name{font-family:'Tenor Sans',sans-serif;font-size:16px;color:var(--ink);margin-bottom:2px}
+.chef-v-spec{font-size:11px;color:var(--ink3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chef-v-meta{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.chef-v-rat{font-size:11px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:2px}
+.chef-v-star{color:#C8820A}
+.chef-v-dot{width:3px;height:3px;border-radius:50%;background:var(--border);flex-shrink:0}
+.chef-v-dist{font-size:11px;color:var(--ink3)}
+.dispo-tag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:50px}
+.dispo-tag.ok{background:#E8F0DC;color:var(--grn)}
+.dispo-tag.soon{background:var(--gold-pale2);color:var(--gold-d)}
+.chef-v-price{padding:0 13px 0 0;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px}
+.chef-v-pv{font-family:'Tenor Sans',sans-serif;font-size:18px;color:var(--gold-d)}
+.chef-v-pl{font-size:9px;color:var(--ink3)}
+
+/* Accordion drop */
+.chef-v-acc{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;border-top:1px solid var(--border);background:var(--bg);cursor:pointer}
+.chef-v-acc-lbl{font-size:11px;color:var(--gold-d);font-weight:600}
+.chef-v-arr{width:18px;height:18px;border-radius:4px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;transition:transform .25s}
+.chef-v-arr.open{transform:rotate(180deg)}
+.chef-v-drop{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.chef-v-drop.open{max-height:900px}
+.chef-v-drop-in{padding:12px;background:var(--bg)}
+.bio-box{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 12px;margin-bottom:10px}
+.bio-nm{font-family:'Tenor Sans',sans-serif;font-size:13px;color:var(--gold-d);margin-bottom:4px}
+.bio-txt{font-size:11px;color:var(--ink2);line-height:1.75;font-weight:300}
 .mini-stats{display:flex;gap:5px;margin-bottom:10px}
-.mst{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:7px;text-align:center}
-.mst-v{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--ora)}
-.mst-l{font-size:8px;color:var(--ink3);margin-top:1px;text-transform:uppercase;letter-spacing:.06em}
-.drop-sec{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
-
-/* Menu row with food photo */
-.mn-row{display:flex;align-items:center;gap:0;background:var(--card);border:1px solid var(--border2);border-radius:9px;margin-bottom:5px;cursor:pointer;transition:.15s;overflow:hidden}
-.mn-row:hover{border-color:rgba(192,90,40,.4)}
-.mn-img{width:54px;height:54px;object-fit:cover;flex-shrink:0}
-.mn-img-fb{width:54px;height:54px;background:var(--ora-pale);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mst{flex:1;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:7px;text-align:center}
+.mst-v{font-family:'Tenor Sans',sans-serif;font-size:13px;color:var(--gold-d)}
+.mst-l{font-size:8px;color:var(--ink3);margin-top:1px;text-transform:uppercase;letter-spacing:.05em}
+.drop-sec{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px}
+.mn-row{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:9px;margin-bottom:5px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.mn-row:hover{border-color:rgba(184,134,42,.4)}
+.mn-img{width:52px;height:52px;object-fit:cover;flex-shrink:0}
+.mn-img-fb{width:52px;height:52px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .mn-i{flex:1;padding:7px 9px;min-width:0}
 .mn-n{font-size:11px;font-weight:500;margin-bottom:1px;color:var(--ink)}
 .mn-d{font-size:10px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mn-tags{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap}
-.mn-tag{font-size:8px;padding:2px 5px;border-radius:3px;background:var(--bg2);color:var(--ink3)}
-.mn-p{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--ora);flex-shrink:0;padding-right:10px}
-.btn-rsv{width:100%;background:var(--ora);color:#fff;border:none;border-radius:8px;padding:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px;transition:.15s}
-.btn-rsv:hover{background:var(--ora-d)}
+.mn-tag{font-size:8px;padding:2px 5px;border-radius:3px;background:var(--card2);color:var(--ink3)}
+.mn-p{font-family:'Tenor Sans',sans-serif;font-size:14px;color:var(--gold-d);flex-shrink:0;padding-right:10px}
+.btn-rsv{width:100%;background:var(--gold);color:#fff;border:none;border-radius:9px;padding:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px}
 
-/* MAP */
-.map-panel{flex:1;position:relative;overflow:hidden}
-#map{width:100%;height:100%}
-.leaflet-control-zoom{border:none!important;border-radius:9px!important;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.12)!important}
-.leaflet-control-zoom a{background:var(--card)!important;color:var(--ink)!important;font-size:15px!important;line-height:30px!important;width:30px!important;height:30px!important;border:none!important;border-bottom:1px solid var(--border2)!important}
-.leaflet-popup-content-wrapper{padding:0!important;border-radius:12px!important;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.14)!important;border:1px solid var(--border)!important;background:var(--card)!important}
-.leaflet-popup-content{margin:0!important;width:218px!important}
-.leaflet-popup-tip-container{display:none!important}
-.leaflet-control-attribution{font-size:9px!important;background:rgba(240,239,234,.85)!important;color:var(--ink3)!important;padding:2px 7px!important;border-radius:4px!important}
-.mpin{background:var(--ink);color:#F5F0E8;padding:6px 11px;border-radius:50px;font-size:10px;font-weight:600;white-space:nowrap;box-shadow:0 3px 10px rgba(0,0,0,.18);display:inline-flex;align-items:center;gap:4px;position:relative;cursor:pointer;border:1.5px solid rgba(255,255,255,.08);transition:transform .15s}
-.mpin::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink);border-bottom:none}
-.mpin.on{background:var(--ora);border-color:rgba(255,255,255,.15)}
-.mpin.on::after{border-top-color:var(--ora)}
-.mpin-dot{width:5px;height:5px;border-radius:50%;background:var(--ora-l);flex-shrink:0}
-.mpin.on .mpin-dot{background:rgba(255,255,255,.65)}
-.mbadge{position:absolute;top:12px;left:12px;z-index:400;background:rgba(250,250,248,.95);border:1px solid var(--border);border-radius:50px;padding:6px 13px;font-size:11px;color:var(--ink2);box-shadow:0 2px 8px rgba(0,0,0,.09);pointer-events:none;display:flex;align-items:center;gap:5px}
-.mbadge b{color:var(--ora);font-weight:600}
+/* BOTTOM NAV */
+.bottom-nav{position:sticky;bottom:0;height:60px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0}
+.bn-ico{font-size:20px;line-height:1}
+.bn-lbl{font-size:10px;font-weight:500;color:var(--ink3)}
+.bn.on .bn-lbl{color:var(--gold-d);font-weight:700}
+
+/* MAP (hidden, used for pin logic only) */
+.map-mini{margin:0 14px 16px;border-radius:14px;overflow:hidden;height:130px;position:relative;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.map-mini #map{width:100%;height:100%}
+.map-badge{position:absolute;top:8px;left:8px;z-index:400;background:rgba(247,243,236,.95);border:1px solid var(--border);border-radius:50px;padding:4px 10px;font-size:10px;font-weight:500;color:var(--ink2);pointer-events:none}
+.map-badge b{color:var(--gold-d);font-weight:700}
 .umark{width:14px;height:14px;border-radius:50%;background:#3A8AE8;border:2.5px solid #fff;box-shadow:0 0 0 3px rgba(58,138,232,.22)}
-.pop-wrap{font-family:'DM Sans',sans-serif}
-.pop-h{background:var(--ink);padding:11px 13px;display:flex;gap:9px;align-items:center}
-.pop-av{width:38px;height:38px;border-radius:8px;object-fit:cover;flex-shrink:0}
-.pop-av-fb{width:38px;height:38px;border-radius:8px;background:#2A2018;display:flex;align-items:center;justify-content:center;font-size:18px}
-.pop-nm{color:#F5F0E8;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600}
-.pop-sp{color:rgba(245,240,232,.42);font-size:10px;margin-top:1px}
+.mpin{background:var(--ink);color:#F5F0E5;padding:5px 10px;border-radius:50px;font-size:9px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.22);display:inline-flex;align-items:center;gap:3px;position:relative;cursor:pointer}
+.mpin::after{content:'';position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink);border-bottom:none}
+.mpin.on{background:var(--gold-d)}.mpin.on::after{border-top-color:var(--gold-d)}
+.mpin-dot{width:4px;height:4px;border-radius:50%;background:var(--gold-l);flex-shrink:0}
+.leaflet-control-zoom{border:none!important;border-radius:8px!important;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12)!important}
+.leaflet-control-zoom a{background:var(--card)!important;color:var(--ink)!important;font-size:14px!important;line-height:28px!important;width:28px!important;height:28px!important;border:none!important}
+.leaflet-popup-content-wrapper{padding:0!important;border-radius:12px!important;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.14)!important;border:1px solid var(--border)!important;background:var(--card)!important}
+.leaflet-popup-content{margin:0!important;width:210px!important}
+.leaflet-popup-tip-container{display:none!important}
+.leaflet-control-attribution{font-size:9px!important;background:rgba(247,243,236,.8)!important;color:var(--ink3)!important;padding:2px 6px!important;border-radius:4px!important}
+.pop-h{background:#2A2010;padding:11px 13px;display:flex;gap:9px;align-items:center}
+.pop-av{width:36px;height:36px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.pop-av-fb{width:36px;height:36px;border-radius:8px;background:#3A3020;display:flex;align-items:center;justify-content:center;font-size:18px}
+.pop-nm{color:#F5F0E5;font-family:'Tenor Sans',sans-serif;font-size:13px}
+.pop-sp{color:rgba(245,240,229,.4);font-size:10px;margin-top:1px}
 .pop-b{padding:10px 12px}
 .pop-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
 .pop-rat{color:#C8820A;font-size:11px;font-weight:600}
-.pop-price{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ora)}
-.pop-price small{font-size:9px;font-weight:400;color:var(--ink2)}
-.pop-btn{width:100%;background:var(--ora);color:#fff;border:none;border-radius:7px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.pop-price{font-family:'Tenor Sans',sans-serif;font-size:16px;color:var(--gold-d)}
+.pop-price small{font-size:9px;color:var(--ink2)}
+.pop-btn{width:100%;background:var(--gold);color:#fff;border:none;border-radius:7px;padding:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif}
 
-/* ══════════ BOOKING SHEET ══════════ */
-/* Works as bottom sheet on mobile, right drawer on desktop */
-.bk-ov{position:fixed;inset:0;background:rgba(28,25,23,.5);backdrop-filter:blur(3px);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s}
+/* BOOKING SHEET */
+.bk-ov{position:fixed;inset:0;background:rgba(26,20,8,.52);backdrop-filter:blur(4px);z-index:900;opacity:0;pointer-events:none;transition:opacity .3s}
 .bk-ov.show{opacity:1;pointer-events:all}
-
-.bk-sheet{
-  position:fixed;
-  background:var(--card);
-  z-index:1000;
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-  /* mobile default */
-  left:0;right:0;bottom:0;
-  height:88dvh;
-  border-radius:18px 18px 0 0;
-  border-top:1px solid var(--border);
-  transform:translateY(100%);
-  transition:transform .4s cubic-bezier(.4,0,.2,1);
-}
-.bk-sheet.show{transform:translateY(0)}
-
-@media(min-width:769px){
-  .bk-sheet{
-    left:auto;top:0;right:0;bottom:0;
-    width:380px;height:100%;
-    border-radius:0;border-top:none;
-    border-left:1px solid var(--border);
-    transform:translateX(100%);
-  }
-  .bk-sheet.show{transform:translateX(0)}
-}
-
+.bk-sh{position:fixed;background:var(--bg);z-index:1000;display:flex;flex-direction:column;overflow:hidden;left:0;right:0;bottom:0;height:88dvh;border-radius:20px 20px 0 0;border-top:1px solid var(--border);transform:translateY(100%);transition:transform .4s cubic-bezier(.4,0,.2,1)}
+.bk-sh.show{transform:translateY(0)}
+@media(min-width:769px){.bk-sh{left:auto;top:0;right:0;bottom:0;width:380px;height:100%;border-radius:0;border-top:none;border-left:1px solid var(--border);transform:translateX(100%)}.bk-sh.show{transform:translateX(0)}}
 .bk-handle{padding:9px 0 2px;display:flex;justify-content:center;flex-shrink:0}
 .bk-handle-bar{width:34px;height:4px;border-radius:2px;background:var(--border)}
 @media(min-width:769px){.bk-handle{display:none}}
-
-.bk-head{background:var(--ink);padding:13px 15px;display:flex;gap:11px;align-items:center;flex-shrink:0;position:relative}
+.bk-head{background:#2A2010;padding:13px 15px;display:flex;gap:11px;align-items:center;flex-shrink:0;position:relative}
 .bk-av{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0}
-.bk-av-fb{width:44px;height:44px;border-radius:10px;background:#2A2018;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.bk-nm{font-family:'Cormorant Garamond',serif;font-size:17px;color:#F5F0E8;font-weight:600}
-.bk-sp{font-size:10px;color:rgba(245,240,232,.4);margin-top:2px}
-.bk-x{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(245,240,232,.65);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;border:1px solid rgba(255,255,255,.07)}
-.bk-x:hover{background:rgba(255,255,255,.18)}
-
-/* THE KEY FIX: this div is the only scrollable element */
-.bk-scroll{
-  flex:1;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
-  padding:14px 15px 50px;
-}
-
+.bk-av-fb{width:44px;height:44px;border-radius:10px;background:#3A3020;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.bk-nm{font-family:'Tenor Sans',sans-serif;font-size:17px;color:#F5F0E5}
+.bk-sp{font-size:10px;color:rgba(245,240,229,.4);margin-top:2px}
+.bk-x{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.1);color:rgba(245,240,229,.65);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px}
+.bk-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:14px 15px 50px;background:var(--bg)}
 .bk-sec{margin-bottom:15px}
-.bk-lbl{font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.bk-lbl{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:9px}
 .bk-stats{display:flex;gap:6px}
-.bkst{flex:1;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:8px;text-align:center}
-.bkst-v{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--ora)}
+.bkst{flex:1;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center}
+.bkst-v{font-family:'Tenor Sans',sans-serif;font-size:15px;color:var(--gold-d)}
 .bkst-l{font-size:8px;color:var(--ink3);margin-top:1px;text-transform:uppercase;letter-spacing:.05em}
-
-/* Menu picker in booking with food photo */
-.bk-menu{display:flex;align-items:center;gap:0;background:var(--card2);border:1.5px solid var(--border2);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:.15s;overflow:hidden}
-.bk-menu.on{border-color:var(--ora);background:var(--ora-pale)}
-.bk-menu:hover{border-color:rgba(192,90,40,.5)}
+.bk-menu{display:flex;align-items:center;background:var(--card);border:1.5px solid var(--border);border-radius:10px;margin-bottom:6px;cursor:pointer;transition:.15s;overflow:hidden}
+.bk-menu.on{border-color:var(--gold);background:var(--gold-pale)}
+.bk-menu:hover{border-color:rgba(184,134,42,.5)}
 .bk-mimg{width:56px;height:56px;object-fit:cover;flex-shrink:0}
-.bk-mimg-fb{width:56px;height:56px;background:var(--ora-pale);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.bk-mimg-fb{width:56px;height:56px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .bk-mi{flex:1;padding:8px 10px;min-width:0}
-.bk-mn{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:1px}
+.bk-mn{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px}
 .bk-md{font-size:10px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bk-mp{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ora);flex-shrink:0;padding-right:11px}
-
-.guests-row{display:flex;align-items:center;justify-content:space-between;background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:10px 13px}
+.bk-mp{font-family:'Tenor Sans',sans-serif;font-size:16px;color:var(--gold-d);flex-shrink:0;padding-right:11px}
+.guests-row{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:9px;padding:10px 13px}
 .guests-lbl{font-size:13px;font-weight:500;color:var(--ink)}
 .guests-ctrl{display:flex;align-items:center;gap:12px}
-.g-btn{width:28px;height:28px;border-radius:7px;background:var(--card);border:1px solid var(--border2);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--ink);line-height:1;transition:.15s;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-.g-btn:active{border-color:var(--ora);color:var(--ora)}
-.g-num{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--ink);min-width:20px;text-align:center}
-
-/* Calendar */
+.g-btn{width:28px;height:28px;border-radius:7px;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--ink);line-height:1;-webkit-user-select:none;user-select:none}
+.g-num{font-family:'Tenor Sans',sans-serif;font-size:20px;color:var(--ink);min-width:20px;text-align:center}
 .cal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.cal-mo{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;color:var(--ink)}
+.cal-mo{font-family:'Tenor Sans',sans-serif;font-size:15px;color:var(--ink)}
 .cal-nav{display:flex;gap:4px}
-.cal-nb{width:26px;height:26px;border-radius:6px;background:var(--card2);border:1px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink2);-webkit-appearance:none}
-.cal-nb:active{background:var(--ora-pale);color:var(--ora)}
+.cal-nb{width:26px;height:26px;border-radius:6px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--ink2);-webkit-appearance:none}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .cal-dn{text-align:center;font-size:9px;font-weight:600;color:var(--ink3);padding:3px 0;text-transform:uppercase;letter-spacing:.04em}
 .cal-d{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:default;transition:.15s;position:relative;color:var(--ink3)}
 .cal-d.avail{color:var(--grn);font-weight:600;cursor:pointer}
-.cal-d.avail:active{background:var(--ora-pale)}
 .cal-d.avail::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--grn)}
 .cal-d.past{color:var(--ink3);opacity:.35}
-.cal-d.sel{background:var(--ora)!important;color:#fff!important;font-weight:700}
+.cal-d.sel{background:var(--gold)!important;color:#fff!important;font-weight:700}
 .cal-d.sel::after{display:none}
 .cal-d.tod{font-weight:700;color:var(--ink)}
-.cal-d.tod:not(.sel)::before{content:'';position:absolute;top:2px;right:2px;width:3px;height:3px;border-radius:50%;background:var(--ora)}
-
+.cal-d.tod:not(.sel)::before{content:'';position:absolute;top:2px;right:2px;width:3px;height:3px;border-radius:50%;background:var(--gold)}
 .slots-grid{display:flex;gap:5px;flex-wrap:wrap}
-.tsl{padding:6px 11px;border-radius:7px;background:var(--card2);font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border2);transition:.15s;color:var(--ink)}
-.tsl:active{border-color:var(--ora)}
-.tsl.on{background:var(--ora-pale);border-color:var(--ora);color:var(--ora)}
+.tsl{padding:6px 11px;border-radius:7px;background:var(--card);font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);transition:.15s;color:var(--ink)}
+.tsl.on{background:var(--gold-pale);border-color:var(--gold);color:var(--gold-d)}
 .tsl.busy{opacity:.3;cursor:not-allowed;text-decoration:line-through}
 .slots-hint{font-size:11px;color:var(--ink3);padding:5px 0}
-
-.sum-box{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:11px}
+.sum-box{background:var(--gold-pale);border:1px solid var(--border);border-radius:11px;padding:13px}
 .sum-row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-bottom:5px}
-.sum-row.tot{font-size:13px;font-weight:600;color:var(--ink);border-top:1px solid var(--border2);padding-top:7px;margin-top:3px}
-.btn-pay{width:100%;background:var(--ora);color:#fff;border:none;border-radius:9px;padding:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;transition:.15s;-webkit-appearance:none}
-.btn-pay:active{background:var(--ora-d)}
+.sum-row.tot{font-size:13px;font-weight:700;color:var(--ink);border-top:1px solid var(--border);padding-top:8px;margin-top:4px}
+.btn-pay{width:100%;background:var(--gold);color:#fff;border:none;border-radius:10px;padding:14px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:11px;-webkit-appearance:none}
 
-/* ══════════ PAYMENT ══════════ */
-.pay-ov{position:fixed;inset:0;background:rgba(28,25,23,.65);backdrop-filter:blur(6px);z-index:1100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
+/* PAYMENT */
+.pay-ov{position:fixed;inset:0;background:rgba(26,20,8,.65);backdrop-filter:blur(6px);z-index:1100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:.25s}
 .pay-ov.show{opacity:1;pointer-events:all}
-.pay-modal{background:var(--card);border-radius:18px 18px 0 0;width:100%;max-width:520px;max-height:94dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(100%);transition:.38s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--border)}
+.pay-modal{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:94dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(100%);transition:.38s cubic-bezier(.4,0,.2,1);border-top:1px solid var(--border)}
 .pay-ov.show .pay-modal{transform:translateY(0)}
-.pm-h{background:var(--ink);padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
-.pm-t{font-family:'Cormorant Garamond',serif;color:#F5F0E8;font-size:19px;font-weight:600}
-.pm-x{color:rgba(245,240,232,.4);cursor:pointer;font-size:21px;line-height:1}
+.pm-h{background:#2A2010;padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
+.pm-t{font-family:'Tenor Sans',sans-serif;color:#F5F0E5;font-size:19px}
+.pm-x{color:rgba(245,240,229,.4);cursor:pointer;font-size:21px;line-height:1}
 .pm-body{padding:15px 17px 36px}
-.stripe-info{display:flex;align-items:center;gap:7px;background:#EAF0E0;border:1px solid rgba(61,107,42,.2);border-radius:7px;padding:8px 11px;font-size:11px;color:var(--grn);margin-bottom:13px;font-weight:500}
+.stripe-info{display:flex;align-items:center;gap:7px;background:#EBF0E2;border:1px solid rgba(58,96,32,.2);border-radius:7px;padding:8px 11px;font-size:11px;color:var(--grn);margin-bottom:13px;font-weight:500}
 .pay-steps{display:flex;margin-bottom:16px}
-.pstep{flex:1;text-align:center;font-size:9px;font-weight:600;color:var(--ink3);letter-spacing:.07em;text-transform:uppercase;padding-bottom:6px;border-bottom:2px solid var(--border2);transition:.2s}
-.pstep.act{color:var(--ora);border-bottom-color:var(--ora)}
+.pstep{flex:1;text-align:center;font-size:9px;font-weight:600;color:var(--ink3);letter-spacing:.07em;text-transform:uppercase;padding-bottom:6px;border-bottom:2px solid var(--border);transition:.2s}
+.pstep.act{color:var(--gold-d);border-bottom-color:var(--gold)}
 .pstep.done{color:var(--grn);border-bottom-color:var(--grn)}
-.pay-recap{background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:11px;margin-bottom:13px}
+.pay-recap{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;margin-bottom:13px}
 .pr{display:flex;justify-content:space-between;font-size:12px;color:var(--ink2);margin-bottom:5px}
-.pr.tot{font-size:13px;font-weight:600;color:var(--ink);border-top:1px solid var(--border2);padding-top:7px;margin-top:3px}
+.pr.tot{font-size:13px;font-weight:700;color:var(--ink);border-top:1px solid var(--border);padding-top:7px;margin-top:3px}
 .pay-methods{display:flex;gap:6px;margin-bottom:12px}
-.pmet{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border2);font-size:11px;font-weight:500;cursor:pointer;background:var(--card2);text-align:center;transition:.15s;color:var(--ink2)}
-.pmet.on{border-color:var(--ora);background:var(--ora-pale);color:var(--ora)}
-.pay-fl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
-.pay-fi{background:var(--card2);border:1.5px solid var(--border2);border-radius:8px;padding:11px 12px;font-family:'DM Sans',sans-serif;font-size:14px;width:100%;outline:none;margin-bottom:10px;color:var(--ink);transition:.15s;-webkit-appearance:none}
-.pay-fi:focus{border-color:var(--ora)}
+.pmet{flex:1;padding:9px;border-radius:9px;border:1.5px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;background:var(--card);text-align:center;transition:.15s;color:var(--ink2)}
+.pmet.on{border-color:var(--gold);background:var(--gold-pale);color:var(--gold-d)}
+.pay-fl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.pay-fi{background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:11px 12px;font-family:'Inter',sans-serif;font-size:14px;width:100%;outline:none;margin-bottom:10px;color:var(--ink);-webkit-appearance:none;transition:.15s}
+.pay-fi:focus{border-color:var(--gold)}
 .pay-fi::placeholder{color:var(--ink3)}
-.pay-row2{display:flex;gap:8px}
-.pay-row2>div{flex:1}
-.card-prev{background:linear-gradient(135deg,#1C1410,#2A1E10);border:1px solid rgba(192,90,40,.2);border-radius:10px;padding:14px;margin-bottom:13px;position:relative;overflow:hidden}
-.cp-g{position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(192,90,40,.2),transparent)}
+.pay-row2{display:flex;gap:8px}.pay-row2>div{flex:1}
+.card-prev{background:linear-gradient(135deg,#2A1E0E,#3A2A10);border:1px solid rgba(184,134,42,.22);border-radius:11px;padding:14px;margin-bottom:13px;position:relative;overflow:hidden}
+.cp-g{position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(184,134,42,.2),transparent)}
 .cp-chip{width:24px;height:17px;background:linear-gradient(135deg,#C89010,#E0B030);border-radius:3px;margin-bottom:13px}
-.cp-num{font-family:'DM Sans',sans-serif;font-size:13px;letter-spacing:.18em;color:#F5F0E8;margin-bottom:10px;font-weight:300}
+.cp-num{font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.18em;color:#F5F0E5;margin-bottom:10px;font-weight:300}
 .cp-bot{display:flex;justify-content:space-between;align-items:flex-end}
-.cp-nm{font-size:10px;color:rgba(245,240,232,.45);text-transform:uppercase;letter-spacing:.07em}
-.cp-exp-lbl{font-size:8px;color:rgba(245,240,232,.3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
-.cp-exp{font-size:11px;color:rgba(245,240,232,.55)}
-.btn-confirm{width:100%;background:var(--ora);color:#fff;border:none;border-radius:9px;padding:13px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s;-webkit-appearance:none}
-.btn-confirm:active{background:var(--ora-d)}
+.cp-nm{font-size:10px;color:rgba(245,240,229,.45);text-transform:uppercase;letter-spacing:.07em}
+.cp-exp-lbl{font-size:8px;color:rgba(245,240,229,.28);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1px}
+.cp-exp{font-size:11px;color:rgba(245,240,229,.52)}
+.btn-confirm{width:100%;background:var(--gold);color:#fff;border:none;border-radius:9px;padding:13px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;-webkit-appearance:none}
 .pay-success{text-align:center;padding:18px 8px}
 .ps-icon{font-size:50px;margin-bottom:8px}
-.ps-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;margin-bottom:5px;color:var(--ink)}
+.ps-title{font-family:'Tenor Sans',sans-serif;font-size:23px;margin-bottom:5px;color:var(--ink)}
 .ps-sub{font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:13px}
-.ps-ref{background:var(--card2);border:1px solid var(--border2);border-radius:9px;padding:11px;text-align:left;margin-bottom:13px}
+.ps-ref{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:11px;text-align:left;margin-bottom:13px}
 .ps-row{display:flex;justify-content:space-between;font-size:11px;color:var(--ink2);margin-bottom:4px}
-.empty-st{text-align:center;padding:42px 16px;color:var(--ink2)}
-.empty-st-i{font-size:34px;margin-bottom:8px}
-@media(max-width:768px){.list-panel{width:100%;border-right:none}.map-panel{display:none}}
+.empty-st{text-align:center;padding:40px 16px;color:var(--ink2)}
+.empty-st-i{font-size:36px;margin-bottom:10px}
+@media(max-width:768px){.map-mini{margin:0 14px 12px}}
 </style>
 </head>
 <body>
 
-<!-- ══ LANDING ══ -->
+<!-- ═══ LANDING ═══ -->
 <div class="screen" id="land">
-  <div class="land-glow"></div>
-
-  <!-- Food SVG decor -->
-  <svg class="land-deco" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" style="opacity:.5">
-    <g transform="translate(90,80) rotate(-22)">
-      <ellipse cx="0" cy="0" rx="52" ry="36" fill="#D4B830" opacity=".7"/>
-      <ellipse cx="0" cy="0" rx="44" ry="29" fill="#E8CC44" opacity=".4"/>
-      <line x1="-42" y1="0" x2="42" y2="0" stroke="#B09010" stroke-width="1.5" opacity=".35"/>
-      <line x1="0" y1="-29" x2="0" y2="29" stroke="#B09010" stroke-width="1.5" opacity=".35"/>
-      <path d="M-9,-40 Q0,-54 9,-40" stroke="#4A7A30" stroke-width="2.5" fill="none" opacity=".8"/>
-    </g>
-    <g transform="translate(1120,95) rotate(12)">
-      <circle cx="0" cy="0" r="46" fill="#C03020" opacity=".6"/>
-      <circle cx="0" cy="0" r="37" fill="#D84030" opacity=".4"/>
-      <path d="M-10,-42 Q0,-56 10,-42" stroke="#4A7A30" stroke-width="3" fill="none" opacity=".8"/>
-      <path d="M-6,-44 Q-14,-58 -20,-46" stroke="#4A7A30" stroke-width="2" fill="none" opacity=".65"/>
-      <path d="M6,-44 Q14,-58 20,-46" stroke="#4A7A30" stroke-width="2" fill="none" opacity=".65"/>
-    </g>
-    <g transform="translate(55,685) rotate(-38)" opacity=".55">
-      <path d="M0,52 Q-11,22 0,-22 Q11,12 0,52" fill="#3A6820"/>
-      <path d="M0,22 Q-22,12 -32,-12" stroke="#3A6820" stroke-width="2" fill="none"/>
-      <path d="M0,10 Q22,6 30,-16" stroke="#3A6820" stroke-width="2" fill="none"/>
-      <ellipse cx="-32" cy="-12" rx="11" ry="7" fill="#3A6820" transform="rotate(-22,-32,-12)"/>
-      <ellipse cx="30" cy="-16" rx="11" ry="7" fill="#3A6820" transform="rotate(18,30,-16)"/>
-    </g>
-    <g transform="translate(1145,705) rotate(18)">
-      <path d="M0,-52 Q16,-20 10,22 Q5,52 0,62 Q-5,52 -10,22 Q-16,-20 0,-52" fill="#C02818" opacity=".65"/>
-      <path d="M0,-52 Q-10,-62 -5,-57" stroke="#4A7820" stroke-width="2.5" fill="none" opacity=".8"/>
-    </g>
-    <g transform="translate(28,385) rotate(8)" opacity=".45">
-      <ellipse cx="0" cy="0" rx="28" ry="38" fill="#EEE4C8"/>
-      <ellipse cx="0" cy="0" rx="21" ry="30" fill="#F8F0DC" opacity=".55"/>
-      <path d="M-14,-36 Q0,-50 14,-36" stroke="#C8B890" stroke-width="1.5" fill="none"/>
-    </g>
-    <g transform="translate(1165,420) rotate(-14)" opacity=".5">
-      <path d="M0,-56 Q20,0 0,56 Q-20,0 0,-56" fill="#E07020"/>
-      <path d="M0,-56 Q8,0 0,56 Q-8,0 0,-56" fill="#F09040" opacity=".45"/>
-      <path d="M-6,-53 Q-16,-66 -8,-59" stroke="#4A8030" stroke-width="2.5" fill="none"/>
-      <path d="M0,-56 Q0,-71 4,-63" stroke="#4A8030" stroke-width="2.5" fill="none"/>
-      <path d="M6,-53 Q16,-66 8,-59" stroke="#4A8030" stroke-width="2.5" fill="none"/>
-    </g>
-    <g transform="translate(600,38) rotate(0)" opacity=".38">
-      <path d="M-85,0 Q-42,-32 0,-12 Q42,-32 85,0" stroke="#4A7A30" stroke-width="2.5" fill="none"/>
-      <ellipse cx="-64" cy="-14" rx="12" ry="7" fill="#5A8A40" transform="rotate(-15,-64,-14)"/>
-      <ellipse cx="-32" cy="-24" rx="11" ry="7" fill="#5A8A40" transform="rotate(-25,-32,-24)"/>
-      <ellipse cx="0" cy="-18" rx="12" ry="7" fill="#5A8A40"/>
-      <ellipse cx="32" cy="-24" rx="11" ry="7" fill="#5A8A40" transform="rotate(25,32,-24)"/>
-      <ellipse cx="64" cy="-14" rx="12" ry="7" fill="#5A8A40" transform="rotate(15,64,-14)"/>
-    </g>
-    <circle cx="210" cy="155" r="4" fill="#8A3820" opacity=".38"/>
-    <circle cx="228" cy="143" r="3" fill="#8A3820" opacity=".28"/>
-    <circle cx="198" cy="168" r="3" fill="#8A3820" opacity=".32"/>
-    <circle cx="990" cy="655" r="5" fill="#8A3820" opacity=".32"/>
-    <circle cx="975" cy="668" r="3" fill="#8A3820" opacity=".26"/>
-    <circle cx="400" cy="730" r="4" fill="#C02818" opacity=".32"/>
-    <circle cx="420" cy="718" r="3" fill="#C02818" opacity=".26"/>
+  <div class="lg"></div>
+  <!-- Food SVG deco -->
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.45" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+    <g transform="translate(90,80) rotate(-22)"><ellipse cx="0" cy="0" rx="52" ry="36" fill="#D4B830" opacity=".65"/><ellipse cx="0" cy="0" rx="43" ry="29" fill="#E8CC44" opacity=".38"/><path d="M-9,-40 Q0,-54 9,-40" stroke="#4A7A30" stroke-width="2.5" fill="none" opacity=".8"/></g>
+    <g transform="translate(1120,95) rotate(12)"><circle cx="0" cy="0" r="46" fill="#C03020" opacity=".55"/><path d="M-10,-42 Q0,-56 10,-42" stroke="#4A7A30" stroke-width="3" fill="none" opacity=".8"/><path d="M-6,-44 Q-14,-58 -20,-46" stroke="#4A7A30" stroke-width="2" fill="none" opacity=".6"/><path d="M6,-44 Q14,-58 20,-46" stroke="#4A7A30" stroke-width="2" fill="none" opacity=".6"/></g>
+    <g transform="translate(55,685) rotate(-38)" opacity=".5"><path d="M0,52 Q-11,22 0,-22 Q11,12 0,52" fill="#3A6820"/><path d="M0,22 Q-22,12 -32,-12" stroke="#3A6820" stroke-width="2" fill="none"/><path d="M0,10 Q22,6 30,-16" stroke="#3A6820" stroke-width="2" fill="none"/><ellipse cx="-32" cy="-12" rx="11" ry="7" fill="#3A6820" transform="rotate(-22,-32,-12)"/><ellipse cx="30" cy="-16" rx="11" ry="7" fill="#3A6820" transform="rotate(18,30,-16)"/></g>
+    <g transform="translate(1145,705) rotate(18)"><path d="M0,-52 Q16,-20 10,22 Q5,52 0,62 Q-5,52 -10,22 Q-16,-20 0,-52" fill="#C02818" opacity=".6"/><path d="M0,-52 Q-10,-62 -5,-57" stroke="#4A7820" stroke-width="2.5" fill="none" opacity=".8"/></g>
+    <g transform="translate(600,38) rotate(0)" opacity=".35"><path d="M-85,0 Q-42,-32 0,-12 Q42,-32 85,0" stroke="#4A7A30" stroke-width="2.5" fill="none"/><ellipse cx="-64" cy="-14" rx="12" ry="7" fill="#5A8A40" transform="rotate(-15,-64,-14)"/><ellipse cx="0" cy="-18" rx="12" ry="7" fill="#5A8A40"/><ellipse cx="64" cy="-14" rx="12" ry="7" fill="#5A8A40" transform="rotate(15,64,-14)"/></g>
+    <circle cx="210" cy="155" r="4" fill="#8A3820" opacity=".36"/><circle cx="228" cy="143" r="3" fill="#8A3820" opacity=".26"/><circle cx="990" cy="655" r="5" fill="#8A3820" opacity=".3"/><circle cx="400" cy="730" r="4" fill="#C02818" opacity=".3"/>
   </svg>
-
-  <div class="land-c">
-    <div class="land-pill">Cuisiniers à domicile</div>
-    <div class="land-logo">Back<em>Cooker</em></div>
-    <div class="land-sub">Des cuisiniers passionnés préparent pour vous, chez vous. Découvrez les talents culinaires autour de vous.</div>
-    <div class="chef-strip">
-      <div class="cs-av">👩🏻‍🍳</div><div class="cs-av">👨🏾‍🍳</div><div class="cs-av">👩🏽‍🍳</div><div class="cs-av">👩🏼‍🍳</div><div class="cs-av">👨🏻‍🍳</div>
-      <span class="cs-lbl"><b>+5</b>&nbsp;chefs disponibles</span>
+  <div class="lc">
+    <div class="lpill">Cuisiniers à domicile</div>
+    <div class="llogo">Back<em>Cooker</em></div>
+    <div class="lsub">Des cuisiniers passionnés préparent pour vous, chez vous. Découvrez les talents autour de vous.</div>
+    <div class="favs">
+      <div class="fav">👩🏻‍🍳</div><div class="fav">👨🏾‍🍳</div><div class="fav">👩🏽‍🍳</div><div class="fav">👩🏼‍🍳</div><div class="fav">👨🏻‍🍳</div>
+      <span class="fav-lbl"><b>+5</b> chefs disponibles</span>
     </div>
-    <div class="city-box">
-      <div class="city-row">
-        <div class="city-ico">📍</div>
-        <input class="city-inp" id="cityInp" type="text" placeholder="Votre ville..."
-          autocomplete="off" oninput="onCI(this.value)" onkeydown="if(event.key==='Enter')goCity()">
-        <button class="city-go" onclick="goCity()">Trouver →</button>
+    <div class="cbox">
+      <div class="crow">
+        <div class="cico">📍</div>
+        <input class="cinp" id="cityInp" type="text" placeholder="Votre ville..." autocomplete="off"
+          oninput="onCI(this.value)" onkeydown="if(event.key==='Enter')goCity()">
+        <button class="cgo" onclick="goCity()">Trouver →</button>
       </div>
       <div class="sugg" id="sugg"></div>
     </div>
-    <div class="qcities">
-      <div class="qc" onclick="selCity('Marseille')">Marseille</div>
-      <div class="qc" onclick="selCity('Paris')">Paris</div>
-      <div class="qc" onclick="selCity('Lyon')">Lyon</div>
-      <div class="qc" onclick="selCity('Nice')">Nice</div>
-      <div class="qc" onclick="selCity('Bordeaux')">Bordeaux</div>
+    <div class="qc">
+      <div class="qci" onclick="selCity('Marseille')">Marseille</div>
+      <div class="qci" onclick="selCity('Paris')">Paris</div>
+      <div class="qci" onclick="selCity('Lyon')">Lyon</div>
+      <div class="qci" onclick="selCity('Nice')">Nice</div>
+      <div class="qci" onclick="selCity('Bordeaux')">Bordeaux</div>
     </div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
+<!-- ═══ APP ═══ -->
 <div class="screen off" id="app">
-  <div class="top-nav">
-    <div class="tn-logo" onclick="backToLand()"><div class="tn-dot"></div>Back<em>Cooker</em></div>
-    <div class="tn-city-pill"><div class="tn-cp" onclick="backToLand()" id="tnCity">📍 Marseille</div></div>
-    <div class="tn-r"><button class="tn-btn">Devenir chef</button><div class="tn-av">S</div></div>
+  <!-- Nav -->
+  <div class="nav">
+    <div class="nav-logo" onclick="backToLand()"><div class="nav-dot"></div>Back<em>Cooker</em></div>
+    <div class="nav-loc"><div class="nav-city" onclick="backToLand()" id="navCity">📍 Marseille</div></div>
+    <div class="nav-av">S</div>
   </div>
-  <div class="hero">
-    <div class="hero-l">Chefs autour de <em id="heroCity">Marseille</em></div>
-    <div class="hero-r" id="heroCnt">10 chefs · ~20 km</div>
-  </div>
-  <div class="toolbar">
-    <div class="tb-search">
-      <div class="tb-si">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#A8A29E" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" id="srch" placeholder="Chef, cuisine, plat..." oninput="renderCards()">
+
+  <!-- Body scroll -->
+  <div class="body" id="appBody">
+
+    <!-- Search -->
+    <div class="searchbar">
+      <div class="si2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A89070" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="srch" placeholder="Chef, cuisine, quartier..." oninput="renderAll()">
       </div>
     </div>
-    <div class="tb-filters">
-      <div class="ftag on" data-cat="tous">Tous</div>
-      <div class="ftag" data-cat="maghreb">🥘 Maghrébin</div>
-      <div class="ftag" data-cat="asiatique">🍜 Asiatique</div>
-      <div class="ftag" data-cat="africain">🫕 Africain</div>
-      <div class="ftag" data-cat="vege">🌿 Végé</div>
-      <div class="ftag" data-cat="grill">🔥 Grill</div>
-      <div class="ftag" data-cat="mer">🐟 Mer</div>
+
+    <!-- Grandes catégories -->
+    <div class="cats-block">
+      <div class="cats-title">Quelle cuisine ce soir ?</div>
+      <div class="cats-grid" id="catsGrid">
+        <div class="cat-card on" data-cat="tous"><div class="cat-card-glow"></div><div class="cat-card-img">🍽️</div><div class="cat-card-lbl">Tous</div></div>
+        <div class="cat-card" data-cat="maghreb"><div class="cat-card-glow"></div><div class="cat-card-img">🥘</div><div class="cat-card-lbl">Maghreb</div></div>
+        <div class="cat-card" data-cat="asiatique"><div class="cat-card-glow"></div><div class="cat-card-img">🍜</div><div class="cat-card-lbl">Asie</div></div>
+        <div class="cat-card" data-cat="africain"><div class="cat-card-glow"></div><div class="cat-card-img">🫕</div><div class="cat-card-lbl">Afrique</div></div>
+        <div class="cat-card" data-cat="vege"><div class="cat-card-glow"></div><div class="cat-card-img">🌿</div><div class="cat-card-lbl">Végé</div></div>
+        <div class="cat-card" data-cat="grill"><div class="cat-card-glow"></div><div class="cat-card-img">🔥</div><div class="cat-card-lbl">Grill</div></div>
+        <div class="cat-card" data-cat="mer"><div class="cat-card-glow"></div><div class="cat-card-img">🐟</div><div class="cat-card-lbl">Mer</div></div>
+        <div class="cat-card" data-cat="tous" style="pointer-events:none;opacity:0"></div>
+      </div>
     </div>
-  </div>
-  <div class="app-main">
-    <div class="list-panel">
-      <div class="list-hdr" id="listHdr">Cuisiniers disponibles</div>
-      <div class="list-scroll" id="cardList"></div>
-    </div>
-    <div class="map-panel">
+
+    <!-- Carte mini -->
+    <div class="map-mini">
       <div id="map"></div>
-      <div class="mbadge">📍 <b id="mapCnt">10</b> chefs · 20 km</div>
+      <div class="map-badge">📍 <b id="mapCnt">10</b> chefs près de vous</div>
     </div>
+
+    <!-- Section : Disponibles aujourd'hui -->
+    <div class="sec">
+      <div class="sec-hdr">
+        <div>
+          <div class="sec-title">🌅 Disponibles aujourd'hui</div>
+          <div class="sec-subtitle">Réservez pour ce soir</div>
+        </div>
+        <div class="sec-see">Voir tout ›</div>
+      </div>
+    </div>
+    <div class="hscroll" id="todayList"></div>
+
+    <div class="divider"></div>
+
+    <!-- Section : Cette semaine -->
+    <div class="sec">
+      <div class="sec-hdr">
+        <div>
+          <div class="sec-title">📅 Cette semaine</div>
+          <div class="sec-subtitle">Planifiez à l'avance</div>
+        </div>
+        <div class="sec-see">Voir tout ›</div>
+      </div>
+    </div>
+    <div class="hscroll" id="weekList"></div>
+
+    <div class="divider"></div>
+
+    <!-- Section : Les mieux notés -->
+    <div class="sec">
+      <div class="sec-hdr">
+        <div>
+          <div class="sec-title">⭐ Les mieux notés</div>
+          <div class="sec-subtitle" id="allSubtitle">Tous les chefs autour de vous</div>
+        </div>
+      </div>
+    </div>
+    <div id="allList"></div>
+    <div style="height:16px"></div>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="bn on"><div class="bn-ico">🏠</div><div class="bn-lbl">Accueil</div></div>
+    <div class="bn"><div class="bn-ico">🔍</div><div class="bn-lbl">Recherche</div></div>
+    <div class="bn"><div class="bn-ico">📅</div><div class="bn-lbl">Réservations</div></div>
+    <div class="bn"><div class="bn-ico">👤</div><div class="bn-lbl">Profil</div></div>
   </div>
 </div>
 
-<!-- ══ BOOKING SHEET ══ -->
+<!-- Booking sheet -->
 <div class="bk-ov" id="bkOv" onclick="closeBK()"></div>
-<div class="bk-sheet" id="bkSheet">
+<div class="bk-sh" id="bkSh">
   <div class="bk-handle"><div class="bk-handle-bar"></div></div>
   <div class="bk-head">
     <div id="bkAv" class="bk-av-fb">👩🏻‍🍳</div>
@@ -483,7 +456,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink)}
   <div class="bk-scroll" id="bkScroll"></div>
 </div>
 
-<!-- ══ PAYMENT ══ -->
+<!-- Payment -->
 <div class="pay-ov" id="payOv">
   <div class="pay-modal">
     <div class="pm-h"><div class="pm-t">Paiement sécurisé</div><div class="pm-x" onclick="closePay()">✕</div></div>
@@ -492,7 +465,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink)}
 </div>
 
 <script>
-/* ── DATA ── */
+/* ═══ DATA ═══ */
 const CITIES={
   'Marseille':{lat:43.2965,lng:5.3698,chefs:[0,1,2,3,4,5,6,7,8,9]},
   'Paris':{lat:48.8566,lng:2.3522,chefs:[0,2,3,5,7,8]},
@@ -503,198 +476,227 @@ const CITIES={
 };
 const CITY_LIST=['Marseille','Paris','Lyon','Nice','Bordeaux','Toulouse','Montpellier','Nantes','Strasbourg','Rennes'];
 
-/* Unsplash food photos per menu category */
-const FOOD_PHOTOS={
-  tagine:'https://images.unsplash.com/photo-1547592180-85f173990554?w=120&h=120&fit=crop',
-  couscous:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&h=120&fit=crop',
-  salade:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&h=120&fit=crop',
-  pastilla:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=120&h=120&fit=crop',
-  riz:'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=120&h=120&fit=crop',
-  poulet:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=120&h=120&fit=crop',
-  pho:'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=120&h=120&fit=crop',
-  sandwich:'https://images.unsplash.com/photo-1539252554935-530ef9d79b69?w=120&h=120&fit=crop',
-  ramen:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=120&h=120&fit=crop',
-  sushi:'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=120&h=120&fit=crop',
-  gyoza:'https://images.unsplash.com/photo-1625938145744-533685a4f823?w=120&h=120&fit=crop',
-  mochi:'https://images.unsplash.com/photo-1631206753348-db44968fd440?w=120&h=120&fit=crop',
-  poisson:'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=120&h=120&fit=crop',
-  boeuf:'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=120&h=120&fit=crop',
-  tarte:'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=120&h=120&fit=crop',
-  soupe:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=120&h=120&fit=crop',
-  curry:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=120&h=120&fit=crop',
-  naan:'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=120&h=120&fit=crop',
-  bowl:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=120&h=120&fit=crop',
-  falafel:'https://images.unsplash.com/photo-1529059997568-3d847b1154f0?w=120&h=120&fit=crop',
-  gateau:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=120&h=120&fit=crop',
-  bouillabaisse:'https://images.unsplash.com/photo-1544025162-d76preimposed?w=120&h=120&fit=crop',
-  default:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=120&h=120&fit=crop'
+const FOOD={
+  tagine:'https://images.unsplash.com/photo-1547592180-85f173990554?w=200&h=200&fit=crop',
+  couscous:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop',
+  salade:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop',
+  pastilla:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&h=200&fit=crop',
+  riz:'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&h=200&fit=crop',
+  poulet:'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=200&h=200&fit=crop',
+  pho:'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=200&h=200&fit=crop',
+  sandwich:'https://images.unsplash.com/photo-1539252554935-530ef9d79b69?w=200&h=200&fit=crop',
+  ramen:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=200&fit=crop',
+  sushi:'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=200&h=200&fit=crop',
+  gyoza:'https://images.unsplash.com/photo-1625938145744-533685a4f823?w=200&h=200&fit=crop',
+  mochi:'https://images.unsplash.com/photo-1631206753348-db44968fd440?w=200&h=200&fit=crop',
+  poisson:'https://images.unsplash.com/photo-1580476262798-bddd9f4b7369?w=200&h=200&fit=crop',
+  boeuf:'https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=200&h=200&fit=crop',
+  tarte:'https://images.unsplash.com/photo-1464305795204-6f5bbfc7fb81?w=200&h=200&fit=crop',
+  soupe:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=200&h=200&fit=crop',
+  curry:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=200&h=200&fit=crop',
+  naan:'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=200&h=200&fit=crop',
+  bowl:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&h=200&fit=crop',
+  falafel:'https://images.unsplash.com/photo-1529059997568-3d847b1154f0?w=200&h=200&fit=crop',
+  gateau:'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=200&h=200&fit=crop',
+  default:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&h=200&fit=crop'
 };
-
-/* Chef profile photos */
 const CHEF_PHOTOS=[
-  'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1583394293214-c8d02f67c21d?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1572715376701-98568319fd0b?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1587124341604-f69ae3f5d19f?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1607631568010-a87245c0daf7?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1592861956120-e524fc739696?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1542010589005-d1eacc3918f2?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1595257841889-eca2678454e2?w=120&h=120&fit=crop',
-  'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=120&h=120&fit=crop'
+  'https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1583394293214-c8d02f67c21d?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1572715376701-98568319fd0b?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1587124341604-f69ae3f5d19f?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1607631568010-a87245c0daf7?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1592861956120-e524fc739696?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1542010589005-d1eacc3918f2?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1595257841889-eca2678454e2?w=200&h=200&fit=crop',
+  'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=200&h=200&fit=crop'
 ];
 
 const chefs=[
   {av:'👩🏻‍🍳',name:'Amina Benali',spec:'Cuisine marocaine · Tagines & Couscous',rat:4.9,meals:127,dist:'0.8km',price:28,lo:[-.005,.004],cat:'maghreb',dispo:true,exp:'8 ans',
-   bio:'Née à Fès, Amina a grandi dans la cuisine de sa grand-mère. Elle apporte l\'authenticité des saveurs marocaines avec des produits soigneusement sélectionnés au marché.',
+   bio:"Née à Fès, Amina a grandi dans la cuisine de sa grand-mère. Elle apporte l'authenticité des saveurs marocaines avec des produits soigneusement sélectionnés au marché.",
    weekdays:[1,3,5,6],slots:{d:['12h30','13h00','19h00','19h30','20h00'],b:['12h30']},
    menus:[{e:'🥘',n:'Tagine agneau',d:'Agneau confit 4h, pruneaux, amandes, safran du Maroc',p:28,t:['Sans gluten','Halal'],img:'tagine'},
           {e:'🫕',n:'Couscous royal',d:'Méchoui, merguez artisanales, 7 légumes du jardin',p:32,t:['Halal','Familial'],img:'couscous'},
           {e:'🥗',n:'Salade marocaine',d:'Tomate, concombre, poivrons grillés, chermoula fraîche',p:14,t:['Végétarien'],img:'salade'},
           {e:'🍮',n:'Pastilla sucrée',d:'Feuilles de brick, cannelle, pigeons confits',p:18,t:['Traditionnel'],img:'pastilla'}]},
   {av:'👨🏾‍🍳',name:'Kofi Asante',spec:'Cuisine africaine · Spécialités ivoiriennes',rat:4.8,meals:89,dist:'1.4km',price:24,lo:[.008,-.003],cat:'africain',dispo:true,exp:'5 ans',
-   bio:'Kofi a quitté Abidjan en 2018 avec ses recettes familiales. Ancien cuisinier étoilé, il revisite la cuisine ivoirienne avec une touche contemporaine.',
+   bio:"Kofi a quitté Abidjan en 2018 avec ses recettes familiales. Ancien cuisinier étoilé, il revisite la cuisine ivoirienne avec une touche contemporaine.",
    weekdays:[2,4,6,0],slots:{d:['12h00','13h00','19h30','20h00','20h30'],b:['12h00']},
    menus:[{e:'🍚',n:'Riz gras',d:'Riz parfumé à la tomate, légumes sautés, épices maison',p:22,t:['Sans gluten'],img:'riz'},
           {e:'🫕',n:'Foutou banane',d:'Banane plantain pilée, sauce arachide, crevettes fraîches',p:24,t:['Traditionnel'],img:'couscous'},
           {e:'🥬',n:'Sauce graine',d:'Huile de palme, poisson fumé, légumes de saison',p:26,t:['Halal'],img:'salade'},
           {e:'🍖',n:'Poulet braisé',d:'Marinade citronnelle 24h, braise au charbon de bois',p:28,t:['Halal','Grillé'],img:'poulet'}]},
   {av:'👩🏽‍🍳',name:'Linh Nguyen',spec:'Cuisine vietnamienne · Phở & Bánh mì',rat:4.7,meals:203,dist:'2.1km',price:22,lo:[-.008,.009],cat:'asiatique',dispo:false,exp:'12 ans',
-   bio:'Linh est arrivée de Hanoï il y a 15 ans. Elle prépare son bouillon de phở pendant 12h la nuit pour une saveur incomparable.',
+   bio:"Linh est arrivée de Hanoï il y a 15 ans. Elle prépare son bouillon de phở pendant 12h la nuit pour une saveur incomparable.",
    weekdays:[1,2,5],slots:{d:['12h00','19h00','19h30'],b:[]},
    menus:[{e:'🍜',n:'Phở bœuf',d:'Bouillon mijoté 12h, bœuf wagyu tranché, herbes fraîches',p:22,t:['Sans lactose'],img:'pho'},
           {e:'🥪',n:'Bánh mì',d:'Baguette croustillante, pâté maison, pickles, coriandre',p:16,t:['Léger'],img:'sandwich'},
           {e:'🥗',n:'Salade papaye',d:'Papaye verte, crevettes tigrées, nuoc-mâm maison',p:14,t:['Sans gluten'],img:'salade'},
           {e:'🍮',n:'Chè coco',d:'Lait de coco, haricots rouges, perles tapioca',p:10,t:['Végétarien'],img:'gateau'}]},
   {av:'👩🏼‍🍳',name:'Yuki Tanaka',spec:'Cuisine japonaise · Ramen & Sushi',rat:4.9,meals:118,dist:'1.9km',price:30,lo:[.012,.006],cat:'asiatique',dispo:true,exp:'10 ans',
-   bio:'Ancienne cheffe à Tokyo, Yuki marie la précision japonaise avec les produits de la mer locale dans des créations uniques et mémorables.',
+   bio:"Ancienne cheffe à Tokyo, Yuki marie la précision japonaise avec les produits de la mer locale dans des créations uniques.",
    weekdays:[3,4,5,6],slots:{d:['12h30','18h30','19h00','19h30','20h30'],b:['12h30','18h30']},
    menus:[{e:'🍜',n:'Ramen tonkotsu',d:'Bouillon porc & poulet 18h, chashu maison, œuf mollet mariné',p:28,t:['Signature'],img:'ramen'},
           {e:'🍱',n:'Bento sushi mer',d:'8 nigiri poissons locaux, soupe miso, salade wakamé',p:30,t:['Frais'],img:'sushi'},
           {e:'🥟',n:'Gyoza maison',d:'Raviolis porc-ciboulette, sauce ponzu yuzu',p:14,t:['Artisanal'],img:'gyoza'},
           {e:'🍡',n:'Mochi glacé',d:'Mochi matcha, fraise ou yuzu, pâte de riz maison',p:10,t:['Végétarien'],img:'mochi'}]},
   {av:'👨🏻‍🍳',name:'Marco Ferreira',spec:'Cuisine portugaise · Pasteis & Grillades',rat:4.6,meals:56,dist:'2.8km',price:32,lo:[-.01,-.008],cat:'grill',dispo:true,exp:'15 ans',
-   bio:'Fils de pêcheur de Porto, Marco achète ses poissons à l\'aube à la criée locale et les cuisine avec les techniques traditionnelles portugaises.',
+   bio:"Fils de pêcheur de Porto, Marco achète ses poissons à l'aube à la criée locale et les cuisine avec les techniques traditionnelles portugaises.",
    weekdays:[0,2,5,6],slots:{d:['12h00','13h00','20h00','20h30','21h00'],b:['21h00']},
    menus:[{e:'🐟',n:'Bacalhau à brás',d:'Morue effilochée, pommes paille, olives, œufs brouillés',p:32,t:['Traditionnel'],img:'poisson'},
           {e:'🥩',n:'Côte de bœuf',d:'Ibérique maturé 45j, chimichurri, braises de cerisier',p:38,t:['Signature','Grillé'],img:'boeuf'},
           {e:'🍮',n:'Pastel de nata',d:'Flan crémeux, pâte feuilletée maison, cannelle de Porto',p:8,t:['Artisanal'],img:'tarte'},
-          {e:'🍲',n:'Caldo verde',d:'Chou kale, chorizo fumé, huile d\'olive extra vierge',p:14,t:['Traditionnel'],img:'soupe'}]},
+          {e:'🍲',n:'Caldo verde',d:"Chou kale, chorizo fumé, huile d'olive extra vierge",p:14,t:['Traditionnel'],img:'soupe'}]},
   {av:'👩🏿‍🍳',name:'Fatou Diallo',spec:'Cuisine sénégalaise · Thiéboudiène',rat:5.0,meals:41,dist:'3.2km',price:26,lo:[-.004,.012],cat:'africain',dispo:true,exp:'6 ans',
-   bio:'Fatou prépare son thiéboudiène avec des épices rapportées personnellement de Dakar. 3h de préparation pour un voyage culinaire authentique.',
+   bio:"Fatou prépare son thiéboudiène avec des épices rapportées personnellement de Dakar. 3h de préparation pour un voyage culinaire authentique.",
    weekdays:[0,1,4,6],slots:{d:['13h00','19h00','19h30','20h00'],b:[]},
    menus:[{e:'🐟',n:'Thiéboudiène',d:'Riz au poisson de la criée, légumes confits, sauce tamarin',p:26,t:['Signature'],img:'poisson'},
           {e:'🍚',n:'Mafé',d:'Bœuf en sauce arachide fumée, légumes racines',p:28,t:['Halal','Familial'],img:'riz'},
           {e:'🥜',n:'Yassa poulet',d:'Poulet mariné citron-oignon 24h, basmati parfumé',p:24,t:['Halal'],img:'poulet'},
           {e:'🍮',n:'Thiakry',d:'Semoule au lait caillé sucré, vanille bourbon',p:10,t:['Végétarien'],img:'gateau'}]},
   {av:'👨🏽‍🍳',name:'Karim Mansouri',spec:'Cuisine algérienne · Chorba & Tajines',rat:4.7,meals:73,dist:'2.4km',price:22,lo:[.009,-.011],cat:'maghreb',dispo:true,exp:'7 ans',
-   bio:'Né à Oran, Karim cuisine avec émotion depuis ses 16 ans. Sa chorba frik est réputée partout où il passe.',
+   bio:"Né à Oran, Karim cuisine avec émotion depuis ses 16 ans. Sa chorba frik est réputée partout où il passe.",
    weekdays:[2,3,5,6,0],slots:{d:['12h00','12h30','19h00','19h30','20h00','20h30'],b:['12h00']},
    menus:[{e:'🍲',n:'Chorba frik',d:'Blé vert, agneau de lait, tomates fraîches, coriandre',p:16,t:['Halal','Traditionnel'],img:'soupe'},
           {e:'🫕',n:'Couscous tfina',d:'Pois chiches, légumes confits, smen de brebis affiné',p:22,t:['Halal','Familial'],img:'couscous'},
           {e:'🥙',n:'Karantika',d:'Tarte aux pois chiches, cumin, harissa douce artisanale',p:12,t:['Végétarien'],img:'falafel'},
           {e:'🍮',n:'Zlabia',d:'Beignets dorés au miel de jujubier, fleur d\'oranger',p:8,t:['Végétarien'],img:'gateau'}]},
   {av:'👩🏻‍🍳',name:'Priya Sharma',spec:'Cuisine indienne · Curry & Tandoor',rat:4.8,meals:95,dist:'3.5km',price:25,lo:[-.012,.003],cat:'asiatique',dispo:false,exp:'9 ans',
-   bio:'Priya vient de Mumbai. Elle torréfie et moud ses masalas quotidiennement pour une fraîcheur incomparable. Ses currys mijotent minimum 4h.',
+   bio:"Priya vient de Mumbai. Elle torréfie et moud ses masalas quotidiennement pour une fraîcheur incomparable.",
    weekdays:[1,4,5],slots:{d:['19h00','19h30','20h00'],b:[]},
    menus:[{e:'🍛',n:'Butter chicken',d:'Poulet mariné tandoor 24h, sauce tomate-crème épicée maison',p:25,t:['Signature'],img:'curry'},
           {e:'🫘',n:'Dal makhani',d:'Lentilles noires 8h, beurre clarifié, garam masala maison',p:20,t:['Végétarien'],img:'soupe'},
           {e:'🫓',n:'Naan maison',d:'Pain au four tandoor, beurre clarifié, ail et coriandre',p:8,t:['Artisanal'],img:'naan'},
           {e:'🍮',n:'Kheer',d:'Riz au lait parfumé cardamome, pistaches, eau de rose',p:10,t:['Végétarien'],img:'gateau'}]},
   {av:'👩🏽‍🍳',name:'Leila Ouazzani',spec:'Cuisine végétarienne · Bio & Créatif',rat:4.9,meals:156,dist:'1.1km',price:20,lo:[.005,.01],cat:'vege',dispo:true,exp:'4 ans',
-   bio:'Ancienne nutritionniste, Leila s\'approvisionne exclusivement en bio. Elle crée des plats végétariens qui surprennent même les plus carnivores.',
+   bio:"Ancienne nutritionniste, Leila s'approvisionne exclusivement en bio. Elle crée des plats végétariens qui surprennent même les plus carnivores.",
    weekdays:[0,1,2,3,4,5,6],slots:{d:['12h00','12h30','13h00','19h00','19h30','20h00','20h30'],b:['12h00']},
    menus:[{e:'🥗',n:'Bowl soleil',d:'Quinoa, avocat, légumes rôtis zaatar, tahini citron',p:20,t:['Vegan','Bio','Sans gluten'],img:'bowl'},
           {e:'🫕',n:'Curry potiron',d:'Potiron de saison, lait coco, gingembre frais, coriandre',p:18,t:['Vegan','Bio'],img:'curry'},
           {e:'🥙',n:'Wrap falafel',d:'Falafel maison, houmous fumé, légumes croquants',p:16,t:['Vegan','Artisanal'],img:'falafel'},
           {e:'🍮',n:'Cheesecake cru',d:'Base cajou-dattes, citron vert, coulis fruits rouges',p:12,t:['Vegan','Raw'],img:'gateau'}]},
   {av:'👨🏻‍🍳',name:'Pierre Roux',spec:'Cuisine provençale · Bouillabaisse & Mer',rat:4.8,meals:88,dist:'0.5km',price:35,lo:[-.002,-.006],cat:'mer',dispo:true,exp:'20 ans',
-   bio:'Marseillais de naissance, fils de pêcheur, Pierre achète ses poissons à 5h à la criée. Sa bouillabaisse respecte la charte officielle des restaurateurs marseillais.',
+   bio:"Marseillais de naissance, fils de pêcheur, Pierre achète ses poissons à 5h à la criée. Sa bouillabaisse respecte la charte officielle des restaurateurs marseillais.",
    weekdays:[5,6,0],slots:{d:['12h30','13h00','20h00','20h30'],b:[]},
    menus:[{e:'🐟',n:'Bouillabaisse',d:'Poissons de roche de la criée, rouille maison, croutons aillés',p:45,t:['Signature','Local','AOC'],img:'poisson'},
           {e:'🦞',n:'Homard grillé',d:'Homard breton, beurre noisette aux herbes, légumes du soleil',p:55,t:['Premium','Grillé'],img:'boeuf'},
           {e:'🥗',n:'Salade niçoise',d:'Thon albacore, œuf mollet, haricots verts, anchois',p:18,t:['Local','Léger'],img:'salade'},
-          {e:'🍮',n:'Tarte tropézienne',d:'Brioche moelleuse, crème diplomate vanille Bourbon',p:12,t:['Provençal'],img:'tarte'}]},
+          {e:'🍮',n:'Tarte tropézienne',d:'Brioche moelleuse, crème diplomate vanille Bourbon',p:12,t:['Provençal'],img:'tarte'}]}
 ];
 
-/* ── STATE ── */
+/* ═══ STATE ═══ */
 let curCity='',cat='tous',curI=0,guests=2,selMenu=null,selDay=null,selSlot=null,calY,calM,mapObj=null;
 const mkrs=[];
 const MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const DL=['Lu','Ma','Me','Je','Ve','Sa','Di'];
 
-/* ── LANDING ── */
+/* ═══ LANDING ═══ */
 function onCI(v){
   const s=document.getElementById('sugg');
-  if(!v.trim()){s.classList.remove('show');return;}
+  if(!v||!v.trim()){s.classList.remove('show');return;}
   const m=CITY_LIST.filter(c=>c.toLowerCase().startsWith(v.toLowerCase())).slice(0,5);
-  s.innerHTML=m.map(c=>`<div class="sugg-item" onclick="selCity('${c}')"><span>📍</span><span class="sugg-name">${c}</span><span class="sugg-n">${CITIES[c]?CITIES[c].chefs.length+' chefs':'bientôt'}</span></div>`).join('');
+  s.innerHTML=m.map(c=>`<div class="si" onclick="selCity('${c}')"><span>📍</span><span class="sn">${c}</span><span class="sc">${CITIES[c]?CITIES[c].chefs.length+' chefs':'bientôt'}</span></div>`).join('');
   m.length?s.classList.add('show'):s.classList.remove('show');
 }
-function selCity(c){document.getElementById('cityInp').value=c;document.getElementById('sugg').classList.remove('show');goCity(c);}
-function goCity(c){const v=c||document.getElementById('cityInp').value.trim();if(!v)return;curCity=v;launchApp();}
+function selCity(c){
+  document.getElementById('cityInp').value=c;
+  document.getElementById('sugg').classList.remove('show');
+  goCity(c);
+}
+function goCity(c){
+  const v=c||document.getElementById('cityInp').value.trim();
+  if(!v)return;
+  curCity=v;
+  launchApp();
+}
 function launchApp(){
   const cd=CITIES[curCity]||CITIES['Marseille'];
-  document.getElementById('heroCity').textContent=curCity;
-  document.getElementById('tnCity').textContent='📍 '+curCity;
-  const n=cd.chefs.length;
-  document.getElementById('heroCnt').textContent=n+' chef'+(n>1?'s':'')+' · ~20 km';
+  document.getElementById('navCity').textContent='📍 '+curCity;
   document.getElementById('land').classList.add('off');
   document.getElementById('app').classList.remove('off');
-  setTimeout(()=>{initMap(cd);renderCards();},120);
+  setTimeout(()=>{initMap(cd);renderAll();},120);
 }
-function backToLand(){document.getElementById('app').classList.add('off');document.getElementById('land').classList.remove('off');closeBK();}
-document.addEventListener('click',e=>{if(!e.target.closest('.city-box'))document.getElementById('sugg').classList.remove('show');});
+function backToLand(){
+  document.getElementById('app').classList.add('off');
+  document.getElementById('land').classList.remove('off');
+  closeBK();
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.cbox'))document.getElementById('sugg').classList.remove('show');
+});
 
-/* ── MAP ── */
+/* ═══ MAP ═══ */
 function initMap(cd){
   if(mapObj){mapObj.remove();mapObj=null;mkrs.length=0;}
-  mapObj=L.map('map',{zoomControl:true,scrollWheelZoom:true,tap:true}).setView([cd.lat,cd.lng],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19}).addTo(mapObj);
-  L.marker([cd.lat+.002,cd.lng-.002],{icon:L.divIcon({className:'',iconSize:[14,14],iconAnchor:[7,7],html:'<div class="umark"></div>'})})
-    .addTo(mapObj).bindTooltip('Vous',{permanent:true,direction:'top',offset:[0,-10]});
+  mapObj=L.map('map',{zoomControl:false,scrollWheelZoom:false,dragging:false,tap:false}).setView([cd.lat,cd.lng],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19}).addTo(mapObj);
+  L.marker([cd.lat+.002,cd.lng-.002],{icon:L.divIcon({className:'',iconSize:[14,14],iconAnchor:[7,7],html:'<div class="umark"></div>'})}).addTo(mapObj);
   chefs.forEach((c,i)=>{
-    const m=L.marker([cd.lat+c.lo[0],cd.lng+c.lo[1]],{icon:mkIcon(i,i===0)}).addTo(mapObj);
-    m.bindPopup(popHTML(i),{maxWidth:240,minWidth:218});
-    m.on('click',()=>{mkrs.forEach((mk,j)=>mk.setIcon(mkIcon(j,j===i)));curI=i;renderCards();});
+    const m=L.marker([cd.lat+c.lo[0],cd.lng+c.lo[1]],{icon:mkIcon(i,false)}).addTo(mapObj);
+    m.bindPopup(`<div><div class="pop-h"><img class="pop-av" src="${CHEF_PHOTOS[i]}" onerror="this.outerHTML='<div class=pop-av-fb>${c.av}</div>'"><div><div class="pop-nm">${c.name}</div><div class="pop-sp">${c.spec}</div></div></div><div class="pop-b"><div class="pop-row"><span class="pop-rat">★ ${c.rat}</span><span class="pop-price">${c.price}€<small>/pers.</small></span></div><button class="pop-btn" onclick="openBK(${i})">Réserver</button></div></div>`,{maxWidth:220,minWidth:210});
     mkrs.push(m);
   });
-  setTimeout(()=>mkrs[0].openPopup(),600);
 }
-function mkIcon(i,on){const c=chefs[i];return L.divIcon({className:'',html:`<div class="mpin${on?' on':''}"><div class="mpin-dot"></div>${c.name.split(' ')[0]} · ${c.price}€</div>`,iconSize:[136,32],iconAnchor:[68,32]});}
-function popHTML(i){const c=chefs[i];return `<div class="pop-wrap"><div class="pop-h"><img class="pop-av" src="${CHEF_PHOTOS[i]}" onerror="this.outerHTML='<div class=pop-av-fb>${c.av}</div>'"><div><div class="pop-nm">${c.name}</div><div class="pop-sp">${c.spec}</div></div></div><div class="pop-b"><div class="pop-row"><span class="pop-rat">★ ${c.rat} · ${c.meals} repas</span><span class="pop-price">${c.price}€<small>/pers.</small></span></div><button class="pop-btn" onclick="openBK(${i})">Voir & Réserver</button></div></div>`;}
+function mkIcon(i,on){const c=chefs[i];return L.divIcon({className:'',html:`<div class="mpin${on?' on':''}"><div class="mpin-dot"></div>${c.name.split(' ')[0]}</div>`,iconSize:[80,28],iconAnchor:[40,28]});}
 
-/* ── CARDS ── */
-function renderCards(){
-  const q=(document.getElementById('srch')?.value||'').toLowerCase();
-  const cd=CITIES[curCity]||CITIES['Marseille'];
-  const ok=new Set(cd.chefs);
-  const f=chefs.map((c,i)=>({...c,i})).filter(c=>ok.has(c.i)&&(cat==='tous'||c.cat===cat)&&(!q||c.name.toLowerCase().includes(q)||c.spec.toLowerCase().includes(q)));
-  document.getElementById('listHdr').textContent=`${f.length} cuisinier${f.length>1?'s':''} dans votre secteur`;
-  document.getElementById('mapCnt').textContent=f.length;
-  if(mkrs.length){chefs.forEach((c,i)=>{const v=ok.has(i)&&(cat==='tous'||c.cat===cat);mkrs[i].setOpacity(v?1:.15);mkrs[i].setIcon(mkIcon(i,i===curI&&v));});}
-  const el=document.getElementById('cardList');el.innerHTML='';
-  if(!f.length){el.innerHTML='<div class="empty-st"><div class="empty-st-i">🍽️</div>Aucun chef dans cette catégorie.</div>';return;}
-  f.forEach((c,fi)=>{
-    const d=document.createElement('div');
-    d.className='ccard'+(c.i===curI?' hi':'');
-    d.style.animationDelay=(fi*.04)+'s';
-    const db=c.dispo?'<span class="cc-tag gr">● Disponible</span>':'<span class="cc-tag or">● Ce soir</span>';
-    d.innerHTML=`
-      <div class="cc-main" onclick="openBK(${c.i})">
-        <img src="${CHEF_PHOTOS[c.i]}" class="cc-photo" alt="${c.name}" style="width:78px;height:78px;object-fit:cover;flex-shrink:0;border-radius:12px 0 0 0" onerror="this.outerHTML='<div class=cc-photo-fb>${c.av}</div>'">
-        <div class="cc-inf">
-          <div class="cc-name">${c.name}</div>
-          <div class="cc-spec">${c.spec}</div>
-          <div class="cc-meta"><div class="cc-rat"><span class="cc-star">★</span>${c.rat}</div><span class="cc-tag">${c.meals} repas</span><span class="cc-tag">${c.exp}</span>${db}</div>
+/* ═══ CHEF CARD H (horizontal) ═══ */
+function chefCardH(c,i){
+  const d=document.createElement('div');
+  d.className='chef-h';
+  d.onclick=()=>openBK(i);
+  const disp=c.dispo
+    ?'<div class="dispo-dot ok"></div>'
+    :'<div class="dispo-dot soon"></div>';
+  d.innerHTML=`
+    <img src="${CHEF_PHOTOS[i]}" class="chef-h-img" alt="${c.name}" onerror="this.outerHTML='<div class=chef-h-img-fb>${c.av}</div>'">
+    <div class="chef-h-body">
+      <div class="chef-h-name">${c.name}</div>
+      <div class="chef-h-spec">${c.spec}</div>
+      <div class="chef-h-foot">
+        <div class="chef-h-rat"><span class="chef-h-star">★</span>${c.rat}</div>
+        <div class="chef-h-price">${c.price}€</div>
+      </div>
+      <div class="chef-h-meta">${disp}<span class="chef-h-dist">${c.dist}</span></div>
+    </div>`;
+  return d;
+}
+
+/* ═══ CHEF CARD V (vertical list) ═══ */
+function chefCardV(c,i,fi){
+  const wrap=document.createElement('div');
+  wrap.style.animationDelay=(fi*.04)+'s';
+
+  const card=document.createElement('div');
+  card.className='chef-v'+(i===curI?' hi':'');
+
+  const dispTag=c.dispo
+    ?'<span class="dispo-tag ok">● Dispo</span>'
+    :'<span class="dispo-tag soon">● Ce soir</span>';
+
+  card.innerHTML=`
+    <div style="display:flex;align-items:stretch;width:100%;cursor:pointer" onclick="openBK(${i})">
+      <img src="${CHEF_PHOTOS[i]}" class="chef-v-img" alt="${c.name}" onerror="this.outerHTML='<div class=chef-v-img-fb>${c.av}</div>'">
+      <div class="chef-v-body">
+        <div class="chef-v-name">${c.name}</div>
+        <div class="chef-v-spec">${c.spec}</div>
+        <div class="chef-v-meta">
+          <div class="chef-v-rat"><span class="chef-v-star">★</span>${c.rat}</div>
+          <div class="chef-v-dot"></div>
+          <div class="chef-v-dist">${c.dist}</div>
+          <div class="chef-v-dot"></div>
+          ${dispTag}
         </div>
-        <div class="cc-price-col"><div class="cc-pv">${c.price}€</div><div class="cc-pl">/pers.</div></div>
       </div>
-      <div class="cc-acc" onclick="toggleDrop(this)">
-        <span class="cc-acc-lbl">Profil & menus</span>
-        <div class="cc-arr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <div class="cc-drop"><div class="cc-drop-in">
+      <div class="chef-v-price"><div class="chef-v-pv">${c.price}€</div><div class="chef-v-pl">/pers.</div></div>
+    </div>
+    <div class="chef-v-acc" onclick="toggleDrop(this)">
+      <span class="chef-v-acc-lbl">Profil & menus</span>
+      <div class="chef-v-arr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="chef-v-drop">
+      <div class="chef-v-drop-in">
         <div class="bio-box"><div class="bio-nm">${c.name}</div><div class="bio-txt">${c.bio}</div></div>
         <div class="mini-stats">
           <div class="mst"><div class="mst-v">★${c.rat}</div><div class="mst-l">Note</div></div>
@@ -705,24 +707,73 @@ function renderCards(){
         <div class="drop-sec">Ses menus</div>
         ${c.menus.map(m=>`
           <div class="mn-row">
-            <img src="${FOOD_PHOTOS[m.img]||FOOD_PHOTOS.default}" class="mn-img" alt="${m.n}" onerror="this.outerHTML='<div class=mn-img-fb>${m.e}</div>'">
+            <img src="${FOOD[m.img]||FOOD.default}" class="mn-img" alt="${m.n}" onerror="this.outerHTML='<div class=mn-img-fb>${m.e}</div>'">
             <div class="mn-i"><div class="mn-n">${m.n}</div><div class="mn-d">${m.d}</div><div class="mn-tags">${m.t.map(t=>`<span class="mn-tag">${t}</span>`).join('')}</div></div>
             <div class="mn-p">${m.p}€</div>
           </div>`).join('')}
-        <button class="btn-rsv" onclick="openBK(${c.i})">📅 Réserver</button>
-      </div></div>`;
-    el.appendChild(d);
-  });
-}
-function toggleDrop(el){el.querySelector('.cc-arr').classList.toggle('open');el.nextElementSibling.classList.toggle('open');}
+        <button class="btn-rsv" onclick="openBK(${i})">📅 Réserver</button>
+      </div>
+    </div>`;
 
-/* ── BOOKING ── */
+  wrap.appendChild(card);
+  return wrap;
+}
+
+function toggleDrop(el){
+  el.querySelector('.chef-v-arr').classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+/* ═══ RENDER ═══ */
+function renderAll(){
+  const q=(document.getElementById('srch')?.value||'').toLowerCase();
+  const cd=CITIES[curCity]||CITIES['Marseille'];
+  const ok=new Set(cd.chefs);
+  const today=new Date().getDay();
+
+  const filtered=chefs.map((c,i)=>({...c,i})).filter(c=>
+    ok.has(c.i) &&
+    (cat==='tous'||c.cat===cat) &&
+    (!q||c.name.toLowerCase().includes(q)||c.spec.toLowerCase().includes(q))
+  );
+
+  document.getElementById('mapCnt').textContent=filtered.length;
+
+  if(mkrs.length){
+    chefs.forEach((c,i)=>{
+      const vis=ok.has(i)&&(cat==='tous'||c.cat===cat);
+      mkrs[i].setOpacity(vis?1:.15);
+    });
+  }
+
+  // Today: dispo today
+  const todayChefs=filtered.filter(c=>c.dispo&&c.weekdays.includes(today));
+  const todayEl=document.getElementById('todayList');
+  todayEl.innerHTML='';
+  if(todayChefs.length){todayChefs.forEach(c=>todayEl.appendChild(chefCardH(c,c.i)));}
+  else{todayEl.innerHTML='<div style="padding:0 14px 10px;font-size:12px;color:#A89070">Aucun chef disponible aujourd\'hui dans cette catégorie.</div>';}
+
+  // This week: available sometime this week
+  const weekChefs=filtered.filter(c=>{
+    for(let d=0;d<7;d++){const wd=(today+d)%7;if(c.weekdays.includes(wd))return true;}return false;
+  }).slice(0,8);
+  const weekEl=document.getElementById('weekList');
+  weekEl.innerHTML='';
+  weekChefs.forEach(c=>weekEl.appendChild(chefCardH(c,c.i)));
+
+  // All chefs sorted by rating
+  const allEl=document.getElementById('allList');
+  allEl.innerHTML='';
+  const sorted=[...filtered].sort((a,b)=>b.rat-a.rat);
+  const sub=document.getElementById('allSubtitle');
+  if(sub)sub.textContent=`${sorted.length} cuisinier${sorted.length>1?'s':''} autour de vous`;
+  if(!sorted.length){allEl.innerHTML='<div class="empty-st"><div class="empty-st-i">🍽️</div>Aucun chef dans cette catégorie.</div>';return;}
+  sorted.forEach((c,fi)=>allEl.appendChild(chefCardV(c,c.i,fi)));
+}
+
+/* ═══ BOOKING ═══ */
 function openBK(i){
   curI=i;const c=chefs[i];
-  renderCards();
-  if(mapObj){mkrs.forEach((m,j)=>m.setIcon(mkIcon(j,j===i)));const cd=CITIES[curCity]||CITIES['Marseille'];mapObj.flyTo([cd.lat+c.lo[0],cd.lng+c.lo[1]],14,{duration:.6});mkrs[i].openPopup();}
-
-  /* Header */
   const avEl=document.getElementById('bkAv');
   avEl.className='bk-av-fb';avEl.textContent=c.av;
   const img=new Image();
@@ -730,43 +781,31 @@ function openBK(i){
   img.src=CHEF_PHOTOS[i];
   document.getElementById('bkNm').textContent=c.name;
   document.getElementById('bkSp').textContent=c.spec;
-
   selMenu=c.menus[0];guests=2;selDay=null;selSlot=null;
   const now=new Date();calY=now.getFullYear();calM=now.getMonth();
-
   buildBKBody(i);
-
   document.getElementById('bkOv').classList.add('show');
-  document.getElementById('bkSheet').classList.add('show');
-  /* Scroll to top of booking */
+  document.getElementById('bkSh').classList.add('show');
   document.getElementById('bkScroll').scrollTop=0;
 }
-
 function buildBKBody(i){
   const c=chefs[i];
-  let html='';
-
-  /* Stats */
-  html+=`<div class="bk-sec"><div class="bk-lbl">À propos</div>
-    <div class="bk-stats">
-      <div class="bkst"><div class="bkst-v">★${c.rat}</div><div class="bkst-l">Note</div></div>
-      <div class="bkst"><div class="bkst-v">${c.meals}</div><div class="bkst-l">Repas</div></div>
-      <div class="bkst"><div class="bkst-v">${c.exp}</div><div class="bkst-l">Exp.</div></div>
-    </div></div>`;
-
-  /* Menus with food photos */
-  html+=`<div class="bk-sec"><div class="bk-lbl">Choisir un menu</div><div id="bkMenus">`;
+  let h='';
+  h+=`<div class="bk-sec"><div class="bk-lbl">À propos</div><div class="bk-stats">
+    <div class="bkst"><div class="bkst-v">★${c.rat}</div><div class="bkst-l">Note</div></div>
+    <div class="bkst"><div class="bkst-v">${c.meals}</div><div class="bkst-l">Repas</div></div>
+    <div class="bkst"><div class="bkst-v">${c.exp}</div><div class="bkst-l">Exp.</div></div>
+  </div></div>`;
+  h+=`<div class="bk-sec"><div class="bk-lbl">Choisir un menu</div><div id="bkMenus">`;
   c.menus.forEach((m,mi)=>{
-    html+=`<div class="bk-menu${mi===0?' on':''}" onclick="pickM(${i},${mi})">
-      <img src="${FOOD_PHOTOS[m.img]||FOOD_PHOTOS.default}" class="bk-mimg" alt="${m.n}" onerror="this.outerHTML='<div class=bk-mimg-fb>${m.e}</div>'">
+    h+=`<div class="bk-menu${mi===0?' on':''}" onclick="pickM(${i},${mi})">
+      <img src="${FOOD[m.img]||FOOD.default}" class="bk-mimg" alt="${m.n}" onerror="this.outerHTML='<div class=bk-mimg-fb>${m.e}</div>'">
       <div class="bk-mi"><div class="bk-mn">${m.n}</div><div class="bk-md">${m.d}</div></div>
       <div class="bk-mp">${m.p}€</div>
     </div>`;
   });
-  html+=`</div></div>`;
-
-  /* Guests */
-  html+=`<div class="bk-sec"><div class="bk-lbl">Convives</div>
+  h+=`</div></div>`;
+  h+=`<div class="bk-sec"><div class="bk-lbl">Convives</div>
     <div class="guests-row">
       <span class="guests-lbl">Nombre de personnes</span>
       <div class="guests-ctrl">
@@ -775,9 +814,7 @@ function buildBKBody(i){
         <div class="g-btn" onclick="chgG(1)">+</div>
       </div>
     </div></div>`;
-
-  /* Calendar */
-  html+=`<div class="bk-sec"><div class="bk-lbl">Calendrier de disponibilités</div>
+  h+=`<div class="bk-sec"><div class="bk-lbl">Calendrier de disponibilités</div>
     <div class="cal-hdr">
       <div class="cal-mo" id="bkCalMo">—</div>
       <div class="cal-nav">
@@ -786,13 +823,9 @@ function buildBKBody(i){
       </div>
     </div>
     <div class="cal-grid" id="bkCalGrid"></div></div>`;
-
-  /* Slots */
-  html+=`<div class="bk-sec"><div class="bk-lbl">Créneaux horaires</div>
+  h+=`<div class="bk-sec"><div class="bk-lbl">Créneaux horaires</div>
     <div id="bkSlots"><div class="slots-hint">Sélectionnez une date d'abord.</div></div></div>`;
-
-  /* Summary */
-  html+=`<div class="bk-sec"><div class="bk-lbl">Récapitulatif</div>
+  h+=`<div class="bk-sec"><div class="bk-lbl">Récapitulatif</div>
     <div class="sum-box">
       <div class="sum-row"><span>Menu</span><span id="bkSM">—</span></div>
       <div class="sum-row"><span id="bkSQ">2 pers.</span><span id="bkSS">—</span></div>
@@ -801,39 +834,18 @@ function buildBKBody(i){
     </div>
     <button class="btn-pay" onclick="openPay()">💳 Réserver & Payer</button>
   </div>`;
-
-  document.getElementById('bkScroll').innerHTML=html;
-  buildCal();
-  updateSum();
+  document.getElementById('bkScroll').innerHTML=h;
+  buildCal();updateSum();
 }
+function closeBK(){document.getElementById('bkOv').classList.remove('show');document.getElementById('bkSh').classList.remove('show');}
+function pickM(ci,mi){document.querySelectorAll('#bkMenus .bk-menu').forEach((x,j)=>x.classList.toggle('on',j===mi));selMenu=chefs[ci].menus[mi];updateSum();}
+function chgG(d){guests=Math.max(1,Math.min(12,guests+d));const el=document.getElementById('bkGnum');if(el)el.textContent=guests;updateSum();}
 
-function closeBK(){
-  document.getElementById('bkOv').classList.remove('show');
-  document.getElementById('bkSheet').classList.remove('show');
-}
-
-/* ── MENUS ── */
-function pickM(ci,mi){
-  document.querySelectorAll('#bkMenus .bk-menu').forEach((x,j)=>x.classList.toggle('on',j===mi));
-  selMenu=chefs[ci].menus[mi];
-  updateSum();
-}
-
-/* ── GUESTS ── */
-function chgG(d){
-  guests=Math.max(1,Math.min(12,guests+d));
-  const el=document.getElementById('bkGnum');
-  if(el)el.textContent=guests;
-  updateSum();
-}
-
-/* ── CALENDAR ── */
+/* ═══ CALENDAR ═══ */
 function buildCal(){
   const c=chefs[curI];
-  const mo=document.getElementById('bkCalMo');
-  if(mo)mo.textContent=MONTHS[calM]+' '+calY;
-  const g=document.getElementById('bkCalGrid');
-  if(!g)return;
+  const mo=document.getElementById('bkCalMo');if(mo)mo.textContent=MONTHS[calM]+' '+calY;
+  const g=document.getElementById('bkCalGrid');if(!g)return;
   g.innerHTML='';
   DL.forEach(d=>{const h=document.createElement('div');h.className='cal-dn';h.textContent=d;g.appendChild(h);});
   const first=new Date(calY,calM,1);
@@ -855,22 +867,16 @@ function buildCal(){
     else if(avail)cls+=' avail';
     if(isT)cls+=' tod';
     el.className=cls;el.textContent=day;
-    if(!past&&avail){
-      el.onclick=()=>{selDay=date;selSlot=null;buildCal();buildSlots();updateSum();};
-    }
+    if(!past&&avail)el.onclick=()=>{selDay=date;selSlot=null;buildCal();buildSlots();updateSum();};
     g.appendChild(el);
   }
   buildSlots();
 }
 function prevMo(){calM--;if(calM<0){calM=11;calY--;}buildCal();}
 function nextMo(){calM++;if(calM>11){calM=0;calY++;}buildCal();}
-
-/* ── SLOTS ── */
 function buildSlots(){
-  const c=chefs[curI];
-  const w=document.getElementById('bkSlots');
-  if(!w)return;
-  if(!selDay){w.innerHTML='<div class="slots-hint">Sélectionnez une date pour voir les créneaux.</div>';return;}
+  const c=chefs[curI];const w=document.getElementById('bkSlots');if(!w)return;
+  if(!selDay){w.innerHTML="<div class='slots-hint'>Sélectionnez une date pour voir les créneaux.</div>";return;}
   const gr=document.createElement('div');gr.className='slots-grid';
   c.slots.d.forEach(s=>{
     const busy=c.slots.b.includes(s);
@@ -882,8 +888,6 @@ function buildSlots(){
   });
   w.innerHTML='';w.appendChild(gr);
 }
-
-/* ── SUMMARY ── */
 function updateSum(){
   if(!selMenu)return;
   const sub=selMenu.p*guests,tot=sub+3;
@@ -895,11 +899,11 @@ function updateSum(){
   if(st)st.textContent=tot+'€';
 }
 
-/* ── PAYMENT ── */
+/* ═══ PAYMENT ═══ */
 function openPay(){
   if(!selMenu){alert('Veuillez choisir un menu.');return;}
-  if(!selDay){alert('Veuillez choisir une date dans le calendrier.');return;}
-  if(!selSlot){alert('Veuillez choisir un créneau horaire.');return;}
+  if(!selDay){alert('Veuillez choisir une date.');return;}
+  if(!selSlot){alert('Veuillez choisir un créneau.');return;}
   const c=chefs[curI],sub=selMenu.p*guests,tot=sub+3;
   const ds=selDay.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   document.getElementById('payBody').innerHTML=`
@@ -962,21 +966,26 @@ function doPayment(tot,chef,date){
           <div class="ps-row"><span>Chef</span><b>${chef}</b></div>
           <div class="ps-row"><span>Menu</span><b>${selMenu.n}</b></div>
           <div class="ps-row"><span>Date</span><b>${date} · ${selSlot}</b></div>
-          <div class="ps-row"><span>Total débité</span><b style="color:var(--ora)">${tot}€</b></div>
+          <div class="ps-row"><span>Total débité</span><b style="color:var(--gold)">${tot}€</b></div>
         </div>
-        <p style="font-size:11px;color:var(--ink3);margin-bottom:15px">Email envoyé. Le BackCooker vous contacte dans les 30 minutes.</p>
+        <p style="font-size:11px;color:var(--ink3);margin-bottom:15px">Email envoyé. Votre BackCooker vous contacte dans les 30 minutes.</p>
         <button class="btn-confirm" onclick="closePay();closeBK();" style="background:var(--grn)">✓ Parfait, merci !</button>
       </div>`;
   },2400);
 }
 
-/* ── FILTERS ── */
-document.querySelectorAll('.ftag').forEach(el=>{
+/* ═══ CATEGORIES ═══ */
+document.querySelectorAll('.cat-card').forEach(el=>{
+  if(!el.dataset.cat)return;
   el.onclick=function(){
-    document.querySelectorAll('.ftag').forEach(t=>t.classList.remove('on'));
-    this.classList.add('on');cat=this.dataset.cat;renderCards();
-    if(mapObj){const cd=CITIES[curCity]||CITIES['Marseille'];const ok=new Set(cd.chefs);const vis=chefs.filter((c,i)=>ok.has(i)&&(cat==='tous'||c.cat===cat));if(vis.length)mapObj.flyToBounds(L.latLngBounds(vis.map(c=>[cd.lat+c.lo[0],cd.lng+c.lo[1]])).pad(.3),{duration:.7});}
+    document.querySelectorAll('.cat-card').forEach(t=>t.classList.remove('on'));
+    this.classList.add('on');
+    cat=this.dataset.cat;
+    renderAll();
   };
+});
+document.querySelectorAll('.bn').forEach(el=>{
+  el.onclick=function(){document.querySelectorAll('.bn').forEach(t=>t.classList.remove('on'));this.classList.add('on');};
 });
 </script>
 </body>
