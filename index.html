@@ -70,6 +70,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 /* SCROLLABLE BODY */
 .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 
+/* HERO BANNER */
+.app-hero{position:relative;height:180px;overflow:hidden;flex-shrink:0}
+.app-hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=400&fit=crop');background-size:cover;background-position:center;transform:scale(1.05);transition:transform .5s}
+.app-hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,20,8,.72) 0%,rgba(26,20,8,.35) 60%,rgba(184,134,42,.2) 100%)}
+.app-hero-content{position:relative;z-index:2;padding:22px 18px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.app-hero-eyebrow{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-l);margin-bottom:6px}
+.app-hero-title{font-family:'Tenor Sans',sans-serif;font-size:26px;color:#F5F0E5;line-height:1.15;margin-bottom:5px}
+.app-hero-title em{font-style:italic;color:var(--gold-l)}
+.app-hero-sub{font-size:12px;color:rgba(245,240,229,.5);font-weight:300}
+
 /* SEARCH */
 .searchbar{padding:12px 14px 6px}
 .si2{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
@@ -81,14 +91,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .cats-block{padding:14px 14px 6px}
 .cats-title{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
 .cats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.cat-card{background:var(--card);border-radius:14px;border:1.5px solid var(--border);padding:14px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:.15s;box-shadow:0 1px 4px rgba(0,0,0,.05);position:relative;overflow:hidden}
-.cat-card.on{border-color:var(--gold);background:var(--gold-pale)}
-.cat-card:active{transform:scale(.96)}
-.cat-card-img{font-size:30px;line-height:1}
-.cat-card-lbl{font-size:11px;font-weight:600;color:var(--ink2);text-align:center;line-height:1.2}
-.cat-card.on .cat-card-lbl{color:var(--gold-d)}
-.cat-card-glow{position:absolute;inset:0;background:linear-gradient(135deg,rgba(184,134,42,.08),transparent);opacity:0;transition:.2s}
-.cat-card.on .cat-card-glow{opacity:1}
+.cat-card{border-radius:14px;border:2px solid transparent;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;cursor:pointer;transition:.2s;box-shadow:0 2px 8px rgba(0,0,0,.12);position:relative;overflow:hidden;aspect-ratio:1;min-height:80px}
+.cat-card.on{border-color:var(--gold);box-shadow:0 4px 16px rgba(184,134,42,.3)}
+.cat-card:active{transform:scale(.94)}
+.cat-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .3s}
+.cat-card:hover .cat-bg{transform:scale(1.06)}
+.cat-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(26,20,8,.75) 0%,rgba(26,20,8,.15) 60%,transparent 100%)}
+.cat-card.on::after{background:linear-gradient(to top,rgba(184,134,42,.8) 0%,rgba(184,134,42,.2) 60%,transparent 100%)}
+.cat-card-lbl{position:relative;z-index:2;font-size:11px;font-weight:700;color:#fff;text-align:center;padding:0 4px 10px;line-height:1.2;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.cat-card-glow{display:none}
 
 /* ── SECTIONS TEMPORELLES ── */
 .sec{padding:16px 14px 0}
@@ -364,6 +375,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
   <!-- Body scroll -->
   <div class="body" id="appBody">
 
+    <!-- Hero banner with food photo bg -->
+    <div class="app-hero">
+      <div class="app-hero-bg"></div>
+      <div class="app-hero-overlay"></div>
+      <div class="app-hero-content">
+        <div class="app-hero-eyebrow">Cuisiniers à domicile</div>
+        <div class="app-hero-title">Un chef chez <em>vous ce soir</em></div>
+        <div class="app-hero-sub">Réservez en 2 minutes · Paiement sécurisé</div>
+      </div>
+    </div>
+
     <!-- Search -->
     <div class="searchbar">
       <div class="si2">
@@ -376,14 +398,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
     <div class="cats-block">
       <div class="cats-title">Quelle cuisine ce soir ?</div>
       <div class="cats-grid" id="catsGrid">
-        <div class="cat-card on" data-cat="tous"><div class="cat-card-glow"></div><div class="cat-card-img">🍽️</div><div class="cat-card-lbl">Tous</div></div>
-        <div class="cat-card" data-cat="maghreb"><div class="cat-card-glow"></div><div class="cat-card-img">🥘</div><div class="cat-card-lbl">Maghreb</div></div>
-        <div class="cat-card" data-cat="asiatique"><div class="cat-card-glow"></div><div class="cat-card-img">🍜</div><div class="cat-card-lbl">Asie</div></div>
-        <div class="cat-card" data-cat="africain"><div class="cat-card-glow"></div><div class="cat-card-img">🫕</div><div class="cat-card-lbl">Afrique</div></div>
-        <div class="cat-card" data-cat="vege"><div class="cat-card-glow"></div><div class="cat-card-img">🌿</div><div class="cat-card-lbl">Végé</div></div>
-        <div class="cat-card" data-cat="grill"><div class="cat-card-glow"></div><div class="cat-card-img">🔥</div><div class="cat-card-lbl">Grill</div></div>
-        <div class="cat-card" data-cat="mer"><div class="cat-card-glow"></div><div class="cat-card-img">🐟</div><div class="cat-card-lbl">Mer</div></div>
-        <div class="cat-card" data-cat="tous" style="pointer-events:none;opacity:0"></div>
+        <div class="cat-card on" data-cat="tous"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Tous</div></div>
+        <div class="cat-card" data-cat="maghreb"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1547592180-85f173990554?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Maghreb</div></div>
+        <div class="cat-card" data-cat="asiatique"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Asie</div></div>
+        <div class="cat-card" data-cat="africain"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Afrique</div></div>
+        <div class="cat-card" data-cat="vege"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Végé</div></div>
+        <div class="cat-card" data-cat="grill"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Grill</div></div>
+        <div class="cat-card" data-cat="mer"><div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1534482421-64566f976cfa?w=300&h=300&fit=crop')"></div><div class="cat-card-lbl">Mer</div></div>
+        <div style="pointer-events:none;opacity:0"></div>
+      </div>
       </div>
     </div>
 
