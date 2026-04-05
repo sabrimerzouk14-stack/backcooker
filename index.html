@@ -56,7 +56,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .qci:hover{border-color:rgba(184,134,42,.44);color:var(--gold-l)}
 
 /* ═══ APP ═══ */
-#app{background:var(--bg)}
+#app{background:var(--bg);display:flex;flex-direction:column;height:100%}
 
 /* TOP NAV */
 .nav{height:54px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:100}
@@ -68,10 +68,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .nav-av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold-d),var(--gold-l));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
 
 /* SCROLLABLE BODY */
-.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0}
 
 /* HERO BANNER */
-.app-hero{position:relative;height:180px;overflow:hidden;flex-shrink:0}
+.app-hero{position:relative;height:180px;overflow:hidden;flex-shrink:0;width:100%}
 .app-hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=400&fit=crop');background-size:cover;background-position:center;transform:scale(1.05);transition:transform .5s}
 .app-hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,20,8,.72) 0%,rgba(26,20,8,.35) 60%,rgba(184,134,42,.2) 100%)}
 .app-hero-content{position:relative;z-index:2;padding:22px 18px;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
@@ -109,14 +109,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .sec-see{font-size:12px;font-weight:600;color:var(--gold-d);cursor:pointer;white-space:nowrap}
 
 /* Horizontal scroll cards */
-.hscroll{display:flex;gap:12px;overflow-x:auto;padding:0 14px 16px;scrollbar-width:none;margin:0 -14px}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:4px 14px 16px;scrollbar-width:none}
 .hscroll::-webkit-scrollbar{display:none}
 
 /* Chef card horizontal */
 .chef-h{width:155px;flex-shrink:0;background:var(--card);border-radius:14px;border:1px solid var(--border);overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .15s}
 .chef-h:active{transform:scale(.97)}
-.chef-h-img{width:155px;height:105px;object-fit:cover;display:block;background:var(--gold-pale)}
-.chef-h-img-fb{width:155px;height:105px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:44px}
+.chef-h-photo{width:155px;height:110px;position:relative;overflow:hidden;flex-shrink:0}
+.chef-h-fb{position:absolute;inset:0;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:44px;z-index:1}
+.chef-h-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
 .chef-h-body{padding:9px 10px 10px}
 .chef-h-name{font-family:'Tenor Sans',sans-serif;font-size:14px;color:var(--ink);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chef-h-spec{font-size:10px;color:var(--ink3);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -137,8 +138,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .chef-v{display:flex;background:var(--card);border-radius:14px;margin:0 14px 10px;border:1px solid var(--border);overflow:hidden;cursor:pointer;box-shadow:0 1px 6px rgba(0,0,0,.05);transition:box-shadow .2s}
 .chef-v:active{box-shadow:0 3px 14px rgba(184,134,42,.15)}
 .chef-v.hi{border-color:var(--gold)}
-.chef-v-img{width:88px;height:88px;object-fit:cover;flex-shrink:0}
-.chef-v-img-fb{width:88px;height:88px;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.chef-v-photo{width:88px;height:88px;position:relative;overflow:hidden;flex-shrink:0}
+.chef-v-fb{position:absolute;inset:0;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:36px;z-index:1}
+.chef-v-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
 .chef-v-body{flex:1;padding:10px 12px;min-width:0}
 .chef-v-name{font-family:'Tenor Sans',sans-serif;font-size:16px;color:var(--ink);margin-bottom:2px}
 .chef-v-spec{font-size:11px;color:var(--ink3);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -183,7 +185,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink)}
 .btn-rsv{width:100%;background:var(--gold);color:#fff;border:none;border-radius:9px;padding:12px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:6px}
 
 /* BOTTOM NAV */
-.bottom-nav{position:sticky;bottom:0;height:60px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav{height:60px;background:var(--card);border-top:1px solid var(--border);display:flex;align-items:center;flex-shrink:0;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .bn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 0}
 .bn-ico{font-size:20px;line-height:1}
 .bn-lbl{font-size:10px;font-weight:500;color:var(--ink3)}
@@ -673,7 +675,10 @@ function chefCardH(c,i){
     ?'<div class="dispo-dot ok"></div>'
     :'<div class="dispo-dot soon"></div>';
   d.innerHTML=`
-    <img src="${CHEF_PHOTOS[i]}" class="chef-h-img" alt="${c.name}" onerror="this.outerHTML='<div class=chef-h-img-fb>${c.av}</div>'">
+    <div class="chef-h-photo">
+      <div class="chef-h-fb">${c.av}</div>
+      <img src="${CHEF_PHOTOS[i]}" class="chef-h-img" alt="${c.name}" onerror="this.style.display='none'">
+    </div>
     <div class="chef-h-body">
       <div class="chef-h-name">${c.name}</div>
       <div class="chef-h-spec">${c.spec}</div>
@@ -700,7 +705,10 @@ function chefCardV(c,i,fi){
 
   card.innerHTML=`
     <div style="display:flex;align-items:stretch;width:100%;cursor:pointer" onclick="openBK(${i})">
-      <img src="${CHEF_PHOTOS[i]}" class="chef-v-img" alt="${c.name}" onerror="this.outerHTML='<div class=chef-v-img-fb>${c.av}</div>'">
+      <div class="chef-v-photo">
+        <div class="chef-v-fb">${c.av}</div>
+        <img src="${CHEF_PHOTOS[i]}" class="chef-v-img" alt="${c.name}" onerror="this.style.display='none'">
+      </div>
       <div class="chef-v-body">
         <div class="chef-v-name">${c.name}</div>
         <div class="chef-v-spec">${c.spec}</div>
@@ -770,16 +778,14 @@ function renderAll(){
   }
 
   // Today: dispo today
-  const todayChefs=filtered.filter(c=>c.dispo&&c.weekdays.includes(today));
+  const todayChefs=filtered.filter(c=>c.dispo);
   const todayEl=document.getElementById('todayList');
   todayEl.innerHTML='';
   if(todayChefs.length){todayChefs.forEach(c=>todayEl.appendChild(chefCardH(c,c.i)));}
   else{todayEl.innerHTML='<div style="padding:0 14px 10px;font-size:12px;color:#A89070">Aucun chef disponible aujourd\'hui dans cette catégorie.</div>';}
 
   // This week: available sometime this week
-  const weekChefs=filtered.filter(c=>{
-    for(let d=0;d<7;d++){const wd=(today+d)%7;if(c.weekdays.includes(wd))return true;}return false;
-  }).slice(0,8);
+  const weekChefs=filtered.slice(0,8);
   const weekEl=document.getElementById('weekList');
   weekEl.innerHTML='';
   weekChefs.forEach(c=>weekEl.appendChild(chefCardH(c,c.i)));
@@ -998,14 +1004,13 @@ function doPayment(tot,chef,date){
 }
 
 /* ═══ CATEGORIES ═══ */
-document.querySelectorAll('.cat-card').forEach(el=>{
-  if(!el.dataset.cat)return;
-  el.onclick=function(){
-    document.querySelectorAll('.cat-card').forEach(t=>t.classList.remove('on'));
-    this.classList.add('on');
-    cat=this.dataset.cat;
-    renderAll();
-  };
+document.addEventListener('click', function(e){
+  const card = e.target.closest('.cat-card[data-cat]');
+  if(!card) return;
+  document.querySelectorAll('.cat-card[data-cat]').forEach(t=>t.classList.remove('on'));
+  card.classList.add('on');
+  cat = card.dataset.cat;
+  if(curCity) renderAll();
 });
 document.querySelectorAll('.bn').forEach(el=>{
   el.onclick=function(){document.querySelectorAll('.bn').forEach(t=>t.classList.remove('on'));this.classList.add('on');};
